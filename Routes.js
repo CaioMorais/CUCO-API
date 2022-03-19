@@ -1,3 +1,3 @@
 const loginRoute = require("./Routes/LoginRoute");
-
-module.exports = loginRoute
+const carteiraRoute = require("./Routes/CarteiraRoute")
+module.exports = [loginRoute, carteiraRoute]
