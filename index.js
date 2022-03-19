@@ -1,9 +1,14 @@
-const express = require('express')
-const app = express()
-const swaggerJsDoc = require("swagger-jsdoc")
-const swaggerUi = require("swagger-ui-express")
+const express = require('express');
+const app = express();
+const router = express.Router();
 
-const port = 3000
+const swaggerJsDoc = require("swagger-jsdoc");
+const swaggerUi = require("swagger-ui-express");
+
+const port = 3000;
+
+//Carrega as rotas
+const loginRoute = require("./Routes/LoginRoute");
 
 const swaggerOptions = {
   swaggerDefinition: {
@@ -24,10 +29,8 @@ const swaggerOptions = {
 
 const swaggerDocs = swaggerJsDoc(swaggerOptions)
 
+app.use('/login', loginRoute);
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs))
-
-//Routes
-app.use('/', require('./Routes/LoginRoute'));
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`)
