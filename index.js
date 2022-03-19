@@ -9,6 +9,8 @@ const port = 3000;
 
 //Carrega as rotas
 const loginRoute = require("./Routes/LoginRoute");
+const contaRoute = require("./Routes/ContaRoute");
+const carteiraRoute = require("./Routes/CarteiraRoute");
 
 const swaggerOptions = {
   swaggerDefinition: {
@@ -30,6 +32,9 @@ const swaggerOptions = {
 const swaggerDocs = swaggerJsDoc(swaggerOptions)
 
 app.use('/login', loginRoute);
+app.use('/conta/Editar', contaRoute);
+app.use('/carteira', carteiraRoute);
+
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs))
 
 app.listen(port, () => {
