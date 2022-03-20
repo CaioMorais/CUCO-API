@@ -1,8 +1,7 @@
 let Result = require("../Domain/Entities/Result.js")
 
 exports.HistoricoDoacoes = (req, res, next) =>{
-    result = new Result("PaginaDoacao", true, 
-    "Doacoes" [
+    result = new Result("PaginaDoacao", true, [
         {
             "numero pedido": 123,
             "data da criação": "28/07/2021",
@@ -28,7 +27,7 @@ exports.HistoricoDoacoes = (req, res, next) =>{
 
 exports.ListaOngs = (req, res, next) =>{
     result = new Result("PaginaOngs", true, 
-    "ONG's" [
+    [
         {
             "ID": 1,
             "Data da Criação do Cadastro": "28/01/2022",            
@@ -58,6 +57,39 @@ exports.ListaOngs = (req, res, next) =>{
 
 exports.Solicitacoes = (req, res, next) =>{
     result = new Result("Solicitacoes", true, "Solicitação aceita!")
+    console.log(result)
+    res.status(200).send(result)
+}
+
+
+exports.HistoricoRetiradas = (req, res, next) =>{
+    result = new Result("HistoricoRetiradas", true, 
+    [
+        {
+            "ID": 1,
+            "Data de Retirada": "07/02/2022",            
+            "Nome Estabelecimento": "Churrascaria Pão e Grill",         
+            "Nome Responsável": "José Walter", 
+            "Contato Estabelecimento" : "11 93242-9871",           
+            "Quantidade de Concessoes": "200",            
+            "Endereço": "Avenida Brasil, 534",
+            "Bairro": "Jardim Itapuá",
+            "Cidade": "São Paulo",
+            "Estado": "SP"
+        },
+        {
+            "ID": 2,
+            "Data de Retirada": "15/03/2022",            
+            "Nome Estabelecimento": "Boteco do Seu Manoel",         
+            "Nome Responsável": "Manoel Miranda da Silva", 
+            "Contato Estabelecimento" : "11 2332-9971",           
+            "Quantidade de Concessoes": "150",            
+            "Endereço": "Rua das Laranjeiras, 13",
+            "Bairro": "Vila Cruzmaltina",
+            "Cidade": "São Paulo",
+            "Estado": "SP"           
+        }
+    ])
     console.log(result)
     res.status(200).send(result)
 }
