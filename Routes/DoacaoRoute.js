@@ -6,5 +6,6 @@ Doacaorouter.get('/QRCodePaginaDoacao', DoacaoController.QRCodePaginaDoacao)
 Doacaorouter.get('/PaginaDoacao', DoacaoController.PaginaDoacao)
 Doacaorouter.get('/ConfirmaTokenRetirada', DoacaoController.ConfirmaTokenRetirada)
 Doacaorouter.get('/GeraTokenRetirada', DoacaoController.GeraTokenRetirada)
+Doacaorouter.get('/EnviaEmailRecompensa', DoacaoController.EnviaEmailRecompensa)
 
 module.exports = Doacaorouter
