@@ -8,7 +8,7 @@ const swaggerUi = require("swagger-ui-express");
 const port = 3000;
 
 //Carrega as rotas
-const routes = require("./Routes");
+const routes = require("./Routes.js");
 
 const swaggerOptions = {
   swaggerDefinition: {
@@ -20,7 +20,7 @@ const swaggerOptions = {
       contact: {
         name: ""
       },
-      servers: ["http://localhost:5000"]
+      servers: ["http://localhost:3000"]
     }
   },
   // ['.routes/*.js']
@@ -30,7 +30,10 @@ const swaggerOptions = {
 
 const swaggerDocs = swaggerJsDoc(swaggerOptions)
 
-app.use('/api', routes);
+routes.forEach(route => {
+  app.use('/api', route);
+});
+
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs))
 
 app.listen(port, () => {

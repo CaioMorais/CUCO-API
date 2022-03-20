@@ -1,3 +1,6 @@
+let Result = require("../Domain/Entities/Result.js")
 exports.teste = (req, res, next) =>{
-    res.status(200).send('teste')
+    result = new Result("teste", true, "testado com sucesso")
+    console.log(result)
+    res.status(200).send(result)
 }
