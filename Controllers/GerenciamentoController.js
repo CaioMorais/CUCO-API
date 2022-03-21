@@ -1,7 +1,7 @@
 let Result = require("../Domain/Entities/Result.js")
 
 exports.HistoricoDoacoes = (req, res, next) =>{
-    result = new Result("PaginaDoacao", true, [
+    result = new Result("HistoricoDoacoes", true, [
         {
             "numero pedido": 123,
             "data da criação": "28/07/2021",
@@ -26,7 +26,7 @@ exports.HistoricoDoacoes = (req, res, next) =>{
 }
 
 exports.ListaOngs = (req, res, next) =>{
-    result = new Result("PaginaOngs", true, 
+    result = new Result("ListaOngs", true, 
     [
         {
             "ID": 1,
