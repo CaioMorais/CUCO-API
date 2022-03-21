@@ -36,7 +36,13 @@ exports.EnviaEmailRecompensa = (req, res, next) =>{
     res.status(200).send(result)
 }
 
+exports.CadastraDoacao = (req, res, next) => {
 
+    result = new Result("CadastraDoacao", true, "Doação cadastrada com sucesso!")
+    console.log(result)
+    res.status(200).send(result)
+
+}
 
     
 // exports.PaginaDoacao = (req, res, next) =>{
