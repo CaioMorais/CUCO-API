@@ -6,7 +6,7 @@ const GerenciamentoController = require("../Controllers/GerenciamentoController"
  * tags:
  *  name: GerenciamentoRoute
  *  description: API's de Gerenciamento
- * /api/Gerenciamento:
+ * /api/HistoricoDoacoes:
  *  get:
  *      tags: [Gerenciamento]
  *      parameters:
