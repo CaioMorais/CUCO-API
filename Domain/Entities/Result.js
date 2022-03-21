@@ -1,8 +1,8 @@
 class Result{
     constructor(content, success, messages){
-        this.Content = content;
-        this.Success = success;
-        this.Messages = messages;
+        this.content = content;
+        this.success = success;
+        this.messages = messages;
     }
 }
 

@@ -1,7 +1,7 @@
 let Result = require("../Domain/Entities/Result.js");
 
 exports.HistoricoDoacoes = (req, res, next) =>{
-    result = new Result("HistoricoDoacoes", true, [
+    result = new Result([
         {
             "numero pedido": 123,
             "data da criação": "28/07/2021",
@@ -20,14 +20,13 @@ exports.HistoricoDoacoes = (req, res, next) =>{
             "estado": "concluido",
             "numero de envio": 589
         }
-    ])
+    ], true, "")
     console.log(result)
     res.status(200).send(result)
 };
 
 exports.ListaOngs = (req, res, next) =>{
-    result = new Result("ListaOngs", true, 
-    [
+    result = new Result([
         {
             "ID": 1,
             "Data da Criação do Cadastro": "28/01/2022",            
@@ -50,7 +49,7 @@ exports.ListaOngs = (req, res, next) =>{
             "Cidade": "São Paulo",
             "Estado": "SP"            
         }
-    ])
+    ], true, "")
     console.log(result)
     res.status(200).send(result)
 };
@@ -63,8 +62,7 @@ exports.Solicitacoes = (req, res, next) =>{
 
 
 exports.HistoricoRetiradas = (req, res, next) =>{
-    result = new Result("HistoricoRetiradas", true, 
-    [
+    result = new Result([
         {
             "ID": 1,
             "Data de Retirada": "07/02/2022",            
@@ -89,7 +87,8 @@ exports.HistoricoRetiradas = (req, res, next) =>{
             "Cidade": "São Paulo",
             "Estado": "SP"           
         }
-    ])
+    ], true, ""
+    )
     console.log(result)
     res.status(200).send(result)
 };
