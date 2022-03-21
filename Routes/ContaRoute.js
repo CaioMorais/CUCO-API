@@ -2,8 +2,8 @@ const express = require("express")
 const Contarouter = express.Router();
 const ContaController = require("../Controllers/ContaController");
 
-Contarouter.get('/Editar', ContaController.Editar)
-Contarouter.get('/Excluir', ContaController.Excluir)
-Contarouter.get('/Cadastrar', ContaController.Cadastrar)
+Contarouter.get('/Conta/Editar', ContaController.Editar)
+Contarouter.get('/Conta/Excluir', ContaController.Excluir)
+Contarouter.get('/Conta/Cadastrar', ContaController.Cadastrar)
 
 module.exports = Contarouter
