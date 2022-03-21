@@ -1,4 +1,4 @@
-let Result = require("../Domain/Entities/Result.js")
+let Result = require("../Domain/Entities/Result.js");
 
 exports.HistoricoDoacoes = (req, res, next) =>{
     result = new Result("PaginaDoacao", true, [
@@ -23,7 +23,7 @@ exports.HistoricoDoacoes = (req, res, next) =>{
     ])
     console.log(result)
     res.status(200).send(result)
-}
+};
 
 exports.ListaOngs = (req, res, next) =>{
     result = new Result("PaginaOngs", true, 
@@ -53,13 +53,13 @@ exports.ListaOngs = (req, res, next) =>{
     ])
     console.log(result)
     res.status(200).send(result)
-}
+};
 
 exports.Solicitacoes = (req, res, next) =>{
     result = new Result("Solicitacoes", true, "Solicitação aceita!")
     console.log(result)
     res.status(200).send(result)
-}
+};
 
 
 exports.HistoricoRetiradas = (req, res, next) =>{
@@ -92,7 +92,7 @@ exports.HistoricoRetiradas = (req, res, next) =>{
     ])
     console.log(result)
     res.status(200).send(result)
-}
+};
 
 
 // exports.HistoricoDoacoes = (req, res, next) =>{
