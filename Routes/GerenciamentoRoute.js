@@ -6,9 +6,9 @@ const GerenciamentoController = require("../Controllers/GerenciamentoController"
 /**
  * @swagger
  * tags:
- *  name: GerenciamentoRoute
+ *  name: Gerenciamento
  *  description: API's de Gerenciamento
- * /api/Gerenciamento:
+ * /api/Gerenciamento/HistoricoDoacoes:
  *  get:
  *      tags: [Gerenciamento]
  *      parameters:
@@ -27,9 +27,47 @@ const GerenciamentoController = require("../Controllers/GerenciamentoController"
 /**
  * @swagger
  * tags:
- *  name: GerenciamentoRoute
+ *  name: Gerenciamento
  *  description: API's de Gerenciamento
  * /api/Gerenciamento/HistoricoRetiradas:
+ *  get:
+ *      tags: [Gerenciamento]
+ *      parameters:
+ *          - name: page_number
+ *            default: 1
+ *            in: body
+ *            schema:
+ *              type: string
+ *      responses:
+ *          default:
+ *              description: This is the default response for it
+ */
+
+/**
+ * @swagger
+ * tags:
+ *  name: Gerenciamento
+ *  description: API's de Gerenciamento
+ * /api/Gerenciamento/ListaOngs:
+ *  get:
+ *      tags: [Gerenciamento]
+ *      parameters:
+ *          - name: page_number
+ *            default: 1
+ *            in: body
+ *            schema:
+ *              type: string
+ *      responses:
+ *          default:
+ *              description: This is the default response for it
+ */
+
+/**
+ * @swagger
+ * tags:
+ *  name: Gerenciamento
+ *  description: API's de Gerenciamento
+ * /api/Gerenciamento/Solicitacoes:
  *  get:
  *      tags: [Gerenciamento]
  *      parameters:

@@ -7,3 +7,4 @@ const contaRoute = require("./Routes/ContaRoute");
 
 module.exports = [loginRoute, carteiraRoute, doacaoRoute, gerenciamentoRoute, contaRoute] ;
 
+

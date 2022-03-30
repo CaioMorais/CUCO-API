@@ -24,6 +24,100 @@ const DoacaoController = require("../Controllers/DoacaoController");
  *              description: This is the default response for it
  */
 
+/**
+ * @swagger
+ * tags:
+ *  name: Doação
+ *  description: API's de Doação
+ * /api/Doacao/QRCodePaginaDoacao:
+ *  get:
+ *      tags: [Doação]
+ *      parameters:
+ *          - name: page_number
+ *            default: 1
+ *            in: body
+ *            schema:
+ *              type: string
+ *      responses:
+ *          default:
+ *              description: This is the default response for it
+ */
+
+/**
+ * @swagger
+ * tags:
+ *  name: Doação
+ *  description: API's de Doação
+ * /api/Doacao/ConfirmaTokenRetirada:
+ *  get:
+ *      tags: [Doação]
+ *      parameters:
+ *          - name: page_number
+ *            default: 1
+ *            in: body
+ *            schema:
+ *              type: string
+ *      responses:
+ *          default:
+ *              description: This is the default response for it
+ */
+
+/**
+ * @swagger
+ * tags:
+ *  name: Doação
+ *  description: API's de Doação
+ * /api/Doacao/GeraTokenRetirada:
+ *  get:
+ *      tags: [Doação]
+ *      parameters:
+ *          - name: page_number
+ *            default: 1
+ *            in: body
+ *            schema:
+ *              type: string
+ *      responses:
+ *          default:
+ *              description: This is the default response for it
+ */
+
+/**
+ * @swagger
+ * tags:
+ *  name: Doação
+ *  description: API's de Doação
+ * /api/Doacao/PaginaDoacao:
+ *  get:
+ *      tags: [Doação]
+ *      parameters:
+ *          - name: page_number
+ *            default: 1
+ *            in: body
+ *            schema:
+ *              type: string
+ *      responses:
+ *          default:
+ *              description: This is the default response for it
+ */
+
+/**
+ * @swagger
+ * tags:
+ *  name: Doação
+ *  description: API's de Doação
+ * /api/Doacao/EnviaEmailRecompensa:
+ *  get:
+ *      tags: [Doação]
+ *      parameters:
+ *          - name: page_number
+ *            default: 1
+ *            in: body
+ *            schema:
+ *              type: string
+ *      responses:
+ *          default:
+ *              description: This is the default response for it
+ */
 
 
 Doacaorouter.get('/Doacao/QRCodePaginaDoacao', DoacaoController.QRCodePaginaDoacao)
