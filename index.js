@@ -1,6 +1,18 @@
 const express = require('express');
+const mongoose = require('mongoose');
 const app = express();
 const router = express.Router();
+
+
+mongoose.connect('mongodb+srv://admin:admin123@cluster0.kxyqc.mongodb.net/myFirstDatabase?retryWrites=true&w=majority',{
+  useNewUrlParser : true,
+  useUnifiedTopology : true
+});
+
+const db = mongoose.connection;
+db.on("error", (error) => console.error(error));
+db.once("open", () => console.log("Conectado a base de dados!"));
+
 
 const swaggerJsDoc = require("swagger-jsdoc");
 const swaggerUi = require("swagger-ui-express");
@@ -8,7 +20,7 @@ const swaggerUi = require("swagger-ui-express");
 const port = 3000;
 
 //Carrega as rotas
-const routes = require("./Routes");
+const routes = require("./Routes.js");
 
 const swaggerOptions = {
   swaggerDefinition: {
@@ -20,7 +32,7 @@ const swaggerOptions = {
       contact: {
         name: ""
       },
-      servers: ["http://localhost:5000"]
+      servers: ["http://localhost:3000"]
     }
   },
   // ['.routes/*.js']
@@ -30,7 +42,10 @@ const swaggerOptions = {
 
 const swaggerDocs = swaggerJsDoc(swaggerOptions)
 
-app.use('/api', routes);
+routes.forEach(route => {
+  app.use('/api', route);
+});
+
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs))
 
 app.listen(port, () => {
