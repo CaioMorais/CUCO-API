@@ -14,10 +14,6 @@ strategy:
       node_version: 16.x
 
 steps:
-- task: NodeTool@0 
-  inputs:
-    versionSpec: $(node_version)
-
 - script: npm install
 - task: Npm@1
   inputs:
