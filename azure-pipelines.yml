@@ -9,11 +9,9 @@ trigger:
 pool:
   vmImage: 'ubuntu-latest'
 strategy:
-  matrix:
-    node_12_x:
-      node_version: 12.x
-    node_13_x:
-      node_version: 13.x
+  matrix:   
+    node_16_x:
+      node_version: 16.x
 
 steps:
 - task: NodeTool@0 
@@ -21,3 +19,9 @@ steps:
     versionSpec: $(node_version)
 
 - script: npm install
+- task: Npm@1
+  inputs:
+     command: 'install'
+
+- script: npx mocha
+- script: npm install -g @angular/cli
