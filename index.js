@@ -17,7 +17,7 @@ db.once("open", () => console.log("Conectado a base de dados!"));
 const swaggerJsDoc = require("swagger-jsdoc");
 const swaggerUi = require("swagger-ui-express");
 
-const port = 3000;
+const port = 80;
 
 //Carrega as rotas
 const routes = require("./Routes.js");
