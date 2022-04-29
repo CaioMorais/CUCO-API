@@ -1,0 +1,8 @@
+function realizarLogin(){
+
+}
+
+function resetarSenha(){
+
+}
+
