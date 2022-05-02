@@ -1,4 +1,6 @@
-let Result = require("../Domain/Entities/Result.js")
+let Result = require("../Domain/Entities/Result.js");
+//let doacaoService = require("../Services/DoacaoService.js");
+
 
 exports.PaginaDoacao = (req, res, next) =>{
     result = new Result("PaginaDoacao", true, 'Pagina acessada com sucesso')
@@ -19,7 +21,9 @@ exports.ConfirmaTokenRetirada = (req, res, next) =>{
 }
 
 exports.GeraTokenRetirada = (req, res, next) =>{
-    result = new Result("GeraTokenRetirada", true, '5895AD418556DSD4')
+    //var token = doacaoService.gerarTokenIndentificacaoRetiradaDoacoes();
+    var token = 0
+    result = new Result("GeraTokenRetirada", true, token)
     console.log(result)
     res.status(200).send(result)
 }
