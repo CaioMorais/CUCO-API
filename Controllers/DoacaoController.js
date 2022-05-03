@@ -1,5 +1,7 @@
 let Result = require("../Domain/Entities/Result.js");
-//let doacaoService = require("../Services/DoacaoService.js");
+const {gerarTokenIndentificacaoRetiradaDoacoes,
+    gerarQRCodeLinkDoacao, efetuaDoacao, enviarEmailRecompensa,
+    gerarTokenIndentificacaoEntregaDoacoes,validacaoTokens} = require("../Services/DoacaoService");
 
 
 exports.PaginaDoacao = (req, res, next) =>{
@@ -21,8 +23,7 @@ exports.ConfirmaTokenRetirada = (req, res, next) =>{
 }
 
 exports.GeraTokenRetirada = (req, res, next) =>{
-    //var token = doacaoService.gerarTokenIndentificacaoRetiradaDoacoes();
-    var token = 0
+    var token = gerarTokenIndentificacaoRetiradaDoacoes();
     result = new Result("GeraTokenRetirada", true, token)
     console.log(result)
     res.status(200).send(result)
