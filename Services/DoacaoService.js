@@ -17,7 +17,8 @@ function gerarTokenIndentificacaoRetiradaDoacoes(){
         result += (Math.floor(Math.random()*256)).toString(16);
     }
     return result;
-}
+} 
+
 
 //Estabelecimento
 function gerarTokenIndentificacaoEntregaDoacoes(){
@@ -29,3 +30,8 @@ function validacaoTokens(){
    
 }
 
+module.exports = {
+    gerarTokenIndentificacaoRetiradaDoacoes,
+    gerarQRCodeLinkDoacao, efetuaDoacao, gerarTokenIndentificacaoEntregaDoacoes,
+    validacaoTokens, enviarEmailRecompensa
+}
