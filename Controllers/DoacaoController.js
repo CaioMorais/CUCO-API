@@ -3,15 +3,9 @@ const {gerarTokenIndentificacaoRetiradaDoacoes,
     gerarQRCodeLinkDoacao, efetuaDoacao, enviarEmailRecompensa,
     gerarTokenIndentificacaoEntregaDoacoes,validacaoTokens} = require("../Services/DoacaoService");
 
-
-exports.PaginaDoacao = (req, res, next) =>{
-    result = new Result("PaginaDoacao", true, 'Pagina acessada com sucesso')
-    console.log(result)
-    res.status(200).send(result)
-}
-
 exports.QRCodePaginaDoacao = (req, res, next) =>{
-    result = new Result("QRCodePaginaDoacao", true, 'H5dd5adA4ssd8f56F5F5DF55sasa8dD4FA5FA5S2342DADA8VAS')
+    var link = gerarQRCodeLinkDoacao();
+    result = new Result("QRCodePaginaDoacao", true, link)
     console.log(result)
     res.status(200).send(result)
 }
@@ -29,19 +23,10 @@ exports.GeraTokenRetirada = (req, res, next) =>{
     res.status(200).send(result)
 }
 
-
-exports.EnviaEmailRecompensa = (req, res, next) =>{
-    result = new Result("EnviaEmailRecompensa", true, 'E-mail enviado com sucesso')
-    console.log(result)
-    res.status(200).send(result)
-}
-
 exports.CadastraDoacao = (req, res, next) => {
-
     result = new Result("CadastraDoacao", true, "Doação cadastrada com sucesso!")
     console.log(result)
     res.status(200).send(result)
-
 }
 
     
