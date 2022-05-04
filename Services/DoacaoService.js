@@ -5,7 +5,7 @@ function gerarQRCodeLinkDoacao(){
     return link
 }
 
-function efetuaDoacao(){
+function cadastraDoacao(){
 
 }
 
@@ -39,6 +39,6 @@ function validacaoTokens(){
 
 module.exports = {
     gerarTokenIndentificacaoRetiradaDoacoes,
-    gerarQRCodeLinkDoacao, efetuaDoacao, gerarTokenIndentificacaoEntregaDoacoes,
+    gerarQRCodeLinkDoacao, cadastraDoacao, gerarTokenIndentificacaoEntregaDoacoes,
     validacaoTokens, enviarEmailRecompensa
 }
