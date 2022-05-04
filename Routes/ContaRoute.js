@@ -8,7 +8,7 @@ const ContaController = require("../Controllers/ContaController");
  *  name: Conta
  *  description: API's de Conta
  * /api/Conta/Editar:
- *  get:
+ *  post:
  *      tags: [Conta]
  *      parameters:
  *          - name: page_number
@@ -46,7 +46,7 @@ const ContaController = require("../Controllers/ContaController");
  *  name: Conta
  *  description: API's de Conta
  * /api/Conta/Cadastrar:
- *  get:
+ *  post:
  *      tags: [Conta]
  *      parameters:
  *          - name: page_number
@@ -59,8 +59,28 @@ const ContaController = require("../Controllers/ContaController");
  *              description: This is the default response for it
  */
 
-Contarouter.get('/Conta/Editar', ContaController.Editar)
+/**
+ * @swagger
+ * tags:
+ *  name: Conta
+ *  description: API's de Conta
+ * /api/Conta/ResetarSenha:
+ *  post:
+ *      tags: [Conta]
+ *      parameters:
+ *          - name: page_number
+ *            default: 1
+ *            in: body
+ *            schema:
+ *              type: string
+ *      responses:
+ *          default:
+ *              description: This is the default response for it
+ */
+
+Contarouter.post('/Conta/Editar', ContaController.Editar)
 Contarouter.get('/Conta/Excluir', ContaController.Excluir)
-Contarouter.get('/Conta/Cadastrar', ContaController.Cadastrar)
+Contarouter.post('/Conta/Cadastrar', ContaController.Cadastrar)
+Contarouter.post('/Conta/ResetarSenha', ContaController.ResetarSenha)
 
 module.exports = Contarouter

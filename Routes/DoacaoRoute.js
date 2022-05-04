@@ -26,7 +26,7 @@ const DoacaoController = require("../Controllers/DoacaoController");
  * tags:
  *  name: Doação
  *  description: API's de Doação
- * /api/Doacao/QRCodePaginaDoacao:
+ * /api/Doacao/QRCodeLinkDoacao:
  *  get:
  *      tags: [Doação]
  *      parameters:
@@ -79,8 +79,48 @@ const DoacaoController = require("../Controllers/DoacaoController");
  */
 
 
-Doacaorouter.get('/Doacao/QRCodePaginaDoacao', DoacaoController.QRCodePaginaDoacao)
-Doacaorouter.get('/Doacao/ConfirmaTokenRetirada', DoacaoController.ConfirmaTokenRetirada)
+/**
+ * @swagger
+ * tags:
+ *  name: Doação
+ *  description: API's de Doação
+ * /api/Doacao/ValidaToken:
+ *  get:
+ *      tags: [Doação]
+ *      parameters:
+ *          - name: page_number
+ *            default: 1
+ *            in: body
+ *            schema:
+ *              type: string
+ *      responses:
+ *          default:
+ *              description: This is the default response for it
+ */
+
+/**
+ * @swagger
+ * tags:
+ *  name: Doação
+ *  description: API's de Doação
+ * /api/Doacao/GeraTokenEntrega:
+ *  get:
+ *      tags: [Doação]
+ *      parameters:
+ *          - name: page_number
+ *            default: 1
+ *            in: body
+ *            schema:
+ *              type: string
+ *      responses:
+ *          default:
+ *              description: This is the default response for it
+ */
+
+
+Doacaorouter.get('/Doacao/QRCodeLinkDoacao', DoacaoController.QRCodeLinkDoacao)
+Doacaorouter.get('/Doacao/ValidaToken', DoacaoController.ValidaToken)
+Doacaorouter.get('/Doacao/GeraTokenEntrega', DoacaoController.GeraTokenEntrega)
 Doacaorouter.get('/Doacao/GeraTokenRetirada', DoacaoController.GeraTokenRetirada)
 Doacaorouter.post('/Doacao/CadastraDoacao', DoacaoController.CadastraDoacao)
 

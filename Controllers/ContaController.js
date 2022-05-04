@@ -1,4 +1,5 @@
 let Result = require("../Domain/Entities/Result.js");
+const {cadastrarConta, editarConta, excluirConta, resetarSenha} = require("../Services/ContaService");
 
 exports.Editar = (req, res, next) =>{
     result = new Result("Editar", true, 'Cadastro Editado com Sucesso!');
@@ -14,6 +15,12 @@ exports.Excluir = (req, res, next) =>{
 
 exports.Cadastrar = (req, res, next) =>{
     result = new Result("Cadastrar", true, 'Cadastro Efetuado com Sucesso!');
+    console.log(result);
+    res.status(200).send(result);
+}
+
+exports.ResetarSenha = (req, res, next) =>{
+    result = new Result("Cadastrar", true, 'Senha Editada com Sucesso!');
     console.log(result);
     res.status(200).send(result);
 }

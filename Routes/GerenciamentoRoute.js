@@ -22,8 +22,6 @@ const GerenciamentoController = require("../Controllers/GerenciamentoController"
  *              description: This is the default response for it
  */
 
-
-
 /**
  * @swagger
  * tags:
@@ -67,7 +65,64 @@ const GerenciamentoController = require("../Controllers/GerenciamentoController"
  * tags:
  *  name: Gerenciamento
  *  description: API's de Gerenciamento
- * /api/Gerenciamento/Solicitacoes:
+ * /api/Gerenciamento/AceitarSolicitacoesDeEstabelecimentos:
+ *  get:
+ *      tags: [Gerenciamento]
+ *      parameters:
+ *          - name: page_number
+ *            default: 1
+ *            in: body
+ *            schema:
+ *              type: string
+ *      responses:
+ *          default:
+ *              description: This is the default response for it
+ */
+
+/**
+ * @swagger
+ * tags:
+ *  name: Gerenciamento
+ *  description: API's de Gerenciamento
+ * /api/Gerenciamento/HistoricoEntregas:
+ *  get:
+ *      tags: [Gerenciamento]
+ *      parameters:
+ *          - name: page_number
+ *            default: 1
+ *            in: body
+ *            schema:
+ *              type: string
+ *      responses:
+ *          default:
+ *              description: This is the default response for it
+ */
+
+/**
+ * @swagger
+ * tags:
+ *  name: Gerenciamento
+ *  description: API's de Gerenciamento
+ * /api/Gerenciamento/GeraSolicitacaoParceriaParaOng:
+ *  post:
+ *      tags: [Gerenciamento]
+ *      parameters:
+ *          - name: page_number
+ *            default: 1
+ *            in: body
+ *            schema:
+ *              type: string
+ *      responses:
+ *          default:
+ *              description: This is the default response for it
+ */
+
+/**
+ * @swagger
+ * tags:
+ *  name: Gerenciamento
+ *  description: API's de Gerenciamento
+ * /api/Gerenciamento/ListaSolicitacoes:
  *  get:
  *      tags: [Gerenciamento]
  *      parameters:
@@ -83,7 +138,10 @@ const GerenciamentoController = require("../Controllers/GerenciamentoController"
 
 Gerenciamentorouter.get('/Gerenciamento/HistoricoDoacoes', GerenciamentoController.HistoricoDoacoes)
 Gerenciamentorouter.get('/Gerenciamento/ListaOngs', GerenciamentoController.ListaOngs)
-Gerenciamentorouter.get('/Gerenciamento/Solicitacoes', GerenciamentoController.Solicitacoes)
+Gerenciamentorouter.post('/Gerenciamento/GeraSolicitacaoParceriaParaOng', GerenciamentoController.GeraSolicitacaoParceriaParaOng)
+Gerenciamentorouter.get('/Gerenciamento/ListaSolicitacoes', GerenciamentoController.ListaSolicitacoes)
+Gerenciamentorouter.get('/Gerenciamento/AceitarSolicitacoesDeEstabelecimentos', GerenciamentoController.AceitarSolicitacoesDeEstabelecimentos)
 Gerenciamentorouter.get('/Gerenciamento/HistoricoRetiradas', GerenciamentoController.HistoricoRetiradas)
+Gerenciamentorouter.get('/Gerenciamento/HistoricoEntregas', GerenciamentoController.HistoricoEntregas)
 
 module.exports = Gerenciamentorouter

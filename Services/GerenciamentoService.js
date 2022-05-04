@@ -15,13 +15,28 @@ function hisotricoDoacoes(){
 }
 
 //Estabelecimento
-function escolherOng(){
+function listaOngs(){
+
+}
+
+//Estabelecimento
+function geraSolicitacaoParceriaParaOng(){
+
+}
+
+//Ong
+function listaSolicitacoes(){
 
 }
 
 //ONG
-function aceitarEstabelecimentos(){
+function aceitarSolicitacoesDeEstabelecimentos(){
 
+}
+ 
+module.exports = {
+    hitoricoRetiradas, hisotricoEntrega, hisotricoDoacoes, geraSolicitacaoParceriaParaOng, 
+    aceitarSolicitacoesDeEstabelecimentos, listaOngs, listaSolicitacoes
 }
 
 

@@ -2,7 +2,7 @@ function realizarLogin(){
 
 }
 
-function resetarSenha(){
-
+module.exports = {
+    realizarLogin
 }
 
