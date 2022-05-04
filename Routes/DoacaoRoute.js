@@ -121,7 +121,6 @@ const DoacaoController = require("../Controllers/DoacaoController");
 Doacaorouter.get('/Doacao/QRCodeLinkDoacao', DoacaoController.QRCodeLinkDoacao)
 Doacaorouter.get('/Doacao/ValidaToken', DoacaoController.ValidaToken)
 Doacaorouter.get('/Doacao/GeraTokenEntrega', DoacaoController.GeraTokenEntrega)
-Doacaorouter.get('/Doacao/ConfirmaTokenRetirada', DoacaoController.ConfirmaTokenRetirada)
 Doacaorouter.get('/Doacao/GeraTokenRetirada', DoacaoController.GeraTokenRetirada)
 Doacaorouter.post('/Doacao/CadastraDoacao', DoacaoController.CadastraDoacao)
 

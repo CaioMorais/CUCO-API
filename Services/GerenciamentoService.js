@@ -35,7 +35,8 @@ function aceitarSolicitacoesDeEstabelecimentos(){
 }
  
 module.exports = {
-    hitoricoRetiradas, hisotricoEntrega, hisotricoDoacoes, geraSolicitacaoParceriaParaOng,  aceitarSolicitacoesDeEstabelecimentos, listaOngs, listaSolicitacoes
+    hitoricoRetiradas, hisotricoEntrega, hisotricoDoacoes, geraSolicitacaoParceriaParaOng, 
+    aceitarSolicitacoesDeEstabelecimentos, listaOngs, listaSolicitacoes
 }
 
 
