@@ -1,6 +1,6 @@
-let Result = require("../Domain/Entities/Result.js");
+let Result = require("../../Domain/Entities/Result.js");
 const {visualizarCarteira, escolhaValorPrato,escolherMetaCarteira, 
-        envioMetaCarteiraAtingido, insert} = require("../Services/v1/CarteiraService.js");
+        envioMetaCarteiraAtingido, insert} = require("../../Services/v1/CarteiraService.js");
 
 exports.ParametrizaPrecos = (req, res, next) =>{
     var result = new Result();
