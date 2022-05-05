@@ -1,6 +1,6 @@
 const express = require("express")
 const Gerenciamentorouter = express.Router();
-const GerenciamentoController = require("../Controllers/GerenciamentoController");
+const GerenciamentoController = require("../../Controllers/v1/GerenciamentoController");
 
 
 /**
@@ -8,7 +8,7 @@ const GerenciamentoController = require("../Controllers/GerenciamentoController"
  * tags:
  *  name: Gerenciamento
  *  description: API's de Gerenciamento
- * /api/Gerenciamento/HistoricoDoacoes:
+ * /api/v1/Gerenciamento/HistoricoDoacoes:
  *  get:
  *      tags: [Gerenciamento]
  *      parameters:
@@ -21,13 +21,14 @@ const GerenciamentoController = require("../Controllers/GerenciamentoController"
  *          default:
  *              description: This is the default response for it
  */
+ Gerenciamentorouter.get('v1/Gerenciamento/HistoricoDoacoes', GerenciamentoController.HistoricoDoacoes)
 
 /**
  * @swagger
  * tags:
  *  name: Gerenciamento
  *  description: API's de Gerenciamento
- * /api/Gerenciamento/HistoricoRetiradas:
+ * /api/v1/Gerenciamento/HistoricoRetiradas:
  *  get:
  *      tags: [Gerenciamento]
  *      parameters:
@@ -40,13 +41,14 @@ const GerenciamentoController = require("../Controllers/GerenciamentoController"
  *          default:
  *              description: This is the default response for it
  */
+ Gerenciamentorouter.get('v1/Gerenciamento/HistoricoRetiradas', GerenciamentoController.HistoricoRetiradas)
 
 /**
  * @swagger
  * tags:
  *  name: Gerenciamento
  *  description: API's de Gerenciamento
- * /api/Gerenciamento/ListaOngs:
+ * /api/v1/Gerenciamento/ListaOngs:
  *  get:
  *      tags: [Gerenciamento]
  *      parameters:
@@ -59,13 +61,16 @@ const GerenciamentoController = require("../Controllers/GerenciamentoController"
  *          default:
  *              description: This is the default response for it
  */
+ Gerenciamentorouter.get('v1/Gerenciamento/ListaOngs', GerenciamentoController.ListaOngs)
+
+
 
 /**
  * @swagger
  * tags:
  *  name: Gerenciamento
  *  description: API's de Gerenciamento
- * /api/Gerenciamento/AceitarSolicitacoesDeEstabelecimentos:
+ * /api/v1/Gerenciamento/AceitarSolicitacoesDeEstabelecimentos:
  *  get:
  *      tags: [Gerenciamento]
  *      parameters:
@@ -78,13 +83,15 @@ const GerenciamentoController = require("../Controllers/GerenciamentoController"
  *          default:
  *              description: This is the default response for it
  */
+ Gerenciamentorouter.get('v1/Gerenciamento/AceitarSolicitacoesDeEstabelecimentos', GerenciamentoController.AceitarSolicitacoesDeEstabelecimentos)
+
 
 /**
  * @swagger
  * tags:
  *  name: Gerenciamento
  *  description: API's de Gerenciamento
- * /api/Gerenciamento/HistoricoEntregas:
+ * /api/v1/Gerenciamento/HistoricoEntregas:
  *  get:
  *      tags: [Gerenciamento]
  *      parameters:
@@ -97,13 +104,14 @@ const GerenciamentoController = require("../Controllers/GerenciamentoController"
  *          default:
  *              description: This is the default response for it
  */
+ Gerenciamentorouter.get('v1/Gerenciamento/HistoricoEntregas', GerenciamentoController.HistoricoEntregas)
 
 /**
  * @swagger
  * tags:
  *  name: Gerenciamento
  *  description: API's de Gerenciamento
- * /api/Gerenciamento/GeraSolicitacaoParceriaParaOng:
+ * /api/v1/Gerenciamento/GeraSolicitacaoParceriaParaOng:
  *  post:
  *      tags: [Gerenciamento]
  *      parameters:
@@ -116,13 +124,14 @@ const GerenciamentoController = require("../Controllers/GerenciamentoController"
  *          default:
  *              description: This is the default response for it
  */
+ Gerenciamentorouter.post('v1/Gerenciamento/GeraSolicitacaoParceriaParaOng', GerenciamentoController.GeraSolicitacaoParceriaParaOng)
 
 /**
  * @swagger
  * tags:
  *  name: Gerenciamento
  *  description: API's de Gerenciamento
- * /api/Gerenciamento/ListaSolicitacoes:
+ * /api/v1/Gerenciamento/ListaSolicitacoes:
  *  get:
  *      tags: [Gerenciamento]
  *      parameters:
@@ -135,13 +144,6 @@ const GerenciamentoController = require("../Controllers/GerenciamentoController"
  *          default:
  *              description: This is the default response for it
  */
-
-Gerenciamentorouter.get('/Gerenciamento/HistoricoDoacoes', GerenciamentoController.HistoricoDoacoes)
-Gerenciamentorouter.get('/Gerenciamento/ListaOngs', GerenciamentoController.ListaOngs)
-Gerenciamentorouter.post('/Gerenciamento/GeraSolicitacaoParceriaParaOng', GerenciamentoController.GeraSolicitacaoParceriaParaOng)
-Gerenciamentorouter.get('/Gerenciamento/ListaSolicitacoes', GerenciamentoController.ListaSolicitacoes)
-Gerenciamentorouter.get('/Gerenciamento/AceitarSolicitacoesDeEstabelecimentos', GerenciamentoController.AceitarSolicitacoesDeEstabelecimentos)
-Gerenciamentorouter.get('/Gerenciamento/HistoricoRetiradas', GerenciamentoController.HistoricoRetiradas)
-Gerenciamentorouter.get('/Gerenciamento/HistoricoEntregas', GerenciamentoController.HistoricoEntregas)
+ Gerenciamentorouter.get('v1/Gerenciamento/ListaSolicitacoes', GerenciamentoController.ListaSolicitacoes)
 
 module.exports = Gerenciamentorouter

@@ -1,5 +1,7 @@
-let Result = require("../Domain/Entities/Result.js");
-const {hitoricoRetiradas, hisotricoEntrega, hisotricoDoacoes, geraSolicitacaoParceriaParaOng,  aceitarSolicitacoesDeEstabelecimentos, listaOngs, listaSolicitacoes} = require("../Services/GerenciamentoService");
+let Result = require("../../Domain/Entities/Result.js");
+const {hitoricoRetiradas, hisotricoEntrega, hisotricoDoacoes, geraSolicitacaoParceriaParaOng,  
+    aceitarSolicitacoesDeEstabelecimentos, 
+    listaOngs, listaSolicitacoes} = require("../../Services/v1/GerenciamentoService");
 
 exports.HistoricoDoacoes = (req, res, next) =>{
     result = new Result([

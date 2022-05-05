@@ -25,14 +25,14 @@ const swaggerOptions = {
     }
   },
   // ['.routes/*.js']
-  apis: ["./Routes/*.js"]
+  apis: ["./Routes/v1/*.js"]
 };
 
 
 const swaggerDocs = swaggerJsDoc(swaggerOptions)
 
 routes.forEach(route => {
-  app.use('/api', route);
+  app.use('/api/', route);
 });
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs))
