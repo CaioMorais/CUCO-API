@@ -1,6 +1,6 @@
 const express = require("express")
 const carteirarouter = express.Router();
-const carteiraController = require("../../Controllers/CarteiraController");
+const carteiraController = require("../../Controllers/v1/CarteiraController");
 
 
 /**
