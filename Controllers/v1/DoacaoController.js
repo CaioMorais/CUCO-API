@@ -1,7 +1,7 @@
-let Result = require("../Domain/Entities/Result.js");
+let Result = require("../../Domain/Entities/Result.js");
 const {gerarTokenIndentificacaoRetiradaDoacoes,
     gerarQRCodeLinkDoacao, cadastraDoacao, enviarEmailRecompensa,
-    gerarTokenIndentificacaoEntregaDoacoes,validacaoTokens} = require("../Services/DoacaoService");
+    gerarTokenIndentificacaoEntregaDoacoes,validacaoTokens} = require("../../Services/v1/DoacaoService");
 
 exports.QRCodeLinkDoacao = (req, res, next) =>{
     var link = gerarQRCodeLinkDoacao();

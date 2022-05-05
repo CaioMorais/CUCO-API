@@ -1,5 +1,5 @@
-let Result = require("../Domain/Entities/Result.js");
-const {cadastrarConta, editarConta, excluirConta, resetarSenha} = require("../Services/ContaService");
+let Result = require("../../Domain/Entities/Result.js");
+const {cadastrarConta, editarConta, excluirConta, resetarSenha} = require("../../Services/v1/ContaService");
 
 exports.Editar = (req, res, next) =>{
     result = new Result("Editar", true, 'Cadastro Editado com Sucesso!');

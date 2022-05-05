@@ -1,13 +1,13 @@
 const express = require("express")
 const Contarouter = express.Router();
-const ContaController = require("../Controllers/ContaController");
+const ContaController = require("../../Controllers/v1/ContaController");
 
 /**
  * @swagger
  * tags:
  *  name: Conta
  *  description: API's de Conta
- * /api/Conta/Editar:
+ * /api/v1/Conta/Editar:
  *  post:
  *      tags: [Conta]
  *      parameters:
@@ -20,13 +20,15 @@ const ContaController = require("../Controllers/ContaController");
  *          default:
  *              description: This is the default response for it
  */
+ Contarouter.post('v1/Conta/Editar', ContaController.Editar)
+
 
 /**
  * @swagger
  * tags:
  *  name: Conta
  *  description: API's de Conta
- * /api/Conta/Excluir:
+ * /api/v1/Conta/Excluir:
  *  get:
  *      tags: [Conta]
  *      parameters:
@@ -39,13 +41,15 @@ const ContaController = require("../Controllers/ContaController");
  *          default:
  *              description: This is the default response for it
  */
+ Contarouter.get('v1/Conta/Excluir', ContaController.Excluir)
+
 
 /**
  * @swagger
  * tags:
  *  name: Conta
  *  description: API's de Conta
- * /api/Conta/Cadastrar:
+ * /api/v1/Conta/Cadastrar:
  *  post:
  *      tags: [Conta]
  *      parameters:
@@ -58,13 +62,15 @@ const ContaController = require("../Controllers/ContaController");
  *          default:
  *              description: This is the default response for it
  */
+ Contarouter.post('v1/Conta/Cadastrar', ContaController.Cadastrar)
+
 
 /**
  * @swagger
  * tags:
  *  name: Conta
  *  description: API's de Conta
- * /api/Conta/ResetarSenha:
+ * /api/v1/Conta/ResetarSenha:
  *  post:
  *      tags: [Conta]
  *      parameters:
@@ -77,10 +83,8 @@ const ContaController = require("../Controllers/ContaController");
  *          default:
  *              description: This is the default response for it
  */
+Contarouter.post('v1/Conta/ResetarSenha', ContaController.ResetarSenha)
 
-Contarouter.post('/Conta/Editar', ContaController.Editar)
-Contarouter.get('/Conta/Excluir', ContaController.Excluir)
-Contarouter.post('/Conta/Cadastrar', ContaController.Cadastrar)
-Contarouter.post('/Conta/ResetarSenha', ContaController.ResetarSenha)
+
 
 module.exports = Contarouter

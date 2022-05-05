@@ -1,13 +1,13 @@
 const express = require("express")
 const router = express.Router();
-const loginController = require("../Controllers/LoginController");
+const loginController = require("../../Controllers/v1/LoginController");
 
 /**
  * @swagger
  * tags:
  *  name: Login
  *  description: Serve pra logar
- * /api/login/autenticar:
+ * /api/v1/login/autenticar:
  *  get:
  *      tags: [Login]
  *      parameters:
@@ -25,6 +25,6 @@ const loginController = require("../Controllers/LoginController");
  *          default:
  *              description: This is the default response for it
  */
-router.get('/login/autenticar', loginController.autenticar)
+router.get('v1/login/autenticar', loginController.autenticar)
 
 module.exports = router
