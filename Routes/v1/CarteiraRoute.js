@@ -8,7 +8,7 @@ const carteiraController = require("../../Controllers/v1/CarteiraController");
  * tags:
  *  name: Carteira
  *  description: API's da Carteira
- * /api/Carteira/ParametrizaPrecos/:
+ * /api/v1/Carteira/ParametrizaPrecos/:
  *  post:
  *      tags: [Carteira]
  *      parameters:
@@ -29,7 +29,7 @@ const carteiraController = require("../../Controllers/v1/CarteiraController");
  * tags:
  *  name: Carteira
  *  description: API's da Carteira
- * /api/Carteira/EnviaEmail:
+ * /api/v1/Carteira/EnviaEmail:
  *  get:
  *      tags: [Carteira]
  *      parameters:
@@ -45,8 +45,10 @@ const carteiraController = require("../../Controllers/v1/CarteiraController");
 
 
 
- carteirarouter.post('/Carteira/ParametrizaPrecos/:preco', carteiraController.ParametrizaPrecos)
-carteirarouter.get('/Carteira/EnviaEmail', carteiraController.EnviaEmail)
+
+ carteirarouter.post('v1/Carteira/ParametrizaPrecos/:valor', carteiraController.ParametrizaPrecos)
+
+carteirarouter.get('v1/Carteira/EnviaEmail', carteiraController.EnviaEmail)
 
 module.exports = carteirarouter
 
