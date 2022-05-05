@@ -8,3 +8,6 @@ mongoose.connect('mongodb+srv://admin:admin123@cluster0.kxyqc.mongodb.net/myFirs
 const db = mongoose.connection;
 db.on("error", (error) => console.error(error));
 db.once("open", () => console.log("Conectado a base de dados!"));
+
+
+
