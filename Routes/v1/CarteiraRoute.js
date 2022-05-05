@@ -1,6 +1,6 @@
 const express = require("express")
 const carteirarouter = express.Router();
-const carteiraController = require("../Controllers/CarteiraController");
+const carteiraController = require("../../Controllers/CarteiraController");
 
 
 /**
@@ -45,7 +45,9 @@ const carteiraController = require("../Controllers/CarteiraController");
 
 
 
-carteirarouter.post('/Carteira/ParametrizaPrecos/:preco', carteiraController.ParametrizaPrecos)
+
+ carteirarouter.post('/Carteira/ParametrizaPrecos/:preco', carteiraController.ParametrizaPrecos)
+
 carteirarouter.get('/Carteira/EnviaEmail', carteiraController.EnviaEmail)
 
 module.exports = carteirarouter

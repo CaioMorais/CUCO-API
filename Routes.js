@@ -1,8 +1,8 @@
-const loginRoute = require("./Routes/LoginRoute");
-const carteiraRoute = require("./Routes/CarteiraRoute");
-const doacaoRoute = require("./Routes/DoacaoRoute");
-const gerenciamentoRoute = require("./Routes/GerenciamentoRoute");
-const contaRoute = require("./Routes/ContaRoute");
+const loginRoute = require("./Routes/v1/LoginRoute");
+const carteiraRoute = require("./Routes/v1/CarteiraRoute");
+const doacaoRoute = require("./Routes/v1/DoacaoRoute");
+const gerenciamentoRoute = require("./Routes/v1/GerenciamentoRoute");
+const contaRoute = require("./Routes/v1/ContaRoute");
 
 
 module.exports = [loginRoute, carteiraRoute, doacaoRoute, gerenciamentoRoute, contaRoute] ;
