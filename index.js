@@ -36,6 +36,11 @@ const swaggerDocs = swaggerJsDoc(swaggerOptions)
 routes.forEach(route => {
   app.use('/api/', route);
 });
+
+app.get('/teste', function(req, res) {
+  res.send('hello world');
+});
+// app.use('/api', routes.loginRoute);
 app.use(express.json());
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs))
 

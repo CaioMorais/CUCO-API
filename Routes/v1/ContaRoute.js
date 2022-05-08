@@ -20,7 +20,7 @@ const ContaController = require("../../Controllers/v1/ContaController");
  *          default:
  *              description: This is the default response for it
  */
- Contarouter.post('v1/Conta/Editar', ContaController.Editar)
+ Contarouter.post('/v1/Conta/Editar', ContaController.Editar)
 
 
 /**
@@ -41,7 +41,7 @@ const ContaController = require("../../Controllers/v1/ContaController");
  *          default:
  *              description: This is the default response for it
  */
- Contarouter.get('v1/Conta/Excluir', ContaController.Excluir)
+ Contarouter.get('/v1/Conta/Excluir', ContaController.Excluir)
 
 
 /**
@@ -62,7 +62,7 @@ const ContaController = require("../../Controllers/v1/ContaController");
  *          default:
  *              description: This is the default response for it
  */
- Contarouter.post('v1/Conta/Cadastrar', ContaController.Cadastrar)
+ Contarouter.post('/v1/Conta/Cadastrar', ContaController.Cadastrar)
 
 
 /**
@@ -83,7 +83,7 @@ const ContaController = require("../../Controllers/v1/ContaController");
  *          default:
  *              description: This is the default response for it
  */
-Contarouter.post('v1/Conta/ResetarSenha', ContaController.ResetarSenha)
+Contarouter.post('/v1/Conta/ResetarSenha', ContaController.ResetarSenha)
 
 
 

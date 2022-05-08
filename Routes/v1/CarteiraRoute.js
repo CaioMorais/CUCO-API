@@ -46,11 +46,11 @@ const carteiraController = require("../../Controllers/v1/CarteiraController");
 
 
 
-carteirarouter.post('v1/Carteira/InsereCarteira', carteiraController.InsereCarteira)
+carteirarouter.post('/v1/Carteira/InsereCarteira', carteiraController.InsereCarteira)
 
-carteirarouter.get('v1/Carteira/ListaCarteira', carteiraController.ListaCarteira)
+carteirarouter.get('/v1/Carteira/ListaCarteira', carteiraController.ListaCarteira)
 
-carteirarouter.get('v1/Carteira/EnviaEmail', carteiraController.EnviaEmail)
+carteirarouter.get('/v1/Carteira/EnviaEmail', carteiraController.EnviaEmail)
 
 module.exports = carteirarouter
 

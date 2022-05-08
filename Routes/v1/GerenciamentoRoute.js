@@ -21,7 +21,7 @@ const GerenciamentoController = require("../../Controllers/v1/GerenciamentoContr
  *          default:
  *              description: This is the default response for it
  */
- Gerenciamentorouter.get('v1/Gerenciamento/HistoricoDoacoes', GerenciamentoController.HistoricoDoacoes)
+ Gerenciamentorouter.get('/v1/Gerenciamento/HistoricoDoacoes', GerenciamentoController.HistoricoDoacoes)
 
 /**
  * @swagger
@@ -41,7 +41,7 @@ const GerenciamentoController = require("../../Controllers/v1/GerenciamentoContr
  *          default:
  *              description: This is the default response for it
  */
- Gerenciamentorouter.get('v1/Gerenciamento/HistoricoRetiradas', GerenciamentoController.HistoricoRetiradas)
+ Gerenciamentorouter.get('/v1/Gerenciamento/HistoricoRetiradas', GerenciamentoController.HistoricoRetiradas)
 
 /**
  * @swagger
@@ -61,7 +61,7 @@ const GerenciamentoController = require("../../Controllers/v1/GerenciamentoContr
  *          default:
  *              description: This is the default response for it
  */
- Gerenciamentorouter.get('v1/Gerenciamento/ListaOngs', GerenciamentoController.ListaOngs)
+ Gerenciamentorouter.get('/v1/Gerenciamento/ListaOngs', GerenciamentoController.ListaOngs)
 
 
 
@@ -83,7 +83,7 @@ const GerenciamentoController = require("../../Controllers/v1/GerenciamentoContr
  *          default:
  *              description: This is the default response for it
  */
- Gerenciamentorouter.get('v1/Gerenciamento/AceitarSolicitacoesDeEstabelecimentos', GerenciamentoController.AceitarSolicitacoesDeEstabelecimentos)
+ Gerenciamentorouter.get('/v1/Gerenciamento/AceitarSolicitacoesDeEstabelecimentos', GerenciamentoController.AceitarSolicitacoesDeEstabelecimentos)
 
 
 /**
@@ -104,7 +104,7 @@ const GerenciamentoController = require("../../Controllers/v1/GerenciamentoContr
  *          default:
  *              description: This is the default response for it
  */
- Gerenciamentorouter.get('v1/Gerenciamento/HistoricoEntregas', GerenciamentoController.HistoricoEntregas)
+ Gerenciamentorouter.get('/v1/Gerenciamento/HistoricoEntregas', GerenciamentoController.HistoricoEntregas)
 
 /**
  * @swagger
@@ -124,7 +124,7 @@ const GerenciamentoController = require("../../Controllers/v1/GerenciamentoContr
  *          default:
  *              description: This is the default response for it
  */
- Gerenciamentorouter.post('v1/Gerenciamento/GeraSolicitacaoParceriaParaOng', GerenciamentoController.GeraSolicitacaoParceriaParaOng)
+ Gerenciamentorouter.post('/v1/Gerenciamento/GeraSolicitacaoParceriaParaOng', GerenciamentoController.GeraSolicitacaoParceriaParaOng)
 
 /**
  * @swagger
@@ -144,6 +144,6 @@ const GerenciamentoController = require("../../Controllers/v1/GerenciamentoContr
  *          default:
  *              description: This is the default response for it
  */
- Gerenciamentorouter.get('v1/Gerenciamento/ListaSolicitacoes', GerenciamentoController.ListaSolicitacoes)
+ Gerenciamentorouter.get('/v1/Gerenciamento/ListaSolicitacoes', GerenciamentoController.ListaSolicitacoes)
 
 module.exports = Gerenciamentorouter
