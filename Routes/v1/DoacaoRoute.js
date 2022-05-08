@@ -20,7 +20,7 @@ const DoacaoController = require("../../Controllers/v1/DoacaoController");
  *          default:
  *              description: This is the default response for it
  */
- Doacaorouter.post('v1/Doacao/CadastraDoacao', DoacaoController.CadastraDoacao)
+ Doacaorouter.post('/v1/Doacao/CadastraDoacao', DoacaoController.CadastraDoacao)
 
 
 /**
@@ -41,7 +41,7 @@ const DoacaoController = require("../../Controllers/v1/DoacaoController");
  *          default:
  *              description: This is the default response for it
  */
- Doacaorouter.get('v1/Doacao/QRCodeLinkDoacao', DoacaoController.QRCodeLinkDoacao)
+ Doacaorouter.get('/v1/Doacao/QRCodeLinkDoacao', DoacaoController.QRCodeLinkDoacao)
 
 /**
  * @swagger
@@ -61,7 +61,7 @@ const DoacaoController = require("../../Controllers/v1/DoacaoController");
  *          default:
  *              description: This is the default response for it
  */
- Doacaorouter.get('v1/Doacao/GeraTokenRetirada', DoacaoController.GeraTokenRetirada)
+ Doacaorouter.get('/v1/Doacao/GeraTokenRetirada', DoacaoController.GeraTokenRetirada)
 
 /**
  * @swagger
@@ -81,7 +81,7 @@ const DoacaoController = require("../../Controllers/v1/DoacaoController");
  *          default:
  *              description: This is the default response for it
  */
- Doacaorouter.get('v1/Doacao/ValidaToken', DoacaoController.ValidaToken)
+ Doacaorouter.get('/v1/Doacao/ValidaToken', DoacaoController.ValidaToken)
 
 
 /**
@@ -102,6 +102,6 @@ const DoacaoController = require("../../Controllers/v1/DoacaoController");
  *          default:
  *              description: This is the default response for it
  */
- Doacaorouter.get('v1/Doacao/GeraTokenEntrega', DoacaoController.GeraTokenEntrega)
+ Doacaorouter.get('/v1/Doacao/GeraTokenEntrega', DoacaoController.GeraTokenEntrega)
 
 module.exports = Doacaorouter

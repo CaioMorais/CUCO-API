@@ -1,7 +1,11 @@
-var MongoClient = require('mongodb').MongoClient;
-var url = "mongodb+srv://admin:admin123@cluster0.kxyqc.mongodb.net/myFirstDatabase?retryWrites=true&w=majority";
-let Result = require("../../Domain/Entities/Result.js");
-let ModelCarteira = require("../../Domain/Entities/Carteira.js");
+const mongoose = require('mongoose');
+var uri = "mongodb+srv://admin:admin123@cluster0.kxyqc.mongodb.net/cucoprod?retryWrites=true&w=majority";
+mongoose.connect(uri);
+
+let Result = require("../../Domain/Entities/Result");
+//const res = require('express/lib/response');
+let CarteiraModel = require('../../Domain/Entities/CarteiraModel');
+let carteiraSchema = require('../../Domain/Entities/CarteiraModel');
 
 //Ong e Estabelecimento
 function visualizarCarteira(){
@@ -23,21 +27,29 @@ function envioMetaCarteiraAtingido(){
 
 }
 
-function insert(valorPrato) {
+function  insert(cart) {
+    
+    var carteira = new CarteiraModel();
     var result = new Result();
-    MongoClient.connect(url, function(err,db) {
-        if(err) throw err;
-        var dbo = db.db("cucoprod");
-        var valorJson = ModelCarteira(valorPrato);
-        dbo.collection("carteira").insertOne(valorJson, function(err, res){
-            if(err) throw err;
-            console.log("Valor do Prato inserido");
-            db.close();
-        });
-    });
-    result.content = "Valor do prato inserido com sucesso!";
+    carteira = carteiraSchema(cart);
+
+    carteira.insert()
+        .then((data) => res.json(data))
+        .catch((error)=> res.json({message: error}));
+
+
+    result.content = "Carteira inserida com sucesso!";
     result.success = true;
     return result;
 }
 
-module.exports = {visualizarCarteira, escolhaValorPrato,escolherMetaCarteira, envioMetaCarteiraAtingido, insert }
+function listagem() {
+    
+   var resposta = carteiraSchema
+            .find()
+            .then((data) => res.json(data))
+            .catch((error)=> res.json({message: error}));
+    return resposta;
+}
+
+module.exports = {visualizarCarteira, escolhaValorPrato,escolherMetaCarteira, envioMetaCarteiraAtingido, insert, listagem}

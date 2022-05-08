@@ -8,13 +8,13 @@ const carteiraController = require("../../Controllers/v1/CarteiraController");
  * tags:
  *  name: Carteira
  *  description: API's da Carteira
- * /api/v1/Carteira/ParametrizaPrecos/:
+ * /api/v1/Carteira/InsereCarteira:
  *  post:
  *      tags: [Carteira]
  *      parameters:
  *          - name: preco
  *            default: 1
- *            in: path
+ *            in: body
  *            schema:
  *              type: string
  *      responses:
@@ -46,9 +46,11 @@ const carteiraController = require("../../Controllers/v1/CarteiraController");
 
 
 
- carteirarouter.post('v1/Carteira/ParametrizaPrecos/:valor', carteiraController.ParametrizaPrecos)
+carteirarouter.post('/v1/Carteira/InsereCarteira', carteiraController.InsereCarteira)
 
-carteirarouter.get('v1/Carteira/EnviaEmail', carteiraController.EnviaEmail)
+carteirarouter.get('/v1/Carteira/ListaCarteira', carteiraController.ListaCarteira)
+
+carteirarouter.get('/v1/Carteira/EnviaEmail', carteiraController.EnviaEmail)
 
 module.exports = carteirarouter
 
