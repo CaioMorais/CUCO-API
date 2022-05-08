@@ -1,6 +1,8 @@
 const express = require('express');
 
 const app = express();
+
+
 const router = express.Router();
 
 const swaggerJsDoc = require("swagger-jsdoc");
@@ -34,7 +36,7 @@ const swaggerDocs = swaggerJsDoc(swaggerOptions)
 routes.forEach(route => {
   app.use('/api/', route);
 });
-
+app.use(express.json());
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs))
 
 app.listen(port, () => {
