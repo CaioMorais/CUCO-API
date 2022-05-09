@@ -1,6 +1,6 @@
 const express = require("express")
 const carteirarouter = express.Router();
-const carteiraController = require("../../Controllers/CarteiraController");
+const carteiraController = require("../../Controllers/v1/CarteiraController");
 
 
 /**
@@ -8,11 +8,11 @@ const carteiraController = require("../../Controllers/CarteiraController");
  * tags:
  *  name: Carteira
  *  description: API's da Carteira
- * /api/Carteira/ParametrizaPrecos:
- *  get:
+ * /api/v1/Carteira/InsereCarteira:
+ *  post:
  *      tags: [Carteira]
  *      parameters:
- *          - name: page_number
+ *          - name: preco
  *            default: 1
  *            in: body
  *            schema:
@@ -29,7 +29,7 @@ const carteiraController = require("../../Controllers/CarteiraController");
  * tags:
  *  name: Carteira
  *  description: API's da Carteira
- * /api/Carteira/EnviaEmail:
+ * /api/v1/Carteira/EnviaEmail:
  *  get:
  *      tags: [Carteira]
  *      parameters:
@@ -45,8 +45,12 @@ const carteiraController = require("../../Controllers/CarteiraController");
 
 
 
-carteirarouter.get('/Carteira/ParametrizaPrecos', carteiraController.ParametrizaPrecos)
-carteirarouter.get('/Carteira/EnviaEmail', carteiraController.EnviaEmail)
+
+carteirarouter.post('/v1/Carteira/InsereCarteira', carteiraController.InsereCarteira)
+
+carteirarouter.get('/v1/Carteira/ListaCarteira', carteiraController.ListaCarteira)
+
+carteirarouter.get('/v1/Carteira/EnviaEmail', carteiraController.EnviaEmail)
 
 module.exports = carteirarouter
 

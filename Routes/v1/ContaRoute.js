@@ -2,6 +2,8 @@ const express = require("express")
 const Contarouter = express.Router();
 const ContaController = require("../../Controllers/v1/ContaController");
 
+
+
 /**
  * @swagger
  * tags:
@@ -20,7 +22,7 @@ const ContaController = require("../../Controllers/v1/ContaController");
  *          default:
  *              description: This is the default response for it
  */
- Contarouter.post('v1/Conta/Editar', ContaController.Editar)
+ Contarouter.post('/v1/Conta/Editar', ContaController.Editar)
 
 
 /**
@@ -41,7 +43,7 @@ const ContaController = require("../../Controllers/v1/ContaController");
  *          default:
  *              description: This is the default response for it
  */
- Contarouter.get('v1/Conta/Excluir', ContaController.Excluir)
+ Contarouter.get('/v1/Conta/Excluir', ContaController.Excluir)
 
 
 /**
@@ -54,15 +56,20 @@ const ContaController = require("../../Controllers/v1/ContaController");
  *      tags: [Conta]
  *      parameters:
  *          - name: page_number
- *            default: 1
+ *            default: {
+ *                       nome : Junior,
+ *                       email : juniorfreitas@mail.com,
+ *                       senha : testeteste,
+ *                       dataCadastro : 25/06/2020
+ *                     }
  *            in: body
  *            schema:
- *              type: string
+ *              type: object
  *      responses:
  *          default:
  *              description: This is the default response for it
  */
- Contarouter.post('v1/Conta/Cadastrar', ContaController.Cadastrar)
+ Contarouter.post('/v1/Conta/Cadastrar', ContaController.Cadastrar)
 
 
 /**
@@ -83,7 +90,7 @@ const ContaController = require("../../Controllers/v1/ContaController");
  *          default:
  *              description: This is the default response for it
  */
-Contarouter.post('v1/Conta/ResetarSenha', ContaController.ResetarSenha)
+Contarouter.post('/v1/Conta/ResetarSenha', ContaController.ResetarSenha)
 
 
 

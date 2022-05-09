@@ -7,17 +7,17 @@ const loginController = require("../../Controllers/v1/LoginController");
  * tags:
  *  name: Login
  *  description: Serve pra logar
- * /api/v1/login/autenticar:
+ * /api/v1/login/autenticar/:
  *  get:
  *      tags: [Login]
  *      parameters:
- *          - name: user
- *            default: 1
+ *          - name: email
+ *            default: joaocabral@mail.com
  *            in: query
  *            schema:
  *              type: string
- *          - name: password
- *            default: 1
+ *          - name: senha
+ *            default: testetestando
  *            in: query
  *            schema:
  *              type: password
@@ -25,6 +25,7 @@ const loginController = require("../../Controllers/v1/LoginController");
  *          default:
  *              description: This is the default response for it
  */
-router.get('v1/login/autenticar', loginController.autenticar)
+router.get('/v1/login/autenticar/', loginController.autenticar)
+
 
 module.exports = router
