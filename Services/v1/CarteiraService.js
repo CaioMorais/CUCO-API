@@ -27,7 +27,7 @@ function envioMetaCarteiraAtingido(){
 
 }
 
-function  inserirCarteira(metaFinal, valorAtual, idRestaurante, ong_IdOng, valorPrato, res) {
+ async function  inserirCarteira(metaFinal, valorAtual, idRestaurante, ong_IdOng, valorPrato, res) {
     
     
     var result = new Result
@@ -40,7 +40,7 @@ function  inserirCarteira(metaFinal, valorAtual, idRestaurante, ong_IdOng, valor
     carteira.valorPrato = valorPrato;
 
 
-    carteira.save();
+    await carteira.save();
      
     result.content = carteira;
     result.message = "Carteira inserida com sucesso!";
@@ -48,12 +48,31 @@ function  inserirCarteira(metaFinal, valorAtual, idRestaurante, ong_IdOng, valor
     return result;
 }
 
-function listagemCarteiras() {
+async function listagemCarteiras() {
     
-   return carteiraSchema
+   return await carteiraSchema
             .find();
     
 }
 
-module.exports = {visualizarCarteira, escolhaValorPrato,escolherMetaCarteira, envioMetaCarteiraAtingido, inserirCarteira, listagemCarteiras}
+async function listagemCarteirasId(id) {
+    
+    return await carteiraSchema
+             .findById(id);
+     
+ }
+
+ async function editandoCarteira(id, metaFinal, valorAtual, idRestaurante, ong_IdOng, valorPrato) {
+
+    return await carteiraSchema
+             .updateOne({_id: id}, {$set:{metaFinal, valorAtual, idRestaurante, ong_IdOng, valorPrato}});
+ }
+
+ async function deletandoCarteira(id) {
+
+    return await carteiraSchema
+             .remove({_id: id});
+ }
+
+module.exports = {visualizarCarteira, escolhaValorPrato,escolherMetaCarteira, envioMetaCarteiraAtingido, inserirCarteira, listagemCarteiras, listagemCarteirasId, editandoCarteira, deletandoCarteira}
  
