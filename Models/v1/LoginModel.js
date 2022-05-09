@@ -8,10 +8,10 @@ const login = async ({email, senha}) =>{
     return usuario;
 };
 
-const autentica = async (req, res) => {
- const {email, senha} = req.body;
+const autentica = async ({email, senha}) => {
+ //const {email, senha} = req.body;
  const usuario = await login({email, senha});
- if (!usuario) return res.status(401).json({message: 'User not found'});
+ if (!usuario) return 'User not found';
 
  const {_id} = usuario;
  const token =  jwt.sign(
@@ -21,11 +21,11 @@ const autentica = async (req, res) => {
      },
      SECRET,
      {
-         expiresIn: 60,
+         expiresIn: 900,
      }
  );
 
- return res.status(201).json({token});  
+ return ({token});  
 };
 
 module.exports = {autentica};
