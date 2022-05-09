@@ -1,6 +1,7 @@
 const express = require("express")
 const router = express.Router();
 const loginController = require("../../Controllers/v1/LoginController");
+const loginModel = require("../../Models/v1/LoginModel");
 
 /**
  * @swagger
@@ -26,5 +27,7 @@ const loginController = require("../../Controllers/v1/LoginController");
  *              description: This is the default response for it
  */
 router.get('/v1/login/autenticar', loginController.autenticar)
+
+router.get('/v1/login/autentica', loginModel.autentica)
 
 module.exports = router

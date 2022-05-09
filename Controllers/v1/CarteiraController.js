@@ -25,8 +25,6 @@ exports.ListaCarteira = (req, res, next) =>{
     res.status(200).send(listagem);
 }
 
-
-
 exports.EnviaEmail = (req, res, next) =>{
     var result = new Result("EnviaEmail", true, 'Email enviado com Sucesso!');
     console.log(result);

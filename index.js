@@ -1,12 +1,13 @@
 const express = require('express');
-
 const app = express();
-
-
+var bodyParser = require ("body-parser")
+app.use(bodyParser.json())
+app.use(express.urlencoded({ extended: true} ));
+app.use(express.json());
 const router = express.Router();
-
 const swaggerJsDoc = require("swagger-jsdoc");
 const swaggerUi = require("swagger-ui-express");
+app.use(express.json({ type: 'application/json' }));
 
 const port = process.env.PORT || 3000;
 

@@ -4,8 +4,8 @@ mongoose.connect(uri);
 
 let Result = require("../../Domain/Entities/Result");
 //const res = require('express/lib/response');
-let CarteiraModel = require('../../Domain/Entities/CarteiraModel');
-let carteiraSchema = require('../../Domain/Entities/CarteiraModel');
+let CarteiraModel = require('../../Models/v1/CarteiraModel');
+let carteiraSchema = require('../../Models/v1/CarteiraModel');
 
 //Ong e Estabelecimento
 function visualizarCarteira(){
