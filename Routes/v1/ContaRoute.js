@@ -2,6 +2,8 @@ const express = require("express")
 const Contarouter = express.Router();
 const ContaController = require("../../Controllers/v1/ContaController");
 
+
+
 /**
  * @swagger
  * tags:
@@ -54,10 +56,15 @@ const ContaController = require("../../Controllers/v1/ContaController");
  *      tags: [Conta]
  *      parameters:
  *          - name: page_number
- *            default: 1
+ *            default: {
+ *                       nome : Junior,
+ *                       email : juniorfreitas@mail.com,
+ *                       senha : testeteste,
+ *                       dataCadastro : 25/06/2020
+ *                     }
  *            in: body
  *            schema:
- *              type: string
+ *              type: object
  *      responses:
  *          default:
  *              description: This is the default response for it

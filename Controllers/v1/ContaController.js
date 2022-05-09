@@ -1,5 +1,8 @@
+const express = require("express");
 let Result = require("../../Domain/Entities/Result.js");
 const {cadastrarConta, editarConta, excluirConta, resetarSenha} = require("../../Services/v1/ContaService");
+
+ 
 
 exports.Editar = (req, res, next) =>{
     result = new Result("Editar", true, 'Cadastro Editado com Sucesso!');
@@ -13,8 +16,11 @@ exports.Excluir = (req, res, next) =>{
     res.status(200).send(result);
 }
 
-exports.Cadastrar = (req, res, next) =>{
-    result = new Result("Cadastrar", true, 'Cadastro Efetuado com Sucesso!');
+exports.Cadastrar = async (req, res) =>{
+    console.log(req.body)
+    const {nome, email, senha, dataCadastro} = req.body;
+    const usuario = await cadastrarConta(nome, email, senha, dataCadastro);
+    result = new Result("Cadastrar", true, usuario);
     console.log(result);
     res.status(200).send(result);
 }
