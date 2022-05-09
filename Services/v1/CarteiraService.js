@@ -27,29 +27,52 @@ function envioMetaCarteiraAtingido(){
 
 }
 
-function  insert(cart) {
+ async function  inserirCarteira(metaFinal, valorAtual, idRestaurante, ong_IdOng, valorPrato, res) {
     
-    var carteira = new CarteiraModel();
-    var result = new Result();
-    carteira = carteiraSchema(cart);
+    
+    var result = new Result
+    var carteira = carteiraSchema();
 
-    carteira.insert()
-        .then((data) => res.json(data))
-        .catch((error)=> res.json({message: error}));
+    carteira.metaFinal = metaFinal;
+    carteira.valorAtual = valorAtual;
+    carteira.idRestaurante = idRestaurante;
+    carteira.ong_IdOng = ong_IdOng;
+    carteira.valorPrato = valorPrato;
 
 
-    result.content = "Carteira inserida com sucesso!";
+    await carteira.save();
+     
+    result.content = carteira;
+    result.message = "Carteira inserida com sucesso!";
     result.success = true;
     return result;
 }
 
-function listagem() {
+async function listagemCarteiras() {
     
-   var resposta = carteiraSchema
-            .find()
-            .then((data) => res.json(data))
-            .catch((error)=> res.json({message: error}));
-    return resposta;
+   return await carteiraSchema
+            .find();
+    
 }
 
-module.exports = {visualizarCarteira, escolhaValorPrato,escolherMetaCarteira, envioMetaCarteiraAtingido, insert, listagem}
+async function listagemCarteirasId(id) {
+    
+    return await carteiraSchema
+             .findById(id);
+     
+ }
+
+ async function editandoCarteira(id, metaFinal, valorAtual, idRestaurante, ong_IdOng, valorPrato) {
+
+    return await carteiraSchema
+             .updateOne({_id: id}, {$set:{metaFinal, valorAtual, idRestaurante, ong_IdOng, valorPrato}});
+ }
+
+ async function deletandoCarteira(id) {
+
+    return await carteiraSchema
+             .remove({_id: id});
+ }
+
+module.exports = {visualizarCarteira, escolhaValorPrato,escolherMetaCarteira, envioMetaCarteiraAtingido, inserirCarteira, listagemCarteiras, listagemCarteirasId, editandoCarteira, deletandoCarteira}
+ 
