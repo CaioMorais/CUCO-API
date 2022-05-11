@@ -131,6 +131,8 @@ carteirarouter.put('/v1/Carteira/EditarCarteira/:id', carteiraController.EditaCa
 
 carteirarouter.delete('/v1/Carteira/DeletaCarteira/:id', carteiraController.DeletaCarteira)
 
+carteirarouter.put('/v1/Carteira/EditaValorPrato/', carteiraController.EditaValorPrato)
+
 carteirarouter.get('/v1/Carteira/EnviaEmail', carteiraController.EnviaEmail)
 
 module.exports = carteirarouter
