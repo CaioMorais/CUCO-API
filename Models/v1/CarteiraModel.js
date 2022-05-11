@@ -24,5 +24,5 @@ var carteiraSchema = new Schema({
     } 
 })
 
-module.exports = mongoose.model('Carteira', carteiraSchema);
+module.exports = mongoose.model('carteira', carteiraSchema);
 
