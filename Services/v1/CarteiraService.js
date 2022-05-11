@@ -2,43 +2,24 @@ const mongoose = require('mongoose');
 var uri = "mongodb+srv://admin:admin123@cluster0.kxyqc.mongodb.net/cucoprod?retryWrites=true&w=majority";
 mongoose.connect(uri);
 
+const connection = require("../../Infrastructure/Data/connection");
+
 let Result = require("../../Domain/Entities/Result");
 //const res = require('express/lib/response');
 let CarteiraModel = require('../../Models/v1/CarteiraModel');
 let carteiraSchema = require('../../Models/v1/CarteiraModel');
 
-//Ong e Estabelecimento
-function visualizarCarteira(){
-
-}
-
-//Estabelecimento
-function escolhaValorPrato(){
-
-}
-
-//Estabelecimento
-function escolherMetaCarteira(){
-
-}
 
 //Ong
 function envioMetaCarteiraAtingido(){
 
 }
 
- async function  inserirCarteira(metaFinal, valorAtual, idRestaurante, ong_IdOng, valorPrato, res) {
+ async function  inserirCarteira(req) {
     
     
     var result = new Result
-    var carteira = carteiraSchema();
-
-    carteira.metaFinal = metaFinal;
-    carteira.valorAtual = valorAtual;
-    carteira.idRestaurante = idRestaurante;
-    carteira.ong_IdOng = ong_IdOng;
-    carteira.valorPrato = valorPrato;
-
+    var carteira = carteiraSchema(req.body);
 
     await carteira.save();
      
@@ -62,10 +43,11 @@ async function listagemCarteirasId(id) {
      
  }
 
- async function editandoCarteira(id, metaFinal, valorAtual, idRestaurante, ong_IdOng, valorPrato) {
+ async function editandoCarteira(id, req) {
 
     return await carteiraSchema
-             .updateOne({_id: id}, {$set:{metaFinal, valorAtual, idRestaurante, ong_IdOng, valorPrato}});
+             .updateOne({_id: id}, {$set:{metaFinal: req.body.metaFinal, valorAtual: req.body.valorAtual, 
+               idRestaurante: req.body.idRestaurante, ong_IdOng: req.body.ong_IdOng, valorPrato: req.body.valorPrato}});
  }
 
  async function deletandoCarteira(id) {
@@ -74,5 +56,18 @@ async function listagemCarteirasId(id) {
              .remove({_id: id});
  }
 
-module.exports = {visualizarCarteira, escolhaValorPrato,escolherMetaCarteira, envioMetaCarteiraAtingido, inserirCarteira, listagemCarteiras, listagemCarteirasId, editandoCarteira, deletandoCarteira}
+ async function editandoValorPrato(id, novoValor){
+
+   var carteira = carteiraSchema();
+   carteira = carteiraSchema.findById(id);
+
+   carteira.valorPrato = novoValor;
+
+   return await carteiraSchema
+   .updateOne({_id: id}, {$set:{metaFinal: carteira.metaFinal, valorAtual: carteira.valorAtual, 
+      idRestaurante: carteira.idRestaurante, ong_IdOng: carteira.ong_IdOng, valorPrato: carteira.valorPrato}});
+
+ }
+
+module.exports = {editandoValorPrato, envioMetaCarteiraAtingido, inserirCarteira, listagemCarteiras, listagemCarteirasId, editandoCarteira, deletandoCarteira}
  
