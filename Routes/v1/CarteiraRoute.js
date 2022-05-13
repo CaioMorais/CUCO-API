@@ -21,7 +21,7 @@ const carteiraController = require("../../Controllers/v1/CarteiraController");
  *          default:
  *              description: This is the default response for it
  */
-
+ carteirarouter.post('/v1/Carteira/InsereCarteira', carteiraController.InsereCarteira)
 
 
 /**
@@ -42,6 +42,7 @@ const carteiraController = require("../../Controllers/v1/CarteiraController");
  *          default:
  *              description: This is the default response for it
  */
+ carteirarouter.get('/v1/Carteira/EnviaEmail', carteiraController.EnviaEmail)
 
 
 /**
@@ -62,6 +63,7 @@ const carteiraController = require("../../Controllers/v1/CarteiraController");
  *          default:
  *              description: This is the default response for it
  */
+ carteirarouter.get('/v1/Carteira/ListaCarteiraId/:id', carteiraController.ListaCarteiraId)
 
 
 /**
@@ -82,6 +84,7 @@ const carteiraController = require("../../Controllers/v1/CarteiraController");
  *          default:
  *              description: This is the default response for it
  */
+ carteirarouter.get('/v1/Carteira/ListaCarteira', carteiraController.ListaCarteira)
 
 /**
  * @swagger
@@ -101,6 +104,7 @@ const carteiraController = require("../../Controllers/v1/CarteiraController");
  *          default:
  *              description: This is the default response for it
  */
+ carteirarouter.put('/v1/Carteira/EditarCarteira/:id', carteiraController.EditaCarteira)
 
 /**
  * @swagger
@@ -120,18 +124,29 @@ const carteiraController = require("../../Controllers/v1/CarteiraController");
  *          default:
  *              description: This is the default response for it
  */
+ carteirarouter.delete('/v1/Carteira/DeletaCarteira/:id', carteiraController.DeletaCarteira)
 
-carteirarouter.post('/v1/Carteira/InsereCarteira', carteiraController.InsereCarteira)
+/**
+ * @swagger
+ * tags:
+ *  name: Carteira
+ *  description: API's da Carteira
+ * /v1/Carteira/EditaValorPrato/:id:
+ *  put:
+ *      tags: [Carteira]
+ *      parameters:
+ *          - name: page_number
+ *            default: 1
+ *            in: body
+ *            schema:
+ *              type: string
+ *      responses:
+ *          default:
+ *              description: This is the default response for it
+ */
+ carteirarouter.put('/v1/Carteira/EditaValorPrato/', carteiraController.EditaValorPrato)
 
-carteirarouter.get('/v1/Carteira/ListaCarteira', carteiraController.ListaCarteira)
 
-carteirarouter.get('/v1/Carteira/ListaCarteiraId/:id', carteiraController.ListaCarteiraId)
-
-carteirarouter.put('/v1/Carteira/EditarCarteira/:id', carteiraController.EditaCarteira)
-
-carteirarouter.delete('/v1/Carteira/DeletaCarteira/:id', carteiraController.DeletaCarteira)
-
-carteirarouter.get('/v1/Carteira/EnviaEmail', carteiraController.EnviaEmail)
 
 module.exports = carteirarouter
 

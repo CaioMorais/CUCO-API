@@ -1,4 +1,4 @@
-const {autentica} = require("../../Models/v1/LoginModel");
+const {autentica} = require("../../Domain/Models/v1/LoginModel");
 
 
 async function realizarLogin(email, senha){

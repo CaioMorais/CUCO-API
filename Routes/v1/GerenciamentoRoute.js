@@ -1,7 +1,7 @@
 const express = require("express")
 const Gerenciamentorouter = express.Router();
 const GerenciamentoController = require("../../Controllers/v1/GerenciamentoController");
-const {verificaToken} = require("../../Infrastructure/usuario.middleware")
+const {verificaToken} = require("../../Security/usuarioMiddleware")
 
 
 /**
@@ -96,14 +96,18 @@ const {verificaToken} = require("../../Infrastructure/usuario.middleware")
  *  get:
  *      tags: [Gerenciamento]
  *      parameters:
- *          - name: page_number
+ *          - name: auth
  *            default: 1
- *            in: body
+ *            in: header
+ *            description: Token de autorização do Header
+ *            required: true
  *            schema:
  *              type: string
  *      responses:
- *          default:
- *              description: This is the default response for it
+ *          200:
+ *            description: Successful response, with a representation of the Tax Filing.
+ *          404:
+ *            description: The requested tax filing was not found.
  */
  Gerenciamentorouter.get('/v1/Gerenciamento/HistoricoEntregas',verificaToken, GerenciamentoController.HistoricoEntregas)
 

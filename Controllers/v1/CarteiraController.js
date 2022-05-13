@@ -1,21 +1,12 @@
 let Result = require("../../Domain/Entities/Result");
-const {visualizarCarteira, escolhaValorPrato,escolherMetaCarteira, 
+const { 
         envioMetaCarteiraAtingido, inserirCarteira, listagemCarteiras, listagemCarteirasId, 
-        editandoCarteira, deletandoCarteira} = require("../../Services/v1/CarteiraService");
-
+        editandoCarteira, deletandoCarteira, editandoValorPrato} = require("../../Services/v1/CarteiraService");
 
 
 exports.InsereCarteira = async (req, res, next) =>{
     var result = new Result();
-
-    var metaFinal = req.body.metaFinal;
-    var valorAtual = req.body.valorAtual;
-    var idRestaurante = req.body.idRestaurante;
-    var ong_IdOng = req.body.ong_IdOng;
-    var valorPrato = req.body.valorPrato;
-
-
-    result = await inserirCarteira(metaFinal, valorAtual, idRestaurante, ong_IdOng, valorPrato, res);
+    result = await inserirCarteira(req);
     console.log(result);
     res.status(200).send(result);
 }
@@ -33,14 +24,7 @@ exports.ListaCarteiraId = async (req, res, next) =>{
 
 exports.EditaCarteira = async (req, res, next) =>{
     var id = req.params["id"];
-    var metaFinal = req.body.metaFinal;
-    var valorAtual = req.body.valorAtual;
-    var idRestaurante = req.body.idRestaurante;
-    var ong_IdOng = req.body.ong_IdOng;
-    var valorPrato = req.body.valorPrato;
-
-
-    var resposta = await editandoCarteira(id, metaFinal, valorAtual, idRestaurante, ong_IdOng, valorPrato);
+    var resposta = await editandoCarteira(id, req);
     res.status(200).send(resposta);
 }
 
@@ -49,7 +33,12 @@ exports.DeletaCarteira = async (req, res, next) =>{
     var resposta = await deletandoCarteira(id);
     res.status(200).send(resposta);
 }
-
+exports.EditaValorPrato = async(req, res, next) => {
+    var id = req.body.id;
+    var novoValor = req.body.valorPrato;
+    var resposta = await editandoValorPrato(id, novoValor);
+    res.status(200).send(resposta);
+}
 exports.EnviaEmail = (req, res, next) =>{
     var result = new Result("EnviaEmail", true, 'Email enviado com Sucesso!');
     console.log(result);
