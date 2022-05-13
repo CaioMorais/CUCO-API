@@ -1,5 +1,5 @@
 const jwt = require('jsonwebtoken');
-const connection = require("../../Infrastructure/Data/connection");
+const connection = require("../../../Infrastructure/Data/connection");
 const SECRET = 'chavesegurancadetestecucoapi'
 
 const login = async ({email, senha}) =>{

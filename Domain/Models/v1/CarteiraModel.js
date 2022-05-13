@@ -14,7 +14,7 @@ var carteiraSchema = new Schema({
         type: String,
         required: true 
     },
-    ong_IdOng: {
+    idOng: {
         type: String,
         required: true 
     },

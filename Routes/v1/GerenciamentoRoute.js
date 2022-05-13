@@ -1,7 +1,7 @@
 const express = require("express")
 const Gerenciamentorouter = express.Router();
 const GerenciamentoController = require("../../Controllers/v1/GerenciamentoController");
-const {verificaToken} = require("../../Infrastructure/usuario.middleware")
+const {verificaToken} = require("../../Security/usuarioMiddleware")
 
 
 /**
