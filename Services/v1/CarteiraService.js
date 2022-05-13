@@ -1,14 +1,5 @@
-const mongoose = require('mongoose');
-var uri = "mongodb+srv://admin:admin123@cluster0.kxyqc.mongodb.net/cucoprod?retryWrites=true&w=majority";
-mongoose.connect(uri);
-
-const connection = require("../../Infrastructure/Data/connection");
-
 let Result = require("../../Domain/Entities/Result");
-//const res = require('express/lib/response');
-let CarteiraModel = require('../../Models/v1/CarteiraModel');
-let carteiraSchema = require('../../Models/v1/CarteiraModel');
-
+let carteiraSchema = require('../../Domain/Models/v1/CarteiraModel');
 
 //Ong
 function envioMetaCarteiraAtingido(){
@@ -16,7 +7,6 @@ function envioMetaCarteiraAtingido(){
 }
 
  async function  inserirCarteira(req) {
-    
     
     var result = new Result
     var carteira = carteiraSchema(req.body);
@@ -47,11 +37,10 @@ async function listagemCarteirasId(id) {
 
     return await carteiraSchema
              .updateOne({_id: id}, {$set:{metaFinal: req.body.metaFinal, valorAtual: req.body.valorAtual, 
-               idRestaurante: req.body.idRestaurante, ong_IdOng: req.body.ong_IdOng, valorPrato: req.body.valorPrato}});
+               idRestaurante: req.body.idRestaurante, idOng: req.body.idOng, valorPrato: req.body.valorPrato}});
  }
 
  async function deletandoCarteira(id) {
-
     return await carteiraSchema
              .remove({_id: id});
  }
@@ -65,7 +54,7 @@ async function listagemCarteirasId(id) {
 
    return await carteiraSchema
    .updateOne({_id: id}, {$set:{metaFinal: carteira.metaFinal, valorAtual: carteira.valorAtual, 
-      idRestaurante: carteira.idRestaurante, ong_IdOng: carteira.ong_IdOng, valorPrato: carteira.valorPrato}});
+      idRestaurante: carteira.idRestaurante, idOng: carteira.idOng, valorPrato: carteira.valorPrato}});
 
  }
 

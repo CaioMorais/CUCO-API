@@ -17,10 +17,7 @@ exports.Excluir = (req, res, next) =>{
 }
 
 exports.Cadastrar = async (req, res) =>{
-    console.log(req.body)
-    const {nome, email, senha, dataCadastro} = req.body;
-    const usuario = await cadastrarConta(nome, email, senha, dataCadastro);
-    result = new Result("Cadastrar", true, usuario);
+    result = await cadastrarConta(req);
     console.log(result);
     res.status(200).send(result);
 }
