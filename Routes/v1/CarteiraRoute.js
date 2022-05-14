@@ -144,7 +144,7 @@ const carteiraController = require("../../Controllers/v1/CarteiraController");
  *          default:
  *              description: This is the default response for it
  */
- carteirarouter.put('/v1/Carteira/EditaValorPrato/', carteiraController.EditaValorPrato)
+ carteirarouter.put('/v1/Carteira/EditaValorPrato/:id', carteiraController.EditaValorPrato)
 
 
 

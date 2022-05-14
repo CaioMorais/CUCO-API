@@ -25,7 +25,7 @@ const loginController = require("../../Controllers/v1/LoginController");
  *          default:
  *              description: This is the default response for it
  */
-router.get('/v1/login/autenticar/', loginController.autenticar)
+router.get('/v1/login/autenticar', loginController.autenticar)
 
 
 module.exports = router
