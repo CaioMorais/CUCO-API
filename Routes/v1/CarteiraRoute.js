@@ -121,6 +121,8 @@ const carteiraController = require("../../Controllers/v1/CarteiraController");
  *              description: This is the default response for it
  */
 
+//***********************************IMPLEMENTADO**************************************
+
 carteirarouter.post('/v1/Carteira/InsereCarteira', carteiraController.InsereCarteira)
 
 carteirarouter.get('/v1/Carteira/ListaCarteira', carteiraController.ListaCarteira)
@@ -133,7 +135,13 @@ carteirarouter.delete('/v1/Carteira/DeletaCarteira/:id', carteiraController.Dele
 
 carteirarouter.put('/v1/Carteira/EditaValorPrato/', carteiraController.EditaValorPrato)
 
+carteirarouter.put('/v1/Carteira/IncrementaSaldo/:id', carteiraController.IncrementaSaldo)
+
+//***********************************BACKLOG**************************************
+
 carteirarouter.get('/v1/Carteira/EnviaEmail', carteiraController.EnviaEmail)
+
+
 
 module.exports = carteirarouter
 

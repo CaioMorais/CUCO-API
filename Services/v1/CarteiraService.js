@@ -69,5 +69,23 @@ async function listagemCarteirasId(id) {
 
  }
 
-module.exports = {editandoValorPrato, envioMetaCarteiraAtingido, inserirCarteira, listagemCarteiras, listagemCarteirasId, editandoCarteira, deletandoCarteira}
+
+ async function incrementandoSaldo(id, req){
+
+   var carteira = carteiraSchema();
+   carteira = carteiraSchema.findById(id);
+
+   var valorFloat = parseFloat(req.body.valor);
+
+
+   return await carteiraSchema
+   .updateOne({_id: id}, {$set:{metaFinal: carteira.metaFinal, valorAtual: JSON.parse(valorFloat + parseFloat(carteira.valorAtual)), 
+      idRestaurante: carteira.idRestaurante, ong_IdOng: carteira.ong_IdOng, valorPrato: carteira.valorPrato}});
+
+ }
+
+
+ 
+
+module.exports = {incrementandoSaldo, editandoValorPrato, envioMetaCarteiraAtingido, inserirCarteira, listagemCarteiras, listagemCarteirasId, editandoCarteira, deletandoCarteira}
  

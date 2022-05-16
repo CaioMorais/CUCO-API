@@ -1,7 +1,7 @@
 let Result = require("../../Domain/Entities/Result");
 const { 
         envioMetaCarteiraAtingido, inserirCarteira, listagemCarteiras, listagemCarteirasId, 
-        editandoCarteira, deletandoCarteira, editandoValorPrato} = require("../../Services/v1/CarteiraService");
+        editandoCarteira, deletandoCarteira, editandoValorPrato, incrementandoSaldo} = require("../../Services/v1/CarteiraService");
 
 
 
@@ -40,8 +40,16 @@ exports.EditaValorPrato = async(req, res, next) => {
     var resposta = await editandoValorPrato(id, novoValor);
     res.status(200).send(resposta);
 }
+
+exports.IncrementaSaldo = async(req, res, next) =>{
+    var id = req.params["id"];
+    var resposta = await incrementandoSaldo(id, req);
+    res.status(200).send(resposta);
+}
+
 exports.EnviaEmail = (req, res, next) =>{
     var result = new Result("EnviaEmail", true, 'Email enviado com Sucesso!');
     console.log(result);
     res.status(200).send(result);
 }
+
