@@ -4,7 +4,6 @@ const {
         editandoCarteira, deletandoCarteira, editandoValorPrato, incrementandoSaldo} = require("../../Services/v1/CarteiraService");
 
 
-
 exports.InsereCarteira = async (req, res, next) =>{
     var result = new Result();
     result = await inserirCarteira(req);

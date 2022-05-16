@@ -4,7 +4,7 @@ const ContaController = require("../../Controllers/v1/ContaController");
 
 
 
-/**
+/* *
  * @swagger
  * tags:
  *  name: Conta
@@ -31,7 +31,7 @@ const ContaController = require("../../Controllers/v1/ContaController");
  *  name: Conta
  *  description: API's de Conta
  * /api/v1/Conta/Excluir:
- *  get:
+ *  delete:
  *      tags: [Conta]
  *      parameters:
  *          - name: page_number
@@ -43,7 +43,7 @@ const ContaController = require("../../Controllers/v1/ContaController");
  *          default:
  *              description: This is the default response for it
  */
- Contarouter.get('/v1/Conta/Excluir', ContaController.Excluir)
+ Contarouter.delete('/v1/Conta/Excluir', ContaController.Excluir)
 
 
 /**

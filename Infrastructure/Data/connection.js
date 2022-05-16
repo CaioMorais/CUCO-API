@@ -1,18 +1,9 @@
-/*const mongoose = require('mongoose');
+//Conexão antiga com driver mongodb
 
-mongoose.connect('mongodb+srv://admin:admin123@cluster0.kxyqc.mongodb.net/cucoprod?retryWrites=true&w=majority',{
-  useNewUrlParser : true,
-  useUnifiedTopology : true
-});
-
-const db = mongoose.connection;
-db.on("error", (error) => console.error(error));
-db.once("open", () => console.log("Conectado a base de dados!"));*/
-
-
-const {MongoClient} = require('mongodb')
+/* const {MongoClient} = require('mongodb')
 const Mongo_DB_URL = 'mongodb+srv://admin:admin123@cluster0.kxyqc.mongodb.net'
 const nome_banco = 'cucoprod'
+
 const connection = () => MongoClient
   .connect(Mongo_DB_URL,{
     useNewUrlParser : true,
@@ -24,4 +15,6 @@ const connection = () => MongoClient
     process.exit(1);
   })
 
-module.exports = connection;
+module.exports = connection */
+
+
