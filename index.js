@@ -54,10 +54,10 @@ mongoose.connect(uri).then(()=> {
 .catch((err) => {
   console.error(error);
   process.exit(1);
-})
+});
 
-app.listen(port, () => {
+const server = app.listen(port, () => {
   console.log(`Example app listening on port ${port}`)
-})
+});
 
-
+module.exports = server;
