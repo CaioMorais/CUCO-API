@@ -17,9 +17,15 @@ exports.Excluir = (req, res, next) =>{
 }
 
 exports.Cadastrar = async (req, res) =>{
+    console.log(req.body);
     result = await cadastrarConta(req);
-    console.log(result);
-    res.status(200).send(result);
+    if (!result.success){
+        res.status(400).send(result);
+    }
+    else{
+        console.log(result);
+        res.status(200).send(result);
+    }
 }
 
 exports.ResetarSenha = (req, res, next) =>{
