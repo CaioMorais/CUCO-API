@@ -58,8 +58,11 @@ const ContaController = require("../../Controllers/v1/ContaController");
  *          - name: page_number
  *            default: {
  *                       nome : Junior,
+ *                       cpf: 46578926570,
  *                       email : juniorfreitas@mail.com,
  *                       senha : testeteste,
+ *                       tipoConta: ONG,
+ *                       idEstabelecimeto: 555566555455, 
  *                       dataCadastro : 25/06/2020
  *                     }
  *            in: body
