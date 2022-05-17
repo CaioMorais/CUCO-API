@@ -58,9 +58,20 @@ const ContaController = require("../../Controllers/v1/ContaController");
  *          - name: page_number
  *            default: {
  *                       nome : Junior,
+ *                       cpf: 46578926570,
  *                       email : juniorfreitas@mail.com,
  *                       senha : testeteste,
+ *                       tipoConta: ONG,
+ *                       idEstabelecimeto: 555566555455, 
  *                       dataCadastro : 25/06/2020
+ *                       nomeEstabelecimento : Fundação Reviver,
+ *                       tipoEstabelecimento : ONG,
+ *                       cnpj: 1455255664457,
+ *                       cidade: SP,
+ *                       estado: São Paulo,
+ *                       endereco: Rua das Flores,4001,
+ *                       emailEstabelecimento: fundacaoreviver@mail.com,
+ *                       contato: 11958942502
  *                     }
  *            in: body
  *            schema:
