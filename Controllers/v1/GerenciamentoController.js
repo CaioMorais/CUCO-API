@@ -28,33 +28,9 @@ exports.HistoricoDoacoes = (req, res, next) =>{
     res.status(200).send(result)
 };
 
-exports.ListaOngs = (req, res, next) =>{
-    result = new Result([
-        {
-            "ID": 1,
-            "Data da Criação do Cadastro": "28/01/2022",            
-            "Nome ONG": "Atitude e Vida",         
-            "Nome Responsável": "Carlos Ramos",            
-            "Status": "Ativo",            
-            "Endereço": "Rua doze, 6",
-            "Bairro": "Aclimação",
-            "Cidade": "São Paulo",
-            "Estado": "SP"
-        },
-        {
-            "ID": 2,
-            "Data da Criação do Cadastro": "29/01/2022", 
-            "Nome ONG": "Reviver",                    
-            "Nome Responsável": "Roberto Lopes",            
-            "Status": "Ativo",
-            "Endereço": "Rua XV de outubro, 555",
-            "Bairro": "Cidade Ademar",
-            "Cidade": "São Paulo",
-            "Estado": "SP"            
-        }
-    ], true, "")
-    console.log(result)
-    res.status(200).send(result)
+exports.ListaOngs = async (req, res, next) =>{
+    var lista = await listaOngs();
+    res.status(200).send(lista)
 };
 
 //Estabelecimento
