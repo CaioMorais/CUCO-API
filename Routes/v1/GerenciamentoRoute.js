@@ -9,7 +9,7 @@ const {verificaToken} = require("../../Security/usuarioMiddleware")
  * tags:
  *  name: Gerenciamento
  *  description: API's de Gerenciamento
- * /api/v1/Gerenciamento/HistoricoDoacoes:
+ * /api/v1/Gerenciamento/HistoricoDoacoes/:id:
  *  get:
  *      tags: [Gerenciamento]
  *      parameters:
@@ -22,7 +22,7 @@ const {verificaToken} = require("../../Security/usuarioMiddleware")
  *          default:
  *              description: This is the default response for it
  */
- Gerenciamentorouter.get('/v1/Gerenciamento/HistoricoDoacoes', verificaToken, GerenciamentoController.HistoricoDoacoes)
+ Gerenciamentorouter.get('/v1/Gerenciamento/HistoricoDoacoes/:id', verificaToken, GerenciamentoController.HistoricoDoacoes)
 
 /**
  * @swagger

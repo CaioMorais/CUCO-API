@@ -6,7 +6,7 @@ function envioMetaCarteiraAtingido(){
 
 }
 
- async function  inserirCarteira(req) {
+async function  inserirCarteira(req) {
     
     var result = new Result
     var carteira = carteiraSchema(req.body);
@@ -22,30 +22,36 @@ function envioMetaCarteiraAtingido(){
 async function listagemCarteiras() {
     
    return await carteiraSchema
-            .find();
-    
+            .find();   
 }
 
-async function listagemCarteirasId(id) {
-    
+async function listagemCarteirasId(id) {   
     return await carteiraSchema
-             .findById(id);
-     
- }
+             .findById(id);   
+}
 
- async function editandoCarteira(id, req) {
+async function editandoCarteira(id, req) {
 
-    return await carteiraSchema
-             .updateOne({_id: id}, {$set:{metaFinal: req.body.metaFinal, valorAtual: req.body.valorAtual, 
+   return await carteiraSchema
+            .updateOne({_id: id}, {$set:{metaFinal: req.body.metaFinal, valorAtual: req.body.valorAtual, 
                idRestaurante: req.body.idRestaurante, idOng: req.body.idOng, valorPrato: req.body.valorPrato}});
- }
+}
 
- async function deletandoCarteira(id) {
-    return await carteiraSchema
-             .remove({_id: id});
- }
+async function insereValorCarteira (id_restaurante, valor){
+   var carteira = await carteiraSchema.findOne({idRestaurante : id_restaurante});
+   console.log(carteira);
+   console.log(id_restaurante);
+   var valorAtual = (parseFloat(carteira.valorAtual) + parseFloat(valor)).toString();
+   return await carteiraSchema
+   .updateOne({_id: carteira.id}, {$set:{valorAtual: valorAtual}});
+}
 
- async function editandoValorPrato(id, novoValor){
+async function deletandoCarteira(id) {
+   return await carteiraSchema
+            .remove({_id: id});
+}
+
+async function editandoValorPrato(id, novoValor){
 
    var carteira = carteiraSchema();
    carteira = carteiraSchema.findById(id);
@@ -56,25 +62,11 @@ async function listagemCarteirasId(id) {
    .updateOne({_id: id}, {$set:{metaFinal: carteira.metaFinal, valorAtual: carteira.valorAtual, 
       idRestaurante: carteira.idRestaurante, idOng: carteira.idOng, valorPrato: carteira.valorPrato}});
 
- }
+}
 
 
- async function incrementandoSaldo(id, req){
+module.exports = {editandoValorPrato, envioMetaCarteiraAtingido, inserirCarteira, 
+                  listagemCarteiras, listagemCarteirasId, editandoCarteira, 
+                  deletandoCarteira, insereValorCarteira}
 
-   var carteira = carteiraSchema();
-   carteira = carteiraSchema.findById(id);
-
-   var valorFloat = parseFloat(req.body.valor);
-
-
-   return await carteiraSchema
-   .updateOne({_id: id}, {$set:{metaFinal: carteira.metaFinal, valorAtual: JSON.parse(valorFloat + parseFloat(carteira.valorAtual)), 
-      idRestaurante: carteira.idRestaurante, ong_IdOng: carteira.ong_IdOng, valorPrato: carteira.valorPrato}});
-
- }
-
-
- 
-
-module.exports = {incrementandoSaldo, editandoValorPrato, envioMetaCarteiraAtingido, inserirCarteira, listagemCarteiras, listagemCarteirasId, editandoCarteira, deletandoCarteira}
  

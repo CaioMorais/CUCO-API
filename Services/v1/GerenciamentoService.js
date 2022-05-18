@@ -1,4 +1,7 @@
+let Result = require("../../Domain/Entities/Result");
 let estabelecimentoSchema = require('../../Domain/Models/v1/EstabelecimentoModel');
+let doacaoSchema = require('../../Domain/Models/v1/DoacaoModel');
+let clienteDoadorSchema = require('../../Domain/Models/v1/ClienteDoadorModel');
 
 //Ong
 function hitoricoRetiradas(){
@@ -11,8 +14,22 @@ function hisotricoEntrega(){
 }
 
 //Estabelecimento
-function hisotricoDoacoes(){
-
+async function hisotricoDoacoes(idRestaurante){
+    //return await doacaoSchema.find({idRestaurante: idRestaurante}); 
+    var element
+    var doacoes = await doacaoSchema.find({idRestaurante: idRestaurante}); 
+    for (let index = 0; index < doacoes.length; index++) {
+        doador = await clienteDoadorSchema.findOne({_id: doacoes[index].idClienteDoador});
+        var doa = {
+            "valorDoacao" : doacoes[index].valorDoacao,
+            "dataDoacao": doacoes[index].dataDoacao,
+            "nomeDoador" : doador.nome
+        }
+        console.log(doa);
+        element.push(doa);
+    }
+    console.log(element);
+    return element;
 }
 
 //Estabelecimento
