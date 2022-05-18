@@ -126,6 +126,9 @@ const carteiraController = require("../../Controllers/v1/CarteiraController");
  */
  carteirarouter.delete('/v1/Carteira/DeletaCarteira/:id', carteiraController.DeletaCarteira)
 
+//***********************************IMPLEMENTADO**************************************
+
+carteirarouter.post('/v1/Carteira/InsereCarteira', carteiraController.InsereCarteira)
 /**
  * @swagger
  * tags:
@@ -145,6 +148,21 @@ const carteiraController = require("../../Controllers/v1/CarteiraController");
  *              description: This is the default response for it
  */
  carteirarouter.put('/v1/Carteira/EditaValorPrato/:id', carteiraController.EditaValorPrato)
+
+
+carteirarouter.get('/v1/Carteira/ListaCarteiraId/:id', carteiraController.ListaCarteiraId)
+
+carteirarouter.put('/v1/Carteira/EditarCarteira/:id', carteiraController.EditaCarteira)
+
+carteirarouter.delete('/v1/Carteira/DeletaCarteira/:id', carteiraController.DeletaCarteira)
+
+carteirarouter.put('/v1/Carteira/EditaValorPrato/', carteiraController.EditaValorPrato)
+
+carteirarouter.put('/v1/Carteira/IncrementaSaldo/:id', carteiraController.IncrementaSaldo)
+
+//***********************************BACKLOG**************************************
+
+carteirarouter.get('/v1/Carteira/EnviaEmail', carteiraController.EnviaEmail)
 
 
 
