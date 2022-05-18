@@ -1,5 +1,6 @@
 let Result = require("../../Domain/Entities/Result");
 let carteiraSchema = require('../../Domain/Models/v1/CarteiraModel');
+var mongoose = require('mongoose');
 
 //Ong
 function envioMetaCarteiraAtingido(){
@@ -42,14 +43,13 @@ async function listagemCarteirasId(id) {
 
  async function deletandoCarteira(id) {
     return await carteiraSchema
-             .remove({_id: id});
+             .deleteOne({_id: id});
  }
 
  async function editandoValorPrato(id, novoValor){
 
    var carteira = carteiraSchema();
    carteira = carteiraSchema.findById(id);
-
    carteira.valorPrato = novoValor;
 
    return await carteiraSchema
@@ -63,12 +63,15 @@ async function listagemCarteirasId(id) {
 
    var carteira = carteiraSchema();
    carteira = carteiraSchema.findById(id);
+   var teste = carteira.Types. ('valorAtual');
+   console.log(teste);
 
    var valorFloat = parseFloat(req.body.valor);
-
+   console.log(parseFloat(req.body.valor));
+   console.log(carteira.valorAtual);
 
    return await carteiraSchema
-   .updateOne({_id: id}, {$set:{metaFinal: carteira.metaFinal, valorAtual: JSON.parse(valorFloat + parseFloat(carteira.valorAtual)), 
+   .updateOne({_id: id}, {$set:{metaFinal: carteira.metaFinal, valorAtual: toString(valorFloat + carteira.valorAtual), 
       idRestaurante: carteira.idRestaurante, ong_IdOng: carteira.ong_IdOng, valorPrato: carteira.valorPrato}});
 
  }
