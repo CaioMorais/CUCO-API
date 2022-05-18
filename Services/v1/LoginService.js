@@ -1,5 +1,5 @@
 const jwt = require('jsonwebtoken');
-let usuarioSchema = require('../../Domain/Models/v1/ContaModel');
+const usuarioSchema = require('../../Domain/Models/v1/ContaModel');
 const SECRET = 'chavesegurancadetestecucoapi'
 
 const procuraUsuario = async ({email, senha}) =>{

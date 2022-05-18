@@ -1,3 +1,4 @@
+let estabelecimentoSchema = require('../../Domain/Models/v1/EstabelecimentoModel');
 
 //Ong
 function hitoricoRetiradas(){
@@ -15,8 +16,8 @@ function hisotricoDoacoes(){
 }
 
 //Estabelecimento
-function listaOngs(){
-
+async function listaOngs(){
+    return await estabelecimentoSchema.find({tipoEstabelecimento: "ONG"}); 
 }
 
 //Estabelecimento
