@@ -6,11 +6,11 @@ let carteira = require('../../Services/v1/CarteiraService');
 function gerarQRCodeLinkDoacao(){
     // acessar o banco paara retornar o link real com os dados do estabelecimento ja prenchidos
     var link = "www.estabelecimentox/paginadoacao"
-    return link
+    var result = new Result(link, true, "link para doaçao", 200);
+    return result
 }
 
 async function cadastraDoacao(req, idRestaurante){
-    var result = new Result;
     //insere valor carteira
     await carteira.insereValorCarteira(idRestaurante, req.body.valorDoacao);
      
@@ -43,10 +43,8 @@ async function cadastraDoacao(req, idRestaurante){
         "nomeDoador" : req.body.nome,
         "valor": req.body.valorDoacao,
     }
-    result.content = resultDoacao;
-    result.message = "Doacao inserida com sucesso!";
-    result.success = true;
-    result.status = 200;  
+
+    var result = new Result(resultDoacao, true, "Doacao inserida com sucesso!", 200);
     return result;
 }
 
@@ -56,20 +54,22 @@ async function enviarEmailRecompensa(){
 
 //Ong
 function gerarTokenIndentificacaoRetiradaDoacoes(){
-    var result = '';
+    var resultado = '';
     for (var i = 80; i > 0; --i) {
-        result += (Math.floor(Math.random()*256)).toString(16);
+        resultado += (Math.floor(Math.random()*256)).toString(16);
     }
+    var result = new Result(resultado, true, "Token de identificação para retirada de doações", 200);
     return result;
 } 
 
 
 //Estabelecimento
 function gerarTokenIndentificacaoEntregaDoacoes(){
-    var result = '';
+    var resultado = '';
     for (var i = 80; i > 0; --i) {
-        result += (Math.floor(Math.random()*256)).toString(16);
+        resultado += (Math.floor(Math.random()*256)).toString(16);
     }
+    var result = new Result(resultado, true, "Token de identificação para entrega de doações", 200);
     return result;
 }
 
@@ -78,9 +78,7 @@ function validacaoTokens(){
     
 }
 
-
 //Auxiliares 
-
 const verificaCpfCliente = async (cpf) =>{
     let usuario = null;   
     if (cpf) {

@@ -88,7 +88,7 @@ const ContaController = require("../../Controllers/v1/ContaController");
  * tags:
  *  name: Conta
  *  description: API's de Conta
- * /api/v1/Conta/ResetarSenha:
+ * /api/v1/Conta/ResetarSenha/:id:
  *  post:
  *      tags: [Conta]
  *      parameters:
@@ -101,7 +101,28 @@ const ContaController = require("../../Controllers/v1/ContaController");
  *          default:
  *              description: This is the default response for it
  */
-Contarouter.post('/v1/Conta/ResetarSenha', ContaController.ResetarSenha)
+Contarouter.post('/v1/Conta/ResetarSenha/:id', ContaController.ResetarSenha)
+
+
+/**
+ * @swagger
+ * tags:
+ *  name: Conta
+ *  description: API's de Conta
+ * /api/v1/Conta/EnviaEmailResetSenha/:
+ *  get:
+ *      tags: [Conta]
+ *      parameters:
+ *          - name: page_number
+ *            default: 1
+ *            in: body
+ *            schema:
+ *              type: string
+ *      responses:
+ *          default:
+ *              description: This is the default response for it
+ */
+ Contarouter.get('/v1/Conta/EnviaEmailResetSenha', ContaController.EnviaEmailResetSenha)
 
 
 

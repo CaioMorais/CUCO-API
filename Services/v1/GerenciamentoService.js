@@ -15,8 +15,8 @@ function hisotricoEntrega(){
 
 //Estabelecimento
 async function hisotricoDoacoes(idRestaurante){
-    //return await doacaoSchema.find({idRestaurante: idRestaurante}); 
-    var element
+    //Function junta os dados das docaoes e dos doadores e devolve um array
+    var element = [];
     var doacoes = await doacaoSchema.find({idRestaurante: idRestaurante}); 
     for (let index = 0; index < doacoes.length; index++) {
         doador = await clienteDoadorSchema.findOne({_id: doacoes[index].idClienteDoador});
@@ -29,12 +29,15 @@ async function hisotricoDoacoes(idRestaurante){
         element.push(doa);
     }
     console.log(element);
-    return element;
+    var result = new Result(element, true, "Historico de doações", 200);
+    return result;
 }
 
 //Estabelecimento
 async function listaOngs(){
-    return await estabelecimentoSchema.find({tipoEstabelecimento: "ONG"}); 
+    var listaOngs = await estabelecimentoSchema.find({tipoEstabelecimento: "ONG"}); 
+    var result = new Result(listaOngs, true, "Lista de Ongs", 200);
+    return result;
 }
 
 //Estabelecimento
