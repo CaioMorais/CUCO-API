@@ -3,58 +3,16 @@ const {hitoricoRetiradas, hisotricoEntrega, hisotricoDoacoes, geraSolicitacaoPar
     aceitarSolicitacoesDeEstabelecimentos, 
     listaOngs, listaSolicitacoes} = require("../../Services/v1/GerenciamentoService");
 
-exports.HistoricoDoacoes = (req, res, next) =>{
-    result = new Result([
-        {
-            "numero pedido": 123,
-            "data da criação": "28/07/2021",
-            "data envio": "28/07/2021",
-            "nome cliente": "João José da Silva",
-            "numero cliente": 50,
-            "estado": "concluido",
-            "numero de envio": 559
-        },
-        {
-            "numero pedido": 124,
-            "data da criação": "28/08/2021",
-            "data envio": "28/08/2021",
-            "nome cliente": "Carla Silva Santos",
-            "numero cliente": 55,
-            "estado": "concluido",
-            "numero de envio": 589
-        }
-    ], true, "")
-    console.log(result)
+exports.HistoricoDoacoes = async (req, res, next) =>{
+    var id = req.params["id"];
+    var historico = await hisotricoDoacoes(id)
+    result = new Result("Historico Doações", true, historico);
     res.status(200).send(result)
 };
 
-exports.ListaOngs = (req, res, next) =>{
-    result = new Result([
-        {
-            "ID": 1,
-            "Data da Criação do Cadastro": "28/01/2022",            
-            "Nome ONG": "Atitude e Vida",         
-            "Nome Responsável": "Carlos Ramos",            
-            "Status": "Ativo",            
-            "Endereço": "Rua doze, 6",
-            "Bairro": "Aclimação",
-            "Cidade": "São Paulo",
-            "Estado": "SP"
-        },
-        {
-            "ID": 2,
-            "Data da Criação do Cadastro": "29/01/2022", 
-            "Nome ONG": "Reviver",                    
-            "Nome Responsável": "Roberto Lopes",            
-            "Status": "Ativo",
-            "Endereço": "Rua XV de outubro, 555",
-            "Bairro": "Cidade Ademar",
-            "Cidade": "São Paulo",
-            "Estado": "SP"            
-        }
-    ], true, "")
-    console.log(result)
-    res.status(200).send(result)
+exports.ListaOngs = async (req, res, next) =>{
+    var lista = await listaOngs();
+    res.status(200).send(lista)
 };
 
 //Estabelecimento

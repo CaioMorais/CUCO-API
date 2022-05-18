@@ -1,35 +1,39 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
-var contaSchema = new Schema({
-    nome: {
+var estabelecimentoSchema = new Schema({
+    nomeEstabelecimento: {
         type: String,
         required: true 
     },
-    cpf: {
+    tipoEstabelecimento: {
         type: String,
         required: true 
     },
-    email: {
+    cnpj: {
         type: String,
         required: true 
     },
-    senha: {
+    cidade: {
         type: String,
         required: true 
     },
-    tipoConta: {
+    estado: {
         type: String,
         required: true 
     },
-    idEstabelecimento: {
+    endereco: {
         type: String,
         required: true 
     },
-    dataCadastro: {
+    emailEstabelecimento: {
+        type: String,
+        required: true 
+    },
+    contato: {
         type: String,
         required: true 
     }
 })
 
-module.exports = mongoose.model('usuario', contaSchema);
+module.exports = mongoose.model('estabelecimento', estabelecimentoSchema);

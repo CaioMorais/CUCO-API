@@ -9,7 +9,7 @@ const ContaController = require("../../Controllers/v1/ContaController");
  * tags:
  *  name: Conta
  *  description: API's de Conta
- * /api/v1/Conta/Editar:
+ * /api/v1/Conta/Editar/:id:
  *  post:
  *      tags: [Conta]
  *      parameters:
@@ -22,7 +22,7 @@ const ContaController = require("../../Controllers/v1/ContaController");
  *          default:
  *              description: This is the default response for it
  */
- Contarouter.post('/v1/Conta/Editar', ContaController.Editar)
+ Contarouter.put('/v1/Conta/Editar/:id', ContaController.Editar)
 
 
 /**
@@ -30,7 +30,7 @@ const ContaController = require("../../Controllers/v1/ContaController");
  * tags:
  *  name: Conta
  *  description: API's de Conta
- * /api/v1/Conta/Excluir:
+ * /api/v1/Conta/Excluir/:id:
  *  delete:
  *      tags: [Conta]
  *      parameters:
@@ -43,7 +43,7 @@ const ContaController = require("../../Controllers/v1/ContaController");
  *          default:
  *              description: This is the default response for it
  */
- Contarouter.delete('/v1/Conta/Excluir', ContaController.Excluir)
+ Contarouter.delete('/v1/Conta/Excluir/:id', ContaController.Excluir)
 
 
 /**
@@ -58,9 +58,20 @@ const ContaController = require("../../Controllers/v1/ContaController");
  *          - name: page_number
  *            default: {
  *                       nome : Junior,
+ *                       cpf: 46578926570,
  *                       email : juniorfreitas@mail.com,
  *                       senha : testeteste,
- *                       dataCadastro : 25/06/2020
+ *                       tipoConta: ONG,
+ *                       idEstabelecimeto: 555566555455, 
+ *                       dataCadastro : 25/06/2020,
+ *                       nomeEstabelecimento : Fundação Reviver,
+ *                       tipoEstabelecimento : ONG,
+ *                       cnpj: 1455255664457,
+ *                       cidade: SP,
+ *                       estado: São Paulo,
+ *                       endereco: Rua das Flores,4001,
+ *                       emailEstabelecimento: fundacaoreviver@mail.com,
+ *                       contato: 11958942502
  *                     }
  *            in: body
  *            schema:

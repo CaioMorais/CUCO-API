@@ -12,12 +12,12 @@ const loginController = require("../../Controllers/v1/LoginController");
  *      tags: [Login]
  *      parameters:
  *          - name: email
- *            default: joaocabral@mail.com
+ *            default: juniorfreitas@mail.com
  *            in: query
  *            schema:
  *              type: string
  *          - name: senha
- *            default: testetestando
+ *            default: 12345678
  *            in: query
  *            schema:
  *              type: password

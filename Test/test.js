@@ -73,7 +73,7 @@ describe('Carteira', () => {
 
     it('Edita Carteira', async () => {
         const res = await supertest(app)
-          .put('/api/v1/Carteira/EditaCarteira/' + idCarteira)    
+          .put('/api/v1/Carteira/EditarCarteira/' + idCarteira)    
           .send({metaFinal: "2000",
                 valorAtual: "400",
                 idRestaurante: "1212",
@@ -97,17 +97,30 @@ describe('Carteira', () => {
 //CONTA
 describe('Conta', () => {
     var idConta;
-    it('Cria Conta', async () => {
-        var randomNum = Math.random() * (1000 - 1 + 1) + 1;
+    var randomNum = Math.random() * (1000 - 1 + 1) + 1;
+    var emailAleatorio = "contateste"+ randomNum +"@mail.com"
+    console.log(emailAleatorio);
+    it('Cria Conta', async () => {  
         const res = await supertest(app)
           .post('/api/v1/Conta/Cadastrar')
           .send({nome: "conta do teste" + randomNum,
-                email: "contateste"+randomNum+"@mail.com",
+                email: emailAleatorio,
                 senha: "123456",
                 dataCadastro: "14/05/2022"})
         expect(res.statusCode).toEqual(200)
         idConta = res._body.content._id;
     })
+
+    it('Tenta criar conta ja existente', async () => {
+        const res = await supertest(app)
+          .post('/api/v1/Conta/Cadastrar')
+          .send({nome: "conta do teste" + randomNum,
+                email: emailAleatorio,
+                senha: "123456",
+                dataCadastro: "14/05/2022"})
+        expect(res.statusCode).toEqual(400)
+    })
+    console.log(emailAleatorio);
 
     it('Resetar Senha', async () => {
         const res = await supertest(app)
