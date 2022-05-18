@@ -30,10 +30,11 @@ exports.GeraTokenEntrega = (req, res, next) =>{
     res.status(200).send(result)
 }
 
-
 //deve chamar as duas functions cadastraDoacao e  enviarEmailRecompensa
-exports.CadastraDoacao = (req, res, next) => {
-    result = new Result("CadastraDoacao", true, "Doação cadastrada com sucesso!")
+exports.CadastraDoacao = async (req, res, next) => {
+    var idRestaurante = req.params["idRestaurante"];
+    console.log(idRestaurante);
+    result = await cadastraDoacao(req, idRestaurante)
     console.log(result)
     res.status(200).send(result)
 }

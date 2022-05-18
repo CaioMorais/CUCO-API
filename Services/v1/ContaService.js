@@ -79,7 +79,7 @@ async function excluirConta(idConta){
 }
 
 function resetarSenha(){
-
+   
 }
 
 
