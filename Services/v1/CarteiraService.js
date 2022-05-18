@@ -64,7 +64,9 @@ async function editandoValorPrato(id, novoValor){
 
 }
 
+
 module.exports = {editandoValorPrato, envioMetaCarteiraAtingido, inserirCarteira, 
                   listagemCarteiras, listagemCarteirasId, editandoCarteira, 
                   deletandoCarteira, insereValorCarteira}
+
  
