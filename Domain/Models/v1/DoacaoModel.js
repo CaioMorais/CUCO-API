@@ -20,4 +20,4 @@ var doacaoSchema = new Schema({
     } 
 })
 
-module.exports = mongoose.model('doacao', doacaoSchema);
+module.exports = mongoose.model('doacoe', doacaoSchema);

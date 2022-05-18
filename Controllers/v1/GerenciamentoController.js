@@ -3,28 +3,10 @@ const {hitoricoRetiradas, hisotricoEntrega, hisotricoDoacoes, geraSolicitacaoPar
     aceitarSolicitacoesDeEstabelecimentos, 
     listaOngs, listaSolicitacoes} = require("../../Services/v1/GerenciamentoService");
 
-exports.HistoricoDoacoes = (req, res, next) =>{
-    result = new Result([
-        {
-            "numero pedido": 123,
-            "data da criação": "28/07/2021",
-            "data envio": "28/07/2021",
-            "nome cliente": "João José da Silva",
-            "numero cliente": 50,
-            "estado": "concluido",
-            "numero de envio": 559
-        },
-        {
-            "numero pedido": 124,
-            "data da criação": "28/08/2021",
-            "data envio": "28/08/2021",
-            "nome cliente": "Carla Silva Santos",
-            "numero cliente": 55,
-            "estado": "concluido",
-            "numero de envio": 589
-        }
-    ], true, "")
-    console.log(result)
+exports.HistoricoDoacoes = async (req, res, next) =>{
+    var id = req.params["id"];
+    var historico = await hisotricoDoacoes(id)
+    result = new Result("Historico Doações", true, historico);
     res.status(200).send(result)
 };
 

@@ -36,6 +36,7 @@ exports.CadastraDoacao = async (req, res, next) => {
     console.log(idRestaurante);
     result = await cadastraDoacao(req, idRestaurante)
     console.log(result)
+    await enviarEmailRecompensa()
     res.status(200).send(result)
 }
 

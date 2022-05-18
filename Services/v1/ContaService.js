@@ -3,7 +3,7 @@ let contaSchema = require('../../Domain/Models/v1/ContaModel');
 let estabelecimentoSchema = require('../../Domain/Models/v1/EstabelecimentoModel');
 
 async function cadastrarConta(req){
-    var result = new Result
+    var result = new Result;
     
     //Verificação de exixtencia de dados 
     let dadoEmail = await verificaContaExiste(req.body.email);
@@ -113,7 +113,7 @@ const verificaCNPJ = async (cnpj) =>{
 }
 
 const listaContas = async () => {
-    return await carteiraSchema.find().toArray(); 
+    return await carteiraSchema.find(); 
 }
 
 const listaContaID = async (id) => {
