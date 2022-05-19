@@ -23,28 +23,6 @@ const {verificaToken} = require("../../Security/usuarioMiddleware")
  */
  carteirarouter.post('/v1/Carteira/InsereCarteira',verificaToken, carteiraController.InsereCarteira)
 
-
-/**
- * @swagger
- * tags:
- *  name: Carteira
- *  description: API's da Carteira
- * /api/v1/Carteira/EnviaEmail:
- *  get:
- *      tags: [Carteira]
- *      parameters:
- *          - name: page_number
- *            default: 1
- *            in: body
- *            schema:
- *              type: string
- *      responses:
- *          default:
- *              description: This is the default response for it
- */
- carteirarouter.get('/v1/Carteira/EnviaEmail',verificaToken, carteiraController.EnviaEmail)
-
-
 /**
  * @swagger
  * tags:
@@ -63,7 +41,7 @@ const {verificaToken} = require("../../Security/usuarioMiddleware")
  *          default:
  *              description: This is the default response for it
  */
- carteirarouter.get('/v1/Carteira/ListaCarteiraId/:id',verificaToken, carteiraController.ListaCarteiraId)
+ carteirarouter.get('/v1/Carteira/ListaCarteiraId/:id', carteiraController.ListaCarteiraId)
 
 
 /**
@@ -84,7 +62,7 @@ const {verificaToken} = require("../../Security/usuarioMiddleware")
  *          default:
  *              description: This is the default response for it
  */
- carteirarouter.get('/v1/Carteira/ListaCarteira',verificaToken, carteiraController.ListaCarteira)
+ carteirarouter.get('/v1/Carteira/ListaCarteira', carteiraController.ListaCarteira)
 
 /**
  * @swagger
@@ -104,7 +82,7 @@ const {verificaToken} = require("../../Security/usuarioMiddleware")
  *          default:
  *              description: This is the default response for it
  */
- carteirarouter.put('/v1/Carteira/EditarCarteira/:id',verificaToken, carteiraController.EditaCarteira)
+ carteirarouter.put('/v1/Carteira/EditarCarteira/:id', carteiraController.EditaCarteira)
 
 /**
  * @swagger
@@ -124,20 +102,15 @@ const {verificaToken} = require("../../Security/usuarioMiddleware")
  *          default:
  *              description: This is the default response for it
  */
- carteirarouter.delete('/v1/Carteira/DeletaCarteira/:id', verificaToken, carteiraController.DeletaCarteira)
+carteirarouter.delete('/v1/Carteira/DeletaCarteira/:id', carteiraController.DeletaCarteira)
 
-//***********************************IMPLEMENTADO**************************************
+carteirarouter.put('/v1/Carteira/EditaValorPrato/:id',carteiraController.EditaValorPrato)
 
-carteirarouter.put('/v1/Carteira/EditaValorPrato/:id', verificaToken,carteiraController.EditaValorPrato)
+carteirarouter.delete('/v1/Carteira/DeletaCarteira/:id', carteiraController.DeletaCarteira)
 
-carteirarouter.delete('/v1/Carteira/DeletaCarteira/:id', verificaToken, carteiraController.DeletaCarteira)
+carteirarouter.put('/v1/Carteira/EditaValorPrato/', carteiraController.EditaValorPrato)
 
-carteirarouter.put('/v1/Carteira/EditaValorPrato/', verificaToken, carteiraController.EditaValorPrato)
-
-carteirarouter.put('/v1/Carteira/IncrementaSaldo/:id', verificaToken, carteiraController.IncrementaSaldo)
-
-//***********************************BACKLOG**************************************
-
+carteirarouter.put('/v1/Carteira/IncrementaSaldo/:id', carteiraController.IncrementaSaldo)
 
 
 module.exports = carteirarouter
