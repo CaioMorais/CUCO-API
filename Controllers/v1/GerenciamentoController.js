@@ -5,14 +5,13 @@ const {hitoricoRetiradas, hisotricoEntrega, hisotricoDoacoes, geraSolicitacaoPar
 
 exports.HistoricoDoacoes = async (req, res, next) =>{
     var id = req.params["id"];
-    var historico = await hisotricoDoacoes(id)
-    result = new Result("Historico Doações", true, historico);
-    res.status(200).send(result)
+    var result = await hisotricoDoacoes(id);
+    res.status(result.status).send(result);
 };
 
 exports.ListaOngs = async (req, res, next) =>{
-    var lista = await listaOngs();
-    res.status(200).send(lista)
+    var result = await listaOngs();
+    res.status(result.status).send(result);
 };
 
 //Estabelecimento
@@ -115,28 +114,3 @@ exports.HistoricoEntregas = (req, res, next) =>{
     res.status(200).send(result)
 };
 
-
-// exports.HistoricoDoacoes = (req, res, next) =>{
-//     res.status(201).send(
-//         "Doacoes" [
-//             {
-//                 "numero pedido": 123,
-//                 "data da criação": "28/07/2021",
-//                 "data envio": "28/07/2021",
-//                 "nome cliente": "João José da Silva",
-//                 "numero cliente": 50,
-//                 "estado": "concluido",
-//                 "numero de envio": 559
-//             },
-//             {
-//                 "numero pedido": 124,
-//                 "data da criação": "28/08/2021",
-//                 "data envio": "28/08/2021",
-//                 "nome cliente": "Carla Silva Santos",
-//                 "numero cliente": 55,
-//                 "estado": "concluido",
-//                 "numero de envio": 589
-//             }
-//         ]
-//     )
-// }
