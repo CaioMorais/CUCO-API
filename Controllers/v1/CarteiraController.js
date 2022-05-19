@@ -1,7 +1,7 @@
 let Result = require("../../Domain/Entities/Result");
 const { 
         envioMetaCarteiraAtingido, inserirCarteira, listagemCarteiras, listagemCarteirasId, 
-        editandoCarteira, deletandoCarteira, editandoValorPrato, incrementandoSaldo} = require("../../Services/v1/CarteiraService");
+        editandoCarteira, deletandoCarteira, editandoValorPrato, insereValorCarteira} = require("../../Services/v1/CarteiraService");
 
 
 exports.InsereCarteira = async (req, res, next) =>{
@@ -42,7 +42,7 @@ exports.EditaValorPrato = async(req, res, next) => {
 
 exports.IncrementaSaldo = async(req, res, next) =>{
     var id = req.params["id"];
-    var resposta = await incrementandoSaldo(id, req);
+    var resposta = await insereValorCarteira(id, req.body.valor);
     res.status(200).send(resposta);
 }
 

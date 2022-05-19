@@ -38,10 +38,9 @@ async function editandoCarteira(id, req) {
                idRestaurante: req.body.idRestaurante, idOng: req.body.idOng, valorPrato: req.body.valorPrato}});
 }
 
-async function insereValorCarteira (id_restaurante, valor){
-   var carteira = await carteiraSchema.findOne({idRestaurante : id_restaurante});
-   console.log(carteira);
-   console.log(id_restaurante);
+async function insereValorCarteira (id, valor){
+   
+   var carteira = await carteiraSchema.findOne({_id : id});
    var valorAtual = (parseFloat(carteira.valorAtual) + parseFloat(valor)).toString();
    return await carteiraSchema
    .updateOne({_id: carteira.id}, {$set:{valorAtual: valorAtual}});
@@ -49,7 +48,7 @@ async function insereValorCarteira (id_restaurante, valor){
 
 async function deletandoCarteira(id) {
    return await carteiraSchema
-            .remove({_id: id});
+            .deleteOne({_id: id});
 }
 
 async function editandoValorPrato(id, novoValor){

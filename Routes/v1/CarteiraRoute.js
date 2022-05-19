@@ -1,7 +1,7 @@
 const express = require("express")
 const carteirarouter = express.Router();
 const carteiraController = require("../../Controllers/v1/CarteiraController");
-
+const {verificaToken} = require("../../Security/usuarioMiddleware")
 
 /**
  * @swagger
@@ -21,7 +21,7 @@ const carteiraController = require("../../Controllers/v1/CarteiraController");
  *          default:
  *              description: This is the default response for it
  */
- carteirarouter.post('/v1/Carteira/InsereCarteira', carteiraController.InsereCarteira)
+ carteirarouter.post('/v1/Carteira/InsereCarteira',verificaToken, carteiraController.InsereCarteira)
 
 
 /**
@@ -42,7 +42,7 @@ const carteiraController = require("../../Controllers/v1/CarteiraController");
  *          default:
  *              description: This is the default response for it
  */
- carteirarouter.get('/v1/Carteira/EnviaEmail', carteiraController.EnviaEmail)
+ carteirarouter.get('/v1/Carteira/EnviaEmail',verificaToken, carteiraController.EnviaEmail)
 
 
 /**
@@ -63,7 +63,7 @@ const carteiraController = require("../../Controllers/v1/CarteiraController");
  *          default:
  *              description: This is the default response for it
  */
- carteirarouter.get('/v1/Carteira/ListaCarteiraId/:id', carteiraController.ListaCarteiraId)
+ carteirarouter.get('/v1/Carteira/ListaCarteiraId/:id',verificaToken, carteiraController.ListaCarteiraId)
 
 
 /**
@@ -84,7 +84,7 @@ const carteiraController = require("../../Controllers/v1/CarteiraController");
  *          default:
  *              description: This is the default response for it
  */
- carteirarouter.get('/v1/Carteira/ListaCarteira', carteiraController.ListaCarteira)
+ carteirarouter.get('/v1/Carteira/ListaCarteira',verificaToken, carteiraController.ListaCarteira)
 
 /**
  * @swagger
@@ -104,7 +104,7 @@ const carteiraController = require("../../Controllers/v1/CarteiraController");
  *          default:
  *              description: This is the default response for it
  */
- carteirarouter.put('/v1/Carteira/EditarCarteira/:id', carteiraController.EditaCarteira)
+ carteirarouter.put('/v1/Carteira/EditarCarteira/:id',verificaToken, carteiraController.EditaCarteira)
 
 /**
  * @swagger
@@ -124,17 +124,17 @@ const carteiraController = require("../../Controllers/v1/CarteiraController");
  *          default:
  *              description: This is the default response for it
  */
- carteirarouter.delete('/v1/Carteira/DeletaCarteira/:id', carteiraController.DeletaCarteira)
+ carteirarouter.delete('/v1/Carteira/DeletaCarteira/:id', verificaToken, carteiraController.DeletaCarteira)
 
 //***********************************IMPLEMENTADO**************************************
 
-carteirarouter.put('/v1/Carteira/EditaValorPrato/:id', carteiraController.EditaValorPrato)
+carteirarouter.put('/v1/Carteira/EditaValorPrato/:id', verificaToken,carteiraController.EditaValorPrato)
 
-carteirarouter.delete('/v1/Carteira/DeletaCarteira/:id', carteiraController.DeletaCarteira)
+carteirarouter.delete('/v1/Carteira/DeletaCarteira/:id', verificaToken, carteiraController.DeletaCarteira)
 
-carteirarouter.put('/v1/Carteira/EditaValorPrato/', carteiraController.EditaValorPrato)
+carteirarouter.put('/v1/Carteira/EditaValorPrato/', verificaToken, carteiraController.EditaValorPrato)
 
-carteirarouter.put('/v1/Carteira/IncrementaSaldo/:id', carteiraController.IncrementaSaldo)
+carteirarouter.put('/v1/Carteira/IncrementaSaldo/:id', verificaToken, carteiraController.IncrementaSaldo)
 
 //***********************************BACKLOG**************************************
 
