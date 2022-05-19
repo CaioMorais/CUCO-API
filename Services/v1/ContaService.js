@@ -1,6 +1,8 @@
+const bcrypt = require("bcryptjs");
 let Result = require("../../Domain/Entities/Result");
 let contaSchema = require('../../Domain/Models/v1/ContaModel');
 let estabelecimentoSchema = require('../../Domain/Models/v1/EstabelecimentoModel');
+
 
 async function cadastrarConta(req){
     
@@ -26,11 +28,14 @@ async function cadastrarConta(req){
     //Salvando usuario com id do estabelecimento
     const timeElapsed = Date.now();
     const today = new Date(timeElapsed); 
+    
+    var hash = await bcrypt.hash(req.body.senha, 10);
+
     var cont = {
         "nome" : req.body.nome,
         "cpf": req.body.cpf,
         "email" : req.body.email,
-        "senha" : req.body.senha,
+        "senha" : hash,
         "tipoConta" : req.body.tipoConta,
         "idEstabelecimento" : estabelecimento._id,
         "dataCadastro" : today.toLocaleDateString()
@@ -58,14 +63,17 @@ async function editarConta (idConta, req){
     .updateOne({_id: conta.idEstabelecimento},{$set:{nomeEstabelecimento: req.body.nomeEstabelecimento, 
                 tipoEstabelecimento: req.body.tipoEstabelecimento, cnpj: req.body.cnpj, 
                 cidade: req.body.cidade, estado: req.body.estado, endereco: req.body.endereco, 
-                emailEstabelecimento: req.body.emailEstabelecimento, 
-                contato: req.body.contato}}));
-
+                emailEstabelecimento: req.body.emailEstabelecimento, contato: req.body.contato}
+    }));
+    
+    var hash = await bcrypt.hash(req.body.senha, 10)
+    
     vetorResult.push(await contaSchema
     .updateOne({_id: idConta}, {$set:{nome: req.body.nome, cpf: req.body.cpf, 
-                email: req.body.email, senha: req.body.senha, 
+                email: req.body.email, senha: hash, 
                 tipoConta: req.body.tipoConta, idEstabelecimento: req.body.idEstabelecimento,
-                dataCadastro: req.body.dataCadastro}}));
+                dataCadastro: req.body.dataCadastro}
+    }));
     
 
     var result = new Result(vetorResult, true, "Conta alterada com sucesso!", 200);
@@ -87,9 +95,10 @@ async function excluirConta(idConta){
 }
 
 async function resetarSenha(idConta, req){
-    var resultado = await contaSchema.updateOne({_id: idConta},{$set:{senha: req.body.senha}});
+    var hash = await bcrypt.hash(req.body.senha, 10)
+    var resultado = await contaSchema.updateOne({_id: idConta},{$set:{senha: hash}});
     var result;
-
+      
     if(resultado.acknowledged) result = new Result(resultado, true, "senha atualizada sucesso", 200);
     else result = new Result(resultado, false, "senha não atualizada", 400);
 
