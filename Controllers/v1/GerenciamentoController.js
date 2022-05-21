@@ -7,23 +7,24 @@ exports.HistoricoDoacoes = async (req, res, next) =>{
     var id = req.params["id"];
     var result = await hisotricoDoacoes(id);
     res.status(result.status).send(result);
-};
+}
 
 exports.ListaOngs = async (req, res, next) =>{
     var result = await listaOngs();
     res.status(result.status).send(result);
-};
+
+}
 
 //Estabelecimento
 exports.GeraSolicitacaoParceriaParaOng = (req, res, next) =>{
-    result = new Result("GeraSolicitacaoParceriaParaOng", true, "Solicitação Gerada!")
+    var result = new Result("GeraSolicitacaoParceriaParaOng", true, "Solicitação Gerada!")
     console.log(result)
-    res.status(200).send(result)
-};
+    res.status(200).send(result)  
+}
 
 //Ong
 exports.ListaSolicitacoes = (req, res, next) =>{
-    result = new Result([
+    var result = new Result([
         {
             "ID": 1,
             "Data de Solicitação": "07/04/2022",            
@@ -36,20 +37,20 @@ exports.ListaSolicitacoes = (req, res, next) =>{
     ], true, "")
     console.log(result)
     res.status(200).send(result)
-};
+}
 
 
 //Ong
 exports.AceitarSolicitacoesDeEstabelecimentos = (req, res, next) =>{
-    result = new Result("AceitarSolicitacoesDeEstabelecimentos", true, "Solicitação aceita!")
+    var result = new Result("AceitarSolicitacoesDeEstabelecimentos", true, "Solicitação aceita!")
     console.log(result)
     res.status(200).send(result)
-};
+}
 
 
 //Estabelecimento
 exports.HistoricoRetiradas = (req, res, next) =>{
-    result = new Result([
+    var result = new Result([
         {
             "ID": 1,
             "Data de Retirada": "07/02/2022",            
@@ -78,12 +79,12 @@ exports.HistoricoRetiradas = (req, res, next) =>{
     )
     console.log(result)
     res.status(200).send(result)
-};
+}
 
 
 //Ong
 exports.HistoricoEntregas = (req, res, next) =>{
-    result = new Result([
+    var result = new Result([
         {
             "ID": 1,
             "Data de Retirada": "07/02/2022",            
@@ -111,6 +112,6 @@ exports.HistoricoEntregas = (req, res, next) =>{
     ], true, ""
     )
     console.log(result)
-    res.status(200).send(result)
-};
+    res.status(200).send(result)  
+}
 

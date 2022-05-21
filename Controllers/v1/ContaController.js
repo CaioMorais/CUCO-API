@@ -7,6 +7,7 @@ exports.Editar = async (req, res, next) =>{
     var id = req.params["id"];
     var result = await editarConta(id, req);
     res.status(result.status).send(result);
+
 }
 
 exports.Excluir = async (req, res, next) =>{
@@ -14,6 +15,7 @@ exports.Excluir = async (req, res, next) =>{
     var result = await excluirConta(id)
     console.log(result);
     res.status(result.status).send(result);
+
 }
 
 exports.Cadastrar = async (req, res) =>{
