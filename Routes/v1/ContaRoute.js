@@ -110,7 +110,7 @@ Contarouter.post('/v1/Conta/ResetarSenha/:id', ContaController.ResetarSenha)
  *  name: Conta
  *  description: API's de Conta
  * /api/v1/Conta/EnviaEmailResetSenha/:
- *  get:
+ *  post:
  *      tags: [Conta]
  *      parameters:
  *          - name: page_number
@@ -122,8 +122,7 @@ Contarouter.post('/v1/Conta/ResetarSenha/:id', ContaController.ResetarSenha)
  *          default:
  *              description: This is the default response for it
  */
- Contarouter.get('/v1/Conta/EnviaEmailResetSenha', ContaController.EnviaEmailResetSenha)
-
+ Contarouter.post('/v1/Conta/EnviaEmailResetSenha', ContaController.EnviaEmailResetSenha)
 
 
 module.exports = Contarouter

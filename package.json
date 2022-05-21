@@ -11,6 +11,7 @@
     "jsonwebtoken": "^8.5.1",
     "mongodb": "^4.5.0",
     "mongoose": "^6.2.9",
+    "nodemailer": "^6.7.5",
     "nodemon": "^2.0.15",
     "swagger-jsdoc": "^6.1.0",
     "swagger-ui-express": "^4.3.0"
@@ -18,5 +19,20 @@
   "devDependencies": {
     "jest": "^28.1.0",
     "supertest": "^6.2.3"
-  }
+  },
+  "name": "cuco-api",
+  "description": "CUCO - Tá na hora de comer",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/CaioMorais/CUCO-API.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/CaioMorais/CUCO-API/issues"
+  },
+  "homepage": "https://github.com/CaioMorais/CUCO-API#readme"
 }
