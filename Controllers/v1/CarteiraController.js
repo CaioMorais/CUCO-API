@@ -1,54 +1,56 @@
 let Result = require("../../Domain/Entities/Result");
 const { 
-        envioMetaCarteiraAtingido, inserirCarteira, listagemCarteiras, listagemCarteirasId, 
-        editandoCarteira, deletandoCarteira, editandoValorPrato, insereValorCarteira} = require("../../Services/v1/CarteiraService");
+        inserirCarteira, listagemCarteiras, listagemCarteirasId, 
+        editandoCarteira, deletandoCarteira, editandoValorPrato, listagemCarteiraIDRestaurante,
+        listagemCarteiraIDOng} = require("../../Services/v1/CarteiraService");
 
 
 exports.InsereCarteira = async (req, res, next) =>{
-    var result = new Result();
-    result = await inserirCarteira(req);
+    var result = await inserirCarteira(req);
     console.log(result);
-    res.status(200).send(result);
+    res.status(result.status).send(result);
 }
 
 exports.ListaCarteira = async (req, res, next) =>{
-    var listagem = await listagemCarteiras();
-    res.status(200).send(listagem);
+    var result = await listagemCarteiras();
+    res.status(result.status).send(result);
 }
 
 exports.ListaCarteiraId = async (req, res, next) =>{
     var id = req.params["id"];
-    var listagemId = await listagemCarteirasId(id);
-    res.status(200).send(listagemId);
+    var result = await listagemCarteirasId(id);
+    res.status(result.status).send(result);
+}
+
+exports.ListaCarteiraIdRestaurante = async (req, res, next) =>{
+    var id = req.params["id"];
+    var result = await listagemCarteiraIDRestaurante(id);
+    res.status(result.status).send(result);
+}
+
+exports.ListaCarteiraIdOng = async (req, res, next) =>{
+    var id = req.params["id"];
+    var result = await listagemCarteiraIDOng(id);
+    res.status(result.status).send(result);
 }
 
 exports.EditaCarteira = async (req, res, next) =>{
     var id = req.params["id"];
     var resposta = await editandoCarteira(id, req);
-    res.status(200).send(resposta);
+    res.status(result.status).send(resposta);
 }
 
 exports.DeletaCarteira = async (req, res, next) =>{
     var id = req.params["id"];
-    var resposta = await deletandoCarteira(id);
-    res.status(200).send(resposta);
+    var result = await deletandoCarteira(id);
+    res.status(result.status).send(result);
 }
+
 exports.EditaValorPrato = async(req, res, next) => {
     var id = req.body.id;
     var novoValor = req.body.valorPrato;
-    var resposta = await editandoValorPrato(id, novoValor);
-    res.status(200).send(resposta);
+    var result = await editandoValorPrato(id, novoValor);
+    res.status(result.status).send(result);
 }
 
-exports.IncrementaSaldo = async(req, res, next) =>{
-    var id = req.params["id"];
-    var resposta = await insereValorCarteira(id, req.body.valor);
-    res.status(200).send(resposta);
-}
-
-exports.EnviaEmail = (req, res, next) =>{
-    var result = new Result("EnviaEmail", true, 'Email enviado com Sucesso!');
-    console.log(result);
-    res.status(200).send(result);
-}
 

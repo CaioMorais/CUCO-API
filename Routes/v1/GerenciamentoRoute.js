@@ -64,14 +64,12 @@ const {verificaToken} = require("../../Security/usuarioMiddleware")
  */
  Gerenciamentorouter.get('/v1/Gerenciamento/ListaOngs',verificaToken, GerenciamentoController.ListaOngs)
 
-
-
 /**
  * @swagger
  * tags:
  *  name: Gerenciamento
  *  description: API's de Gerenciamento
- * /api/v1/Gerenciamento/AceitarSolicitacoesDeEstabelecimentos:
+ * /api/v1/Gerenciamento/AceitarSolicitacoesDeEstabelecimentos/:id:
  *  get:
  *      tags: [Gerenciamento]
  *      parameters:
@@ -84,7 +82,7 @@ const {verificaToken} = require("../../Security/usuarioMiddleware")
  *          default:
  *              description: This is the default response for it
  */
- Gerenciamentorouter.get('/v1/Gerenciamento/AceitarSolicitacoesDeEstabelecimentos', GerenciamentoController.AceitarSolicitacoesDeEstabelecimentos)
+ Gerenciamentorouter.get('/v1/Gerenciamento/AceitarSolicitacoesDeEstabelecimentos/:id', GerenciamentoController.AceitarSolicitacoesDeEstabelecimentos)
 
 
 /**
@@ -136,7 +134,7 @@ const {verificaToken} = require("../../Security/usuarioMiddleware")
  * tags:
  *  name: Gerenciamento
  *  description: API's de Gerenciamento
- * /api/v1/Gerenciamento/ListaSolicitacoes:
+ * /api/v1/Gerenciamento/listaSolicitacoesParaOng/:id:
  *  get:
  *      tags: [Gerenciamento]
  *      parameters:
@@ -149,6 +147,47 @@ const {verificaToken} = require("../../Security/usuarioMiddleware")
  *          default:
  *              description: This is the default response for it
  */
- Gerenciamentorouter.get('/v1/Gerenciamento/ListaSolicitacoes', GerenciamentoController.ListaSolicitacoes)
+ Gerenciamentorouter.get('/v1/Gerenciamento/listaSolicitacoesParaOng/:id', GerenciamentoController.ListaSolicitacoesParaOng)
+
+ /**
+ * @swagger
+ * tags:
+ *  name: Gerenciamento
+ *  description: API's de Gerenciamento
+ * /api/v1/Gerenciamento/RecusaSolicitacoesDeEstabelecimentos/:id:
+ *  get:
+ *      tags: [Gerenciamento]
+ *      parameters:
+ *          - name: page_number
+ *            default: 1
+ *            in: body
+ *            schema:
+ *              type: string
+ *      responses:
+ *          default:
+ *              description: This is the default response for it
+ */
+  Gerenciamentorouter.get('/v1/Gerenciamento/RecusaSolicitacoesDeEstabelecimentos/:id', GerenciamentoController.RecusaSolicitacoesDeEstabelecimentos)
+
+
+  /**
+ * @swagger
+ * tags:
+ *  name: Gerenciamento
+ *  description: API's de Conta
+ * /api/v1/Gerenciamento/ExcluirSolicitacoesDeEstabelecimentos/:id:
+ *  delete:
+ *      tags: [Conta]
+ *      parameters:
+ *          - name: page_number
+ *            default: 1
+ *            in: body
+ *            schema:
+ *              type: string
+ *      responses:
+ *          default:
+ *              description: This is the default response for it
+ */
+ Gerenciamentorouter.delete('/v1/Gerenciamento/ExcluirSolicitacoesDeEstabelecimentos/:id', GerenciamentoController.ExcluirSolicitacoesDeEstabelecimentos)
 
 module.exports = Gerenciamentorouter
