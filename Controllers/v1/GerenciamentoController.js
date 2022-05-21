@@ -1,7 +1,7 @@
 let Result = require("../../Domain/Entities/Result.js");
 const {hitoricoRetiradas, hisotricoEntrega, hisotricoDoacoes, geraSolicitacaoParceriaParaOng,  
-    aceitarSolicitacoesDeEstabelecimentos, 
-    listaOngs, listaSolicitacoes} = require("../../Services/v1/GerenciamentoService");
+    aceitarSolicitacoesDeEstabelecimentos,listaOngs, listaSolicitacoesParaOng, 
+    recusaSolicitacoesDeEstabelecimentos, excluirSolicitacaoDeEstabelecimento} = require("../../Services/v1/GerenciamentoService");
 
 exports.HistoricoDoacoes = async (req, res, next) =>{
     var id = req.params["id"];
@@ -16,35 +16,41 @@ exports.ListaOngs = async (req, res, next) =>{
 }
 
 //Estabelecimento
-exports.GeraSolicitacaoParceriaParaOng = (req, res, next) =>{
-    var result = new Result("GeraSolicitacaoParceriaParaOng", true, "Solicitação Gerada!")
-    console.log(result)
-    res.status(200).send(result)  
+exports.GeraSolicitacaoParceriaParaOng = async (req, res, next) =>{
+    var result = await geraSolicitacaoParceriaParaOng(req);
+    console.log(result);
+    res.status(result.status).send(result); 
 }
 
 //Ong
-exports.ListaSolicitacoes = (req, res, next) =>{
-    var result = new Result([
-        {
-            "ID": 1,
-            "Data de Solicitação": "07/04/2022",            
-            "Nome Estabelecimento": "Churrascaria Pão e Grill",          
-            "Bairro": "Jardim Itapuá",
-            "Cidade": "São Paulo",
-            "Estado": "SP",
-            "Status:": "Pendente"
-        },
-    ], true, "")
-    console.log(result)
-    res.status(200).send(result)
+exports.ListaSolicitacoesParaOng = async (req, res, next) =>{
+    var id = req.params["id"];
+    var result = await listaSolicitacoesParaOng(id);
+    console.log(result);
+    res.status(result.status).send(result); 
 }
 
 
 //Ong
-exports.AceitarSolicitacoesDeEstabelecimentos = (req, res, next) =>{
-    var result = new Result("AceitarSolicitacoesDeEstabelecimentos", true, "Solicitação aceita!")
+exports.AceitarSolicitacoesDeEstabelecimentos = async (req, res, next) =>{
+    var id = req.params["id"];
+    var result = await aceitarSolicitacoesDeEstabelecimentos(id);
     console.log(result)
-    res.status(200).send(result)
+    res.status(result.status).send(result)
+}
+
+exports.RecusaSolicitacoesDeEstabelecimentos = async (req, res, next) =>{
+    var id = req.params["id"];
+    var result = await recusaSolicitacoesDeEstabelecimentos(id);
+    console.log(result)
+    res.status(result.status).send(result)
+}
+
+exports.ExcluirSolicitacoesDeEstabelecimentos = async (req, res, next) =>{
+    var id = req.params["id"];
+    var result = await excluirSolicitacaoDeEstabelecimento(id);
+    console.log(result)
+    res.status(result.status).send(result)
 }
 
 

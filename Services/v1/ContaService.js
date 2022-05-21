@@ -2,11 +2,11 @@ const bcrypt = require("bcryptjs");
 let Result = require("../../Domain/Entities/Result");
 let contaSchema = require('../../Domain/Models/v1/ContaModel');
 let estabelecimentoSchema = require('../../Domain/Models/v1/EstabelecimentoModel');
+var nodemailer = require('nodemailer');
 
 
 async function cadastrarConta(req){
     try {
-
         //Verificação de exixtencia de dados 
         let dadoEmail = await verificaContaExiste(req.body.email);
         let dadoCPF = await verificaCPF(req.body.cpf);
@@ -56,7 +56,7 @@ async function cadastrarConta(req){
         return result;
        
     } catch (error) {
-      var result = new Result(null, false, "Internal error", 500);
+      var result = new Result(error, false, "Internal error", 500);
       return result;
     }
 }
@@ -89,7 +89,7 @@ async function editarConta (idConta, req){
         return result;
          
     } catch (error) {
-      var result = new Result(null, false, "Internal error", 500);
+      var result = new Result(error, false, "Internal error", 500);
       return result;
     }
 
@@ -110,7 +110,7 @@ async function excluirConta(idConta){
         return result;
       
     } catch (error) {
-      var result = new Result(null, false, "Internal error", 500);
+      var result = new Result(error, false, "Internal error", 500);
       return result;
     }
     
@@ -118,7 +118,6 @@ async function excluirConta(idConta){
 
 async function resetarSenha(idConta, req){
     try {
-
         var hash = await bcrypt.hash(req.body.senha, 10)
         var resultado = await contaSchema.updateOne({_id: idConta},{$set:{senha: hash}});
         var result;
@@ -129,20 +128,63 @@ async function resetarSenha(idConta, req){
         return result;
        
     } catch (error) {
-      var result = new Result(null, false, "Internal error", 500);
+      var result = new Result(error, false, "Internal error", 500);
       return result;
     }
 
 }
 
-async function enviaEmailResetSenha(){
+async function enviaEmailResetSenha(req){ 
     try {
+        console.log(req.body.email);
+        var conta = await verificaContaExiste(req.body.email);
+        if(!conta){
+            var result = new Result(null, false, "Email não enviado, conta inexistente", 400);
+            return result; 
+        }
+        var remetente = nodemailer.createTransport( {
+            host: "smtp-mail.outlook.com",
+            service: "outlook",
+            port: 587,
+            secureConnection: false,
+            tls: {
+              ciphers: 'SSLv3'                            // tls version
+            },
+            auth: {
+               user:"no-reply.cuco@outlook.com.br",
+               pass:"Cuco1234"
+            }
+         });
+      
+         var emailASerEnviado = {
+      
+            from: "no-reply.cuco@outlook.com.br",
+            
+            to: conta.email,
+            
+            subject: "Troca de Senha Cuco",
+            
+            text: "Você solicitou a troca de senha"+
+                   " entre no link a seguir para proseguir www.linkpaginatrocadesenha/" + conta._id + ".com ." +
+                   " Caso não tenha solicitado ignore esse e-mail e considere trocar sua senha."+
+                   " A equipe CUCO está a disposição em caso de qualquer duvida."
+                        
+         };
+      
+         remetente.sendMail(emailASerEnviado, function(error){
+             if (error) {
+                 console.log(error);
+             } else {
+                 console.log("Email enviado com sucesso.");
+             }
+         });
 
-        var result = new Result(null, true, "E-mail enviado para o endereço solicitado", 200);
-        return result;
+
+         var result = new Result(null, true, "Email enviado com sucesso", 200);
+         return result; 
        
     } catch (error) {
-      var result = new Result(null, false, "Internal error", 500);
+      var result = new Result(error, false, "Internal error", 500);
       return result;
     }
 

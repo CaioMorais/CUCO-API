@@ -17,21 +17,43 @@ async function  inserirCarteira(req) {
       return result;
 
     } catch (error) {
-      var result = new Result(null, false, "Internal error", 500);
+      var result = new Result(error, false, "Internal error", 500);
       return result;
     }
 
 }
 
+async function listagemCarteiraIDRestaurante(id) {
+   try {
+      console.log(id)   
+      var retorno = await carteiraSchema
+               .find({idRestaurante : id, status : "true"});
+   
+      var result = new Result(retorno, true, "lista de Carteiras", 200);
+      return result;
+
+   } catch (error) {
+     var result = new Result(error, false, "Internal error", 500);
+     return result;
+   }
+}
+
+async function listagemCarteiraIDOng(id) {
+   try { 
+      var retorno = await carteiraSchema
+               .find({idOng : id, status : "true"});
+   
+      var result = new Result(retorno, true, "lista de Carteiras", 200);
+      return result;
+
+   } catch (error) {
+     var result = new Result(error, false, "Internal error", 500);
+     return result;
+   }
+}
+
 async function listagemCarteiras() {
    try {
-
-      var carteira = carteiraSchema(req.body);
-
-      await carteira.save();
-   
-      var result = new Result(carteira, true, "Carteira inserida com sucesso!", 200);
-      return result;
    
       var retorno = await carteiraSchema
                .find();
@@ -40,20 +62,13 @@ async function listagemCarteiras() {
       return result;
 
    } catch (error) {
-     var result = new Result(null, false, "Internal error", 500);
+     var result = new Result(error, false, "Internal error", 500);
      return result;
    }
 }
 
 async function listagemCarteirasId(id) {
    try {
-       
-      var carteira = carteiraSchema(req.body);
-
-      await carteira.save();
-   
-      var result = new Result(carteira, true, "Carteira inserida com sucesso!", 200);
-      return result;   
       var retorno = await carteiraSchema
                 .findById(id); 
     
@@ -61,7 +76,7 @@ async function listagemCarteirasId(id) {
       return result; 
 
    } catch (error) {
-     var result = new Result(null, false, "Internal error", 500);
+     var result = new Result(error, false, "Internal error", 500);
      return result;
    }
  
@@ -69,20 +84,13 @@ async function listagemCarteirasId(id) {
 
 async function listagemEstabelecimentoId(id) {   
    try {
-       
-      var carteira = carteiraSchema(req.body);
-
-      await carteira.save();
-   
-      var result = new Result(carteira, true, "Carteira inserida com sucesso!", 200);
-      return result;
       var retorno = await estabelecimentoSchema.findById(id); 
     
       var result = new Result(retorno, true, "Lista de estabelecimentos", 200);
       return result;    
 
    } catch (error) {
-     var result = new Result(null, false, "Internal error", 500);
+     var result = new Result(error, false, "Internal error", 500);
      return result;
    }
 
@@ -90,68 +98,51 @@ async function listagemEstabelecimentoId(id) {
 
 async function editandoCarteira(id, req) {
    try {
-       
-      var carteira = carteiraSchema(req.body);
-
-      await carteira.save();
-   
-      var result = new Result(carteira, true, "Carteira inserida com sucesso!", 200);
-      return result;
       var retorno = await carteiraSchema
                .updateOne({_id: id}, {$set:{metaFinal: req.body.metaFinal, valorAtual: req.body.valorAtual, 
-                  idRestaurante: req.body.idRestaurante, idOng: req.body.idOng, valorPrato: req.body.valorPrato}});
+                  idRestaurante: req.body.idRestaurante, idOng: req.body.idOng, valorPrato: req.body.valorPrato,
+                  entregasPendentes: req.body.entregasPendentes}});
    
       var result = new Result(retorno, true, "Carteira editada com sucesso", 200);
       return result;
 
    } catch (error) {
-     var result = new Result(null, false, "Internal error", 500);
+     var result = new Result(error, false, "Internal error", 500);
      return result;
    }
 }
 
 async function insereValorCarteira (id, valor){
    try {
-
-      var carteira = carteiraSchema(req.body);
-
-      await carteira.save();
-   
-      var result = new Result(carteira, true, "Carteira inserida com sucesso!", 200);
-      return result;
       var carteira = await carteiraSchema.findOne({_id : id});
    
       if(parseFloat(carteira.valorAtual) + parseFloat(valor) >= parseFloat(carteira.metaFinal))
       {
          envioMetaCarteiraAtingido(carteira);
          var valorAtual = (parseFloat(carteira.valorAtual) + parseFloat(valor) - parseFloat(carteira.metaFinal)).toString();
-         var retorno = await carteiraSchema.updateOne({_id: carteira.id}, {$set:{valorAtual: valorAtual}});
-   
+         var entregasPendentes = parseFloat(carteira.entregasPendentes) + 1;
+         var retorno = await carteiraSchema.updateOne({_id: carteira.id}, {$set:{valorAtual: valorAtual, 
+            entregasPendentes: entregasPendentes}});
+         
          var result = new Result(retorno, true, "Valor inserido com sucesso, carteira teve seu limite atingido", 200);
          return result;
-         //inserir entregas pendentes na tabela carteira 
       }
       else{
          var valorAtual = (parseFloat(carteira.valorAtual) + parseFloat(valor)).toString();
          var retorno = await carteiraSchema.updateOne({_id: carteira.id}, {$set:{valorAtual: valorAtual}});
          var result = new Result(retorno, true, "Valor inserido com sucesso", 200);
+         return result;
       }
        
    } catch (error) {
-     var result = new Result(null, false, "Internal error", 500);
+     var result = new Result(error, false, "Internal error", 500);
      return result;
    }
 }
 
+
 async function envioMetaCarteiraAtingido(carteira){
    try {
-
-      var carteira = carteiraSchema(req.body);
-
-      await carteira.save();
-   
-      var result = new Result(carteira, true, "Carteira inserida com sucesso!", 200);
-      return result;
       var dadosEstabelecimento = await listagemEstabelecimentoId(carteira.idRestaurante);
    
       var remetente = nodemailer.createTransport( {
@@ -199,19 +190,13 @@ async function envioMetaCarteiraAtingido(carteira){
 async function deletandoCarteira(id) {
    try {
 
-      var carteira = carteiraSchema(req.body);
-
-      await carteira.save();
-   
-      var result = new Result(carteira, true, "Carteira inserida com sucesso!", 200);
-      return result;
       var retorno = await carteiraSchema
                .deleteOne({_id: id});
       var result = new Result(retorno, true, "Carteira deletada com sucesso", 200);
       return result;
 
    } catch (error) {
-     var result = new Result(null, false, "Internal error", 500);
+     var result = new Result(error, false, "Internal error", 500);
      return result;
    }
 
@@ -220,26 +205,19 @@ async function deletandoCarteira(id) {
 async function editandoValorPrato(id, novoValor){
    try {
 
-      var carteira = carteiraSchema(req.body);
-
-      await carteira.save();
-   
-      var result = new Result(carteira, true, "Carteira inserida com sucesso!", 200);
-      return result;
       var carteira = carteiraSchema();
       carteira = carteiraSchema.findById(id);
       carteira.valorPrato = novoValor;
    
       var retorno = await carteiraSchema
-      .updateOne({_id: id}, {$set:{metaFinal: carteira.metaFinal, valorAtual: carteira.valorAtual, 
-         idRestaurante: carteira.idRestaurante, idOng: carteira.idOng, valorPrato: carteira.valorPrato}});
+      .updateOne({_id: id}, {$set:{valorPrato: carteira.valorPrato}});
       
       var result = new Result(retorno, true, "Valor do prato editado com sucesso", 200);
       return result;
    
        
    } catch (error) {
-     var result = new Result(null, false, "Internal error", 500);
+     var result = new Result(error, false, "Internal error", 500);
      return result;
    }
 
@@ -248,6 +226,6 @@ async function editandoValorPrato(id, novoValor){
 
 module.exports = {editandoValorPrato, inserirCarteira, 
                   listagemCarteiras, listagemCarteirasId, editandoCarteira, 
-                  deletandoCarteira, insereValorCarteira}
+                  deletandoCarteira, insereValorCarteira, listagemCarteiraIDRestaurante, listagemCarteiraIDOng}
 
  

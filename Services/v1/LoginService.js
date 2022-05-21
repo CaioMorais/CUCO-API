@@ -15,7 +15,7 @@ async function realizarLogin(email, senha) {
         return result;
 
     } catch (error) {
-        var result = new Result(null, false, "Internal error", 500);
+        var result = new Result(error, false, "Internal error", 500);
         return result;
     }
 

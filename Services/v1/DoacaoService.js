@@ -2,6 +2,7 @@ let Result = require("../../Domain/Entities/Result");
 let doacaoSchema = require('../../Domain/Models/v1/DoacaoModel');
 let clienteDoadorSchema = require('../../Domain/Models/v1/ClienteDoadorModel');
 let carteira = require('../../Services/v1/CarteiraService');
+let entregaRetiradasSchema = require('../../Domain/Models/v1/EntregaRetiradaModel');
 var nodemailer = require('nodemailer');
 
 function gerarQRCodeLinkDoacao(){
@@ -13,7 +14,7 @@ function gerarQRCodeLinkDoacao(){
         return result
 
     } catch (error) {
-      var result = new Result(null, false, "Internal error", 500);
+      var result = new Result(error, false, "Internal error", 500);
       return result;
     }
 
@@ -62,7 +63,7 @@ async function cadastraDoacao(req, idRestaurante){
         return result;
        
     } catch (error) {
-      var result = new Result(null, false, "Internal error", 500);
+      var result = new Result(error, false, "Internal error", 500);
       return result;
     }
 }
@@ -112,48 +113,70 @@ async function enviarEmailRecompensa(emailcliente){
 }
 
 //Ong
-function gerarTokenIndentificacaoRetiradaDoacoes(){
+async function gerarTokenIndentificacaoRetiradaDoacoes(idCarteira){
     try {
-
-        var resultado = '';
+        var tokenIdnetificacao = '';
         for (var i = 80; i > 0; --i) {
-            resultado += (Math.floor(Math.random()*256)).toString(16);
+            tokenIdnetificacao += (Math.floor(Math.random()*256)).toString(16);
         }
-        var result = new Result(resultado, true, "Token de identificação para retirada de doações", 200);
+        var entregaRetiradasDocument = await entregaRetiradasSchema.findOne({idCarteira: idCarteira});
+        console.log(entregaRetiradasDocument);
+        await entregaRetiradasSchema.updateOne({_id: entregaRetiradasDocument._id},
+            {$set:{tokenOng: tokenIdnetificacao}})
+        
+        var result = new Result(tokenIdnetificacao, true, "Token de identificação para retirada de doações", 200);
         return result;
        
     } catch (error) {
-      var result = new Result(null, false, "Internal error", 500);
+      var result = new Result(error, false, "Internal error", 500);
       return result;
     }
 
 } 
 
-
 //Estabelecimento
-function gerarTokenIndentificacaoEntregaDoacoes(){
+async function gerarTokenIndentificacaoEntregaDoacoes(idCarteira){
     try {
-
-        var resultado = '';
+        var tokenIdnetificacao = '';
         for (var i = 80; i > 0; --i) {
-            resultado += (Math.floor(Math.random()*256)).toString(16);
+            tokenIdnetificacao += (Math.floor(Math.random()*256)).toString(16);
         }
-        var result = new Result(resultado, true, "Token de identificação para entrega de doações", 200);
+        var entregaRetiradasDocument = await entregaRetiradasSchema.findOne({idCarteira: idCarteira});
+        await entregaRetiradasSchema.updateOne({_id: entregaRetiradasDocument._id},
+            {$set:{tokenRestaurante: tokenIdnetificacao}})
+        
+        var result = new Result(tokenIdnetificacao, true, "Token de identificação para entrega de doações", 200);
         return result;
 
     } catch (error) {
-      var result = new Result(null, false, "Internal error", 500);
+      var result = new Result(error, false, "Internal error", 500);
       return result;
     }
 
 }
 
 //Ong Estabelecimento
-function validacaoTokens(){
+async function validacaoTokens(idCarteira, req){
     try {
-       
+        var resultado;
+        if(req.body.tipoConta = "ONG"){
+           resultado = await entregaRetiradasSchema.findOne({idCarteira: idCarteira, tokenOng: req.body.token});
+        }
+        else{
+           resultado = await entregaRetiradasSchema.findOne({idCarteira: idCarteira, tokenRestaurante: req.body.token});
+        }
+        
+        if(resultado){
+            var result = new Result(resultado, true, "Token Validado", 200);
+            return result;
+        }
+        else{
+            var result = new Result(resultado, false, "Token não Validado", 400);
+            return result;
+        }
+            
     } catch (error) {
-      var result = new Result(null, false, "Internal error", 500);
+      var result = new Result(error, false, "Internal error", 500);
       return result;
     }
     

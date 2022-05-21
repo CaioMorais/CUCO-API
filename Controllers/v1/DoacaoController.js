@@ -9,20 +9,23 @@ exports.QRCodeLinkDoacao = (req, res, next) =>{
     res.status(result.status).send(result);
 }
 
-exports.ValidaToken = (req, res, next) =>{
-    var result = new Result("ValidaToken", true, 'Token Confirmado com Sucesso');
+exports.ValidaToken = async (req, res, next) =>{
+    var id = req.params["idCarteira"];
+    var result = await validacaoTokens(id,req);
     console.log(result);
     res.status(200).send(result);
 }
 
-exports.GeraTokenRetirada = (req, res, next) =>{
-    var result = gerarTokenIndentificacaoRetiradaDoacoes();
+exports.GeraTokenRetirada =  async (req, res, next) =>{
+    var id = req.params["idCarteira"];
+    var result =  await gerarTokenIndentificacaoRetiradaDoacoes(id);
     console.log(result);
     res.status(result.status).send(result);
 }
 
-exports.GeraTokenEntrega = (req, res, next) =>{
-    var result = gerarTokenIndentificacaoEntregaDoacoes();
+exports.GeraTokenEntrega =  async (req, res, next) =>{
+    var id = req.params["idCarteira"];
+    var result =  await gerarTokenIndentificacaoEntregaDoacoes(id);
     console.log(result);
     res.status(result.status).send(result);
 }
