@@ -165,7 +165,9 @@ async function aceitarSolicitacoesDeEstabelecimentos(idSolicitacao){
       var entrRet = {
         "idCarteira" : carteira._id,
         "tokenOng" : " ",
-        "tokenRestaurante" : " "
+        "tokenRestaurante" : " ",
+        "verificaTokenOng" : "false", 
+        "verificaTokenRestaurante" : "false" 
       }
       var entregaRetiradas = entregaRetiradasSchema(entrRet);
       var resultEntregasRetirada = await entregaRetiradas.save();
