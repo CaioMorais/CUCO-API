@@ -8,7 +8,7 @@ exports.InsereCarteira = async (req, res, next) =>{
     var result = new Result();
     result = await inserirCarteira(req);
     console.log(result);
-    res.status(200).send(result);
+    res.status(201).send(result);
 }
 
 exports.ListaCarteira = async (req, res, next) =>{
@@ -46,9 +46,4 @@ exports.IncrementaSaldo = async(req, res, next) =>{
     res.status(200).send(resposta);
 }
 
-exports.EnviaEmail = (req, res, next) =>{
-    var result = new Result("EnviaEmail", true, 'Email enviado com Sucesso!');
-    console.log(result);
-    res.status(200).send(result);
-}
 
