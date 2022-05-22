@@ -1,27 +1,27 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
-var entregaRetiradasSchema = new Schema({
+var HistoricoEntregaRetiradasSchema = new Schema({
     idCarteira: {
         type: String,
         required: true 
     },
-    tokenOng: {
+    dataEntregaRetirada: {
         type: String,
         required: true
     },
-    tokenRestaurante: {
+    valorEntregado: {
         type: String,
         required: true
     },
-    verificaTokenOng: {
+    nomeOng: {
         type: String,
         required: true
     },
-    verificaTokenRestaurante: {
+    nomeRestaurante: {
         type: String,
         required: true
     }
 })
 
-module.exports = mongoose.model('entregaRetirada', entregaRetiradasSchema);
+module.exports = mongoose.model('HistoricoEntregaRetirada', HistoricoEntregaRetiradasSchema);
