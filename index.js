@@ -1,14 +1,16 @@
 const express = require('express');
-const app = express();
+const cors = require('cors')
 const bodyParser = require ("body-parser")
 const router = express.Router();
 const swaggerJsDoc = require("swagger-jsdoc");
 const swaggerUi = require("swagger-ui-express");
 const mongoose = require('mongoose');
+const app = express();
 app.use(bodyParser.json())
 app.use(express.urlencoded({ extended: true} ));
 app.use(express.json());
 app.use(express.json({ type: 'application/json' }));
+app.use(cors({origin: '*'}));
 
 const port = process.env.PORT || 3000;
 

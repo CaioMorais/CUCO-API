@@ -48,7 +48,7 @@ const DoacaoController = require("../../Controllers/v1/DoacaoController");
  * tags:
  *  name: Doação
  *  description: API's de Doação
- * /api/v1/Doacao/GeraTokenRetirada:
+ * /api/v1/Doacao/GeraTokenRetirada/:idCarteira:
  *  get:
  *      tags: [Doação]
  *      parameters:
@@ -61,15 +61,15 @@ const DoacaoController = require("../../Controllers/v1/DoacaoController");
  *          default:
  *              description: This is the default response for it
  */
- Doacaorouter.get('/v1/Doacao/GeraTokenRetirada', DoacaoController.GeraTokenRetirada)
+ Doacaorouter.get('/v1/Doacao/GeraTokenRetirada/:idCarteira', DoacaoController.GeraTokenRetirada)
 
 /**
  * @swagger
  * tags:
  *  name: Doação
  *  description: API's de Doação
- * /api/v1/Doacao/ValidaToken:
- *  get:
+ * /api/v1/Doacao/ValidaToken/:idCarteira:
+ *  post:
  *      tags: [Doação]
  *      parameters:
  *          - name: page_number
@@ -81,7 +81,7 @@ const DoacaoController = require("../../Controllers/v1/DoacaoController");
  *          default:
  *              description: This is the default response for it
  */
- Doacaorouter.get('/v1/Doacao/ValidaToken', DoacaoController.ValidaToken)
+ Doacaorouter.post('/v1/Doacao/ValidaToken/:idCarteira', DoacaoController.ValidaToken)
 
 
 /**
@@ -89,7 +89,7 @@ const DoacaoController = require("../../Controllers/v1/DoacaoController");
  * tags:
  *  name: Doação
  *  description: API's de Doação
- * /api/v1/Doacao/GeraTokenEntrega:
+ * /api/v1/Doacao/GeraTokenEntrega/:idCarteira:
  *  get:
  *      tags: [Doação]
  *      parameters:
@@ -102,6 +102,6 @@ const DoacaoController = require("../../Controllers/v1/DoacaoController");
  *          default:
  *              description: This is the default response for it
  */
- Doacaorouter.get('/v1/Doacao/GeraTokenEntrega', DoacaoController.GeraTokenEntrega)
+ Doacaorouter.get('/v1/Doacao/GeraTokenEntrega/:idCarteira', DoacaoController.GeraTokenEntrega)
 
 module.exports = Doacaorouter

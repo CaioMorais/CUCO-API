@@ -1,12 +1,8 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
-var carteiraSchema = new Schema({
-    metaFinal: {
-        type: String,
-        required: true 
-    },
-    valorAtual: {
+var contratoORSchema = new Schema({
+    idOng: {
         type: String,
         required: true 
     },
@@ -14,23 +10,30 @@ var carteiraSchema = new Schema({
         type: String,
         required: true 
     },
-    idOng: {
+    respostaOng: {
         type: String,
-        required: true 
+        required: true
     },
-    valorPrato: {
+    respostaRestaurante: {
         type: String,
-        required: true 
-    },
-    entregasPendentes: {
-        type: String,
-        required: true 
+        required: true
     },
     status: {
         type: String,
         required: true 
-    } 
+    },
+    dataSolicitacao: {
+        type: String,
+        required: true 
+    },
+    dataResposta: {
+        type: String,
+        required: true 
+    },
+    idCarteira: {
+        type: String,
+        required: true 
+    }
 })
 
-module.exports = mongoose.model('carteira', carteiraSchema);
-
+module.exports = mongoose.model('contrato', contratoORSchema);
