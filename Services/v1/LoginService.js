@@ -43,7 +43,8 @@ const autentica = async ({ email, senha }) => {
     const token = jwt.sign(
         {
             userid: _id,
-            email,
+            email, 
+            usuario
         },
         SECRET,
         {

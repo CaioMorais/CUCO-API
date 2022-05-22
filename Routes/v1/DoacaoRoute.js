@@ -68,7 +68,7 @@ const DoacaoController = require("../../Controllers/v1/DoacaoController");
  * tags:
  *  name: Doação
  *  description: API's de Doação
- * /api/v1/Doacao/ValidaToken/:id:
+ * /api/v1/Doacao/ValidaToken/:idCarteira:
  *  post:
  *      tags: [Doação]
  *      parameters:
@@ -81,7 +81,7 @@ const DoacaoController = require("../../Controllers/v1/DoacaoController");
  *          default:
  *              description: This is the default response for it
  */
- Doacaorouter.post('/v1/Doacao/ValidaToken/:id', DoacaoController.ValidaToken)
+ Doacaorouter.post('/v1/Doacao/ValidaToken/:idCarteira', DoacaoController.ValidaToken)
 
 
 /**

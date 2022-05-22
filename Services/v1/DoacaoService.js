@@ -3,6 +3,9 @@ let doacaoSchema = require('../../Domain/Models/v1/DoacaoModel');
 let clienteDoadorSchema = require('../../Domain/Models/v1/ClienteDoadorModel');
 let carteira = require('../../Services/v1/CarteiraService');
 let entregaRetiradasSchema = require('../../Domain/Models/v1/EntregaRetiradaModel');
+let historicoEntregaRetiradasSchema = require("../../Domain/Models/v1/HistoricoEntregaRetiradas");
+let carteiraSchema = require("../../Domain/Models/v1/CarteiraModel");
+let estabelecimentoSchema = require("../../Domain/Models/v1/EstabelecimentoModel");
 var nodemailer = require('nodemailer');
 
 function gerarQRCodeLinkDoacao(){
@@ -159,21 +162,58 @@ async function gerarTokenIndentificacaoEntregaDoacoes(idCarteira){
 async function validacaoTokens(idCarteira, req){
     try {
         var resultado;
-        if(req.body.tipoConta = "ONG"){
-           resultado = await entregaRetiradasSchema.findOne({idCarteira: idCarteira, tokenOng: req.body.token});
+        var resultadoHistorico;
+        console.log(idCarteira);
+        console.log(req.body.tipoConta)
+        if(req.body.tipoConta == "ONG"){
+            resultado = await entregaRetiradasSchema.findOne({idCarteira: idCarteira, tokenOng: req.body.token});
         }
         else{
-           resultado = await entregaRetiradasSchema.findOne({idCarteira: idCarteira, tokenRestaurante: req.body.token});
+            resultado = await entregaRetiradasSchema.findOne({idCarteira: idCarteira, tokenRestaurante: req.body.token});
         }
         
         if(resultado){
-            var result = new Result(resultado, true, "Token Validado", 200);
+            var entregaRetiradasDocument = await entregaRetiradasSchema.findOne({idCarteira: idCarteira});
+            if (req.body.tipoConta == "ONG") {           
+                await entregaRetiradasSchema.updateOne({_id: entregaRetiradasDocument._id},
+                {$set:{verificaTokenOng: "true"}})
+            } else {
+                await entregaRetiradasSchema.updateOne({_id: entregaRetiradasDocument._id},
+                {$set:{verificaTokenRestaurante: "true"}})
+            }
+            
+            entregaRetiradasDocument = await entregaRetiradasSchema.findOne({idCarteira: idCarteira});
+            if(entregaRetiradasDocument.verificaTokenOng == "true" && entregaRetiradasDocument.verificaTokenRestaurante == "true"){
+                console.log("passou por aqui ")
+                await entregaRetiradasSchema.updateOne({_id: entregaRetiradasDocument._id},
+                    {$set:{verificaTokenOng: "false", verificaTokenRestaurante: "false",
+                    tokenRestaurante: "", tokenOng: ""}})
+
+                const timeElapsed = Date.now();
+                const today = new Date(timeElapsed); 
+                var ctr = await carteiraSchema.findOne({_id: idCarteira});
+                var ong = await estabelecimentoSchema.findOne({_id: ctr.idOng});
+                var rest = await estabelecimentoSchema.findOne({_id: ctr.idRestaurante});
+                var h = {
+                    "idCarteira" : idCarteira,
+                    "dataEntregaRetirada" : today.toLocaleDateString(),
+                    "valorEntregado" : ctr.metaFinal,
+                    "nomeOng" : ong.nomeEstabelecimento,
+                    "nomeRestaurante" : rest.nomeEstabelecimento 
+                }
+                    
+                var geraHistoricoEntregaRetirada = historicoEntregaRetiradasSchema(h);
+                resultadoHistorico = await geraHistoricoEntregaRetirada.save();
+            }
+
+            var result = new Result(resultadoHistorico, true, "Token Validado", 200);
             return result;
         }
         else{
             var result = new Result(resultado, false, "Token não Validado", 400);
             return result;
         }
+
             
     } catch (error) {
       var result = new Result(error, false, "Internal error", 500);
