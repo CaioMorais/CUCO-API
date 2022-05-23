@@ -66,8 +66,19 @@ async function listaOngs(){
 
 async function listaSolicitacoesEstabelecimentos(idEstabelecimento){
   try {
-      var solicitacao = await contratoORSchema.find({idEstabelecimento: idEstabelecimento});
-      var result = new Result(solicitacao, true, "Solicitação efetuada", 200);
+      var solicitacao = await contratoORSchema.find({idRestaurante: idEstabelecimento});
+
+      var ONG =  await estabelecimentoSchema.findOne({_id: solicitacao.idOng});
+
+      var resultado = {
+          "nomeOng" : ONG.nomeEstabelecimento,
+          "respostaOng" : solicitacao.respostaOng,
+          "dataSolicitacao" : solicitacao.dataSolicitacao,
+          "dataResposta" : solicitacao.dataResposta,
+          "contatoONG": ONG.contato
+      }
+
+      var result = new Result(resultado, true, "Solicitação efetuada", 200);
       return result;
   } catch (error) {
     var result = new Result(error, false, "Internal error", 500);
