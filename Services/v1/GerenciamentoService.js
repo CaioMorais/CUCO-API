@@ -8,7 +8,7 @@ let entregaRetiradasSchema = require('../../Domain/Models/v1/EntregaRetiradaMode
 let historicoEntregaRetiradasSchema = require('../../Domain/Models/v1/HistoricoEntregaRetiradas');
 
 //Ong
-function hitoricoRetiradas(idEstabelecimento){
+async function hitoricoRetiradas(idEstabelecimento){
     try {
       var element = [];
       var retiradas = await historicoEntregaRetiradasSchema.find({idRestaurante: idEstabelecimento}); 
@@ -32,7 +32,7 @@ function hitoricoRetiradas(idEstabelecimento){
 }
 
 //Estabelecimento
-function hisotricoEntrega(idEstabelecimento){
+async function hisotricoEntrega(idEstabelecimento){
     try {
       var element = [];
       var retiradas = await historicoEntregaRetiradasSchema.find({idRestaurante: idEstabelecimento}); 
