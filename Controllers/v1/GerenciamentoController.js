@@ -62,7 +62,7 @@ exports.ExcluirSolicitacoesDeEstabelecimentos = async (req, res, next) =>{
 
 
 //Estabelecimento
-exports.HistoricoRetiradas = (req, res, next) =>{
+exports.HistoricoRetiradas = async (req, res, next) =>{
     var id = req.params["id"];
     var result = await hitoricoRetiradas(id);
     res.status(result.status).send(result);
@@ -70,7 +70,7 @@ exports.HistoricoRetiradas = (req, res, next) =>{
 
 
 //Ong
-exports.HistoricoEntregas = (req, res, next) =>{
+exports.HistoricoEntregas = async (req, res, next) =>{
     var id = req.params["id"];
     var result = await hisotricoEntrega(id);
     res.status(result.status).send(result);
