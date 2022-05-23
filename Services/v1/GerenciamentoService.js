@@ -137,6 +137,7 @@ async function listaSolicitacoesParaOng(idOng){
         var carteira = await carteiraSchema.findOne({_id: solicitacoes[index].idCarteira});
 
         var resultado = {
+            "idSolicitacao" : solicitacoes._id,
             "nomeEstabelecimento" : restaurante.nomeEstabelecimento,
             "endereco" : restaurante.endereco,
             "contato" : restaurante.contato,
