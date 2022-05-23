@@ -41,7 +41,7 @@ const DoacaoController = require("../../Controllers/v1/DoacaoController");
  *          default:
  *              description: This is the default response for it
  */
- Doacaorouter.get('/v1/Doacao/QRCodeLinkDoacao', DoacaoController.QRCodeLinkDoacao)
+//  Doacaorouter.get('/v1/Doacao/QRCodeLinkDoacao/:id', DoacaoController.QRCodeLinkDoacao)
 
 /**
  * @swagger
