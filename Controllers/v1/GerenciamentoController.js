@@ -63,68 +63,16 @@ exports.ExcluirSolicitacoesDeEstabelecimentos = async (req, res, next) =>{
 
 //Estabelecimento
 exports.HistoricoRetiradas = (req, res, next) =>{
-    var result = new Result([
-        {
-            "ID": 1,
-            "Data de Retirada": "07/02/2022",            
-            "Nome Estabelecimento": "Churrascaria Pão e Grill",         
-            "Nome Responsável": "José Walter", 
-            "Contato Estabelecimento" : "11 93242-9871",           
-            "Quantidade de Concessoes": "200",            
-            "Endereço": "Avenida Brasil, 534",
-            "Bairro": "Jardim Itapuá",
-            "Cidade": "São Paulo",
-            "Estado": "SP"
-        },
-        {
-            "ID": 2,
-            "Data de Retirada": "15/03/2022",            
-            "Nome Estabelecimento": "Churrascaria Pão e Grill",         
-            "Nome Responsável": "Manoel Miranda da Silva", 
-            "Contato Estabelecimento" : "11  93242-9871",           
-            "Quantidade de Concessoes": "150",            
-            "Endereço": "Avenida Brasil, 534",
-            "Bairro": "Jardim Itapuá",
-            "Cidade": "São Paulo",
-            "Estado": "SP"           
-        }
-    ], true, ""
-    )
-    console.log(result)
-    res.status(200).send(result)
+    var id = req.params["id"];
+    var result = await hitoricoRetiradas(id);
+    res.status(result.status).send(result);
 }
 
 
 //Ong
 exports.HistoricoEntregas = (req, res, next) =>{
-    var result = new Result([
-        {
-            "ID": 1,
-            "Data de Retirada": "07/02/2022",            
-            "Nome Ong": "Reviver",         
-            "Nome Responsável": "Manoel Frreira", 
-            "Contato Estabelecimento" : "11 95968 8596",           
-            "Quantidade de Concessoes": "200",            
-            "Endereço": "Avenida Arapua, 952",
-            "Bairro": "Jardim Itapuá",
-            "Cidade": "São Paulo",
-            "Estado": "SP"
-        },
-        {
-            "ID": 2,
-            "Data de Retirada": "15/03/2022",            
-            "Nome Ong": "Reviver",         
-            "Nome Responsável": "Manoel Frreira", 
-            "Contato Estabelecimento" : "11 95968 8596",           
-            "Quantidade de Concessoes": "150",            
-            "Endereço": "Avenida Arapua, 952",
-            "Bairro": "Jardim Itapuá",
-            "Cidade": "São Paulo",
-            "Estado": "SP"          
-        }
-    ], true, ""
-    )
-    console.log(result)
-    res.status(200).send(result)  
+    var id = req.params["id"];
+    var result = await hisotricoEntrega(id);
+    res.status(result.status).send(result);
 }
 
