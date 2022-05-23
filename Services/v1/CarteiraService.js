@@ -4,6 +4,7 @@ let token = require("../../Services/v1/LoginService");
 var nodemailer = require('nodemailer');
 let estabelecimentoSchema = require('../../Domain/Models/v1/EstabelecimentoModel');
 const CarteiraModel = require("../../Domain/Models/v1/CarteiraModel");
+const { status } = require("express/lib/response");
 
 //Ong
 async function  inserirCarteira(req) {
@@ -82,6 +83,21 @@ async function listagemCarteirasId(id) {
  
 }
 
+
+async function listaValorPratoId(id) {
+   try {
+      var retorno = await carteiraSchema.findOne({idRestaurante: id}); 
+      
+      var result = new Result(retorno.valorPrato, true, "Valor encontrado", 200);
+      return result; 
+
+   } catch (error) {
+     var result = new Result(error, false, "Internal error", 500);
+     return result;
+   }
+ 
+}
+
 async function listagemEstabelecimentoId(id) {   
    try {
       var retorno = await estabelecimentoSchema.findById(id); 
@@ -114,7 +130,7 @@ async function editandoCarteira(id, req) {
 
 async function insereValorCarteira (id, valor){
    try {
-      var carteira = await carteiraSchema.findOne({_id : id});
+      var carteira = await carteiraSchema.findOne({idRestaurante : id});
    
       if(parseFloat(carteira.valorAtual) + parseFloat(valor) >= parseFloat(carteira.metaFinal))
       {
@@ -224,7 +240,7 @@ async function editandoValorPrato(id, novoValor){
 }
 
 
-module.exports = {editandoValorPrato, inserirCarteira, 
+module.exports = {listaValorPratoId, editandoValorPrato, inserirCarteira, 
                   listagemCarteiras, listagemCarteirasId, editandoCarteira, 
                   deletandoCarteira, insereValorCarteira, listagemCarteiraIDRestaurante, listagemCarteiraIDOng}
 

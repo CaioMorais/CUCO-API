@@ -1,13 +1,14 @@
 let Result = require("../../Domain/Entities/Result.js");
 const {gerarTokenIndentificacaoRetiradaDoacoes,
-    gerarQRCodeLinkDoacao, cadastraDoacao, enviarEmailRecompensa,
+    /*gerarQRCodeLinkDoacao,*/ cadastraDoacao, enviarEmailRecompensa,
     gerarTokenIndentificacaoEntregaDoacoes,validacaoTokens} = require("../../Services/v1/DoacaoService");
 
-exports.QRCodeLinkDoacao = (req, res, next) =>{
-    var result = gerarQRCodeLinkDoacao();
-    console.log(result);
-    res.status(result.status).send(result);
-}
+// exports.QRCodeLinkDoacao = (req, res, next) =>{
+//     var id = req.params["id"];
+//     var result = gerarQRCodeLinkDoacao(id);
+//     console.log(result);
+//     res.status(result.status).send(result);
+// }
 
 exports.ValidaToken = async (req, res, next) =>{
     var id = req.params["idCarteira"];

@@ -164,6 +164,8 @@ carteirarouter.put('/v1/Carteira/EditaValorPrato/', carteiraController.EditaValo
  */
   carteirarouter.get('/v1/Carteira/ListaCarteiraIdOng/:id', carteiraController.ListaCarteiraIdOng)
 
+  carteirarouter.get('/v1/Carteira/PegarValorPrato/:id', carteiraController.PegarValorPrato)
+
 
 module.exports = carteirarouter
 
