@@ -64,6 +64,17 @@ async function listaOngs(){
     }
 }
 
+async function listaSolicitacoesEstabelecimentos(idEstabelecimento){
+  try {
+      var solicitacao = await contratoORSchema.find({idEstabelecimento: idEstabelecimento});
+      var result = new Result(solicitacao, true, "Solicitação efetuada", 200);
+      return result;
+  } catch (error) {
+    var result = new Result(error, false, "Internal error", 500);
+    return result;
+  }
+}
+
 //Estabelecimento
  async function geraSolicitacaoParceriaParaOng(req){
     var verfContratosRestaurantes = await verificaSolicitacoesRestaurante(req.body.idRestaurante);
@@ -106,7 +117,7 @@ async function listaOngs(){
 
       await carteira.save();
 
-      var result = new Result( resultado, false, "Solicitação de parceria efetuada", 200);
+      var result = new Result( resultado, true, "Solicitação de parceria efetuada", 200);
       return result;
 
     } catch (error) {
@@ -237,7 +248,7 @@ const verificaSolicitacoesRestaurante = async (idRestaurante) =>{
 module.exports = {
     hitoricoRetiradas, hisotricoEntrega, hisotricoDoacoes, geraSolicitacaoParceriaParaOng, 
     aceitarSolicitacoesDeEstabelecimentos, listaOngs, listaSolicitacoesParaOng, 
-    recusaSolicitacoesDeEstabelecimentos, excluirSolicitacaoDeEstabelecimento
+    recusaSolicitacoesDeEstabelecimentos, excluirSolicitacaoDeEstabelecimento,listaSolicitacoesEstabelecimentos
 }
 
 

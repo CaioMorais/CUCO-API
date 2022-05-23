@@ -1,7 +1,7 @@
 let Result = require("../../Domain/Entities/Result.js");
 const {hitoricoRetiradas, hisotricoEntrega, hisotricoDoacoes, geraSolicitacaoParceriaParaOng,  
     aceitarSolicitacoesDeEstabelecimentos,listaOngs, listaSolicitacoesParaOng, 
-    recusaSolicitacoesDeEstabelecimentos, excluirSolicitacaoDeEstabelecimento} = require("../../Services/v1/GerenciamentoService");
+    recusaSolicitacoesDeEstabelecimentos, excluirSolicitacaoDeEstabelecimento, listaSolicitacoesEstabelecimentos} = require("../../Services/v1/GerenciamentoService");
 
 exports.HistoricoDoacoes = async (req, res, next) =>{
     var id = req.params["id"];
@@ -23,6 +23,13 @@ exports.GeraSolicitacaoParceriaParaOng = async (req, res, next) =>{
 }
 
 //Ong
+exports.ListaSolicitacoesParaEstabelecimento = async (req, res, next) =>{
+    var id = req.params["id"];
+    var result = await listaSolicitacoesEstabelecimentos(id);
+    console.log(result);
+    res.status(result.status).send(result); 
+}
+
 exports.ListaSolicitacoesParaOng = async (req, res, next) =>{
     var id = req.params["id"];
     var result = await listaSolicitacoesParaOng(id);

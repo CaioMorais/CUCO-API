@@ -46,7 +46,8 @@ const autentica = async ({ email, senha }) => {
             email, 
             usuario,
             tipoconta: usuario.tipoConta,
-            nome: usuario.nome
+            nome: usuario.nome,
+            idestabelecimento: usuario.idEstabelecimento
         },
         SECRET,
         {
