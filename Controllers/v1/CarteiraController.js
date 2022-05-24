@@ -2,7 +2,7 @@ let Result = require("../../Domain/Entities/Result");
 const { 
         inserirCarteira, listagemCarteiras, listagemCarteirasId, 
         editandoCarteira, deletandoCarteira, editandoValorPrato, listagemCarteiraIDRestaurante,
-        listaValorPratoId } = require("../../Services/v1/CarteiraService");
+        listaValorPratoId, listagemCarteiraIDOng } = require("../../Services/v1/CarteiraService");
 
 
 exports.InsereCarteira = async (req, res, next) =>{
