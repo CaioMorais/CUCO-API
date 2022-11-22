@@ -21,6 +21,14 @@ var HistoricoEntregaRetiradasSchema = new Schema({
     nomeRestaurante: {
         type: String,
         required: true
+    },
+    idOng: {
+        type: String,
+        required: true
+    },
+    idRestaurante: {
+        type: String,
+        required: true
     }
 })
 

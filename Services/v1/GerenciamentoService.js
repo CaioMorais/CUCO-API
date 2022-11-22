@@ -5,11 +5,26 @@ let clienteDoadorSchema = require('../../Domain/Models/v1/ClienteDoadorModel');
 let contratoORSchema =  require('../../Domain/Models/v1/ContratoORModel');
 let carteiraSchema = require('../../Domain/Models/v1/CarteiraModel');
 let entregaRetiradasSchema = require('../../Domain/Models/v1/EntregaRetiradaModel');
+let historicoEntregaRetiradasSchema = require('../../Domain/Models/v1/HistoricoEntregaRetiradas');
 
 //Ong
-function hitoricoRetiradas(){
+async function hitoricoRetiradas(idEstabelecimento){
     try {
-       
+      var element = [];
+      var retiradas = await historicoEntregaRetiradasSchema.find({idRestaurante: idEstabelecimento}); 
+      for (let index = 0; index < retiradas.length; index++) {
+          var ret = {
+              "dataEntregaRetirada" : retiradas[index].dataEntregaRetirada,
+              "nomeOng": retiradas[index].nomeOng,
+              "nomeRestaurante" : retiradas[index].nomeRestaurante,
+              "valorEntregado" : retiradas[index].valorEntregado
+          }
+          console.log(ret);
+          element.push(ret);
+      }
+      console.log(element);
+      var result = new Result(element, true, "Historico de Retiradas", 200);
+      return result;
     } catch (error) {
       var result = new Result(error, false, "Internal error", 500);
       return result;
@@ -17,8 +32,23 @@ function hitoricoRetiradas(){
 }
 
 //Estabelecimento
-function hisotricoEntrega(){
+async function hisotricoEntrega(idEstabelecimento){
     try {
+      var element = [];
+      var retiradas = await historicoEntregaRetiradasSchema.find({idRestaurante: idEstabelecimento}); 
+      for (let index = 0; index < retiradas.length; index++) {
+          var ret = {
+              "dataEntregaRetirada" : retiradas[index].dataEntregaRetirada,
+              "nomeOng": retiradas[index].nomeOng,
+              "nomeRestaurante" : retiradas[index].nomeRestaurante,
+              "valorEntregado" : retiradas[index].valorEntregado
+          }
+          console.log(ret);
+          element.push(ret);
+      }
+      console.log(element);
+      var result = new Result(element, true, "Historico de Entregas", 200);
+      return result;
        
     } catch (error) {
       var result = new Result(error, false, "Internal error", 500);
@@ -64,6 +94,18 @@ async function listaOngs(){
     }
 }
 
+async function listaSolicitacoesEstabelecimentos(idEstabelecimento){
+  try {
+      var solicitacao = await contratoORSchema.find({idRestaurante: idEstabelecimento});
+
+      var result = new Result(solicitacao, true, "Solicitação efetuada", 200);
+      return result;
+  } catch (error) {
+    var result = new Result(error, false, "Internal error", 500);
+    return result;
+  }
+}
+
 //Estabelecimento
  async function geraSolicitacaoParceriaParaOng(req){
     var verfContratosRestaurantes = await verificaSolicitacoesRestaurante(req.body.idRestaurante);
@@ -106,7 +148,7 @@ async function listaOngs(){
 
       await carteira.save();
 
-      var result = new Result( resultado, false, "Solicitação de parceria efetuada", 200);
+      var result = new Result( resultado, true, "Solicitação de parceria efetuada", 200);
       return result;
 
     } catch (error) {
@@ -126,6 +168,7 @@ async function listaSolicitacoesParaOng(idOng){
         var carteira = await carteiraSchema.findOne({_id: solicitacoes[index].idCarteira});
 
         var resultado = {
+            "idSolicitacao" : solicitacoes[index]._id,
             "nomeEstabelecimento" : restaurante.nomeEstabelecimento,
             "endereco" : restaurante.endereco,
             "contato" : restaurante.contato,
@@ -237,7 +280,7 @@ const verificaSolicitacoesRestaurante = async (idRestaurante) =>{
 module.exports = {
     hitoricoRetiradas, hisotricoEntrega, hisotricoDoacoes, geraSolicitacaoParceriaParaOng, 
     aceitarSolicitacoesDeEstabelecimentos, listaOngs, listaSolicitacoesParaOng, 
-    recusaSolicitacoesDeEstabelecimentos, excluirSolicitacaoDeEstabelecimento
+    recusaSolicitacoesDeEstabelecimentos, excluirSolicitacaoDeEstabelecimento,listaSolicitacoesEstabelecimentos
 }
 
 

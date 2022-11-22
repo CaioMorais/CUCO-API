@@ -201,7 +201,9 @@ async function validacaoTokens(idCarteira, req){
                     "dataEntregaRetirada" : today.toLocaleDateString(),
                     "valorEntregado" : ctr.metaFinal,
                     "nomeOng" : ong.nomeEstabelecimento,
-                    "nomeRestaurante" : rest.nomeEstabelecimento 
+                    "nomeRestaurante" : rest.nomeEstabelecimento,
+                    "idOng" : ong._id,
+                    "idRestaurante" : rest._id
                 }
                     
                 var geraHistoricoEntregaRetirada = historicoEntregaRetiradasSchema(h);

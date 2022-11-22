@@ -29,7 +29,7 @@ const {verificaToken} = require("../../Security/usuarioMiddleware")
  * tags:
  *  name: Gerenciamento
  *  description: API's de Gerenciamento
- * /api/v1/Gerenciamento/HistoricoRetiradas:
+ * /api/v1/Gerenciamento/HistoricoRetiradas/:id:
  *  get:
  *      tags: [Gerenciamento]
  *      parameters:
@@ -42,7 +42,7 @@ const {verificaToken} = require("../../Security/usuarioMiddleware")
  *          default:
  *              description: This is the default response for it
  */
- Gerenciamentorouter.get('/v1/Gerenciamento/HistoricoRetiradas',verificaToken, GerenciamentoController.HistoricoRetiradas)
+ Gerenciamentorouter.get('/v1/Gerenciamento/HistoricoRetiradas/:id',verificaToken, GerenciamentoController.HistoricoRetiradas)
 
 /**
  * @swagger
@@ -90,7 +90,7 @@ const {verificaToken} = require("../../Security/usuarioMiddleware")
  * tags:
  *  name: Gerenciamento
  *  description: API's de Gerenciamento
- * /api/v1/Gerenciamento/HistoricoEntregas:
+ * /api/v1/Gerenciamento/HistoricoEntregas/:id:
  *  get:
  *      tags: [Gerenciamento]
  *      parameters:
@@ -107,7 +107,7 @@ const {verificaToken} = require("../../Security/usuarioMiddleware")
  *          404:
  *            description: The requested tax filing was not found.
  */
- Gerenciamentorouter.get('/v1/Gerenciamento/HistoricoEntregas',verificaToken, GerenciamentoController.HistoricoEntregas)
+ Gerenciamentorouter.get('/v1/Gerenciamento/HistoricoEntregas/:id',verificaToken, GerenciamentoController.HistoricoEntregas)
 
 /**
  * @swagger
@@ -148,6 +148,26 @@ const {verificaToken} = require("../../Security/usuarioMiddleware")
  *              description: This is the default response for it
  */
  Gerenciamentorouter.get('/v1/Gerenciamento/listaSolicitacoesParaOng/:id', GerenciamentoController.ListaSolicitacoesParaOng)
+
+ /**
+ * @swagger
+ * tags:
+ *  name: Gerenciamento
+ *  description: API's de Gerenciamento
+ * /api/v1/Gerenciamento/listaSolicitacoesParaEstabelecimento/:id:
+ *  get:
+ *      tags: [Gerenciamento]
+ *      parameters:
+ *          - name: page_number
+ *            default: 1
+ *            in: body
+ *            schema:
+ *              type: string
+ *      responses:
+ *          default:
+ *              description: This is the default response for it
+ */
+  Gerenciamentorouter.get('/v1/Gerenciamento/listaSolicitacoesParaEstabelecimento/:id', GerenciamentoController.ListaSolicitacoesParaEstabelecimento)
 
  /**
  * @swagger
