@@ -41,6 +41,7 @@ exports.ListaSolicitacoesParaOng = async (req, res, next) =>{
 //Ong
 exports.AceitarSolicitacoesDeEstabelecimentos = async (req, res, next) =>{
     var id = req.params["id"];
+    console.log(id);
     var result = await aceitarSolicitacoesDeEstabelecimentos(id);
     console.log(result)
     res.status(result.status).send(result)

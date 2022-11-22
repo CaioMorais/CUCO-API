@@ -192,6 +192,7 @@ async function listaSolicitacoesParaOng(idOng){
 //ONG
 async function aceitarSolicitacoesDeEstabelecimentos(idSolicitacao){
     try {
+      console.log(idSolicitacao);
       var solicitacao = await contratoORSchema.findById(idSolicitacao);
       var carteira = await carteiraSchema.findOne({_id: solicitacao.idCarteira});
       
