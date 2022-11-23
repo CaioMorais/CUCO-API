@@ -128,16 +128,25 @@ async function editandoCarteira(id, req) {
    }
 }
 
-async function insereValorCarteira (id, valor){
+async function insereValorCarteira(id, valor){
    try {
       var carteira = await carteiraSchema.findOne({idRestaurante : id});
    
-      if(parseFloat(carteira.valorAtual) + parseFloat(valor) >= parseFloat(carteira.metaFinal))
+      if((parseFloat(carteira.valorAtual) + parseFloat(valor)) >= parseFloat(carteira.metaFinal))
       {
-         envioMetaCarteiraAtingido(carteira);
-         var valorAtual = (parseFloat(carteira.valorAtual) + parseFloat(valor) - parseFloat(carteira.metaFinal)).toString();
-         var entregasPendentes = parseFloat(carteira.entregasPendentes) + 1;
-         var retorno = await carteiraSchema.updateOne({_id: carteira.id}, {$set:{valorAtual: valorAtual, 
+         var montante = parseFloat(carteira.valorAtual) + parseFloat(valor);
+
+         while(montante >= parseFloat(carteira.metaFinal)){
+            envioMetaCarteiraAtingido(carteira);
+            var entregasPendentes = parseFloat(carteira.entregasPendentes) + 1;
+            montante = montante - parseFloat(carteira.metaFinal);
+         }
+         
+         
+         aux = montante.toString();
+
+
+         var retorno = await carteiraSchema.updateOne({_id: carteira._id}, {$set:{valorAtual: aux, 
             entregasPendentes: entregasPendentes}});
          
          var result = new Result(retorno, true, "Valor inserido com sucesso, carteira teve seu limite atingido", 200);
@@ -145,7 +154,7 @@ async function insereValorCarteira (id, valor){
       }
       else{
          var valorAtual = (parseFloat(carteira.valorAtual) + parseFloat(valor)).toString();
-         var retorno = await carteiraSchema.updateOne({_id: carteira.id}, {$set:{valorAtual: valorAtual}});
+         var retorno = await carteiraSchema.updateOne({_id: carteira._id}, {$set:{valorAtual: valorAtual}});
          var result = new Result(retorno, true, "Valor inserido com sucesso", 200);
          return result;
       }
