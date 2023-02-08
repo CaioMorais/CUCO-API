@@ -33,6 +33,14 @@ var estabelecimentoSchema = new Schema({
     contato: {
         type: String,
         required: true 
+    },
+    chavePix: {
+        type: String,
+        required: true 
+    },
+    tipoChavePix: {
+        type: String,
+        required: true 
     }
 })
 
