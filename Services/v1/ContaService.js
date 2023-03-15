@@ -116,6 +116,21 @@ async function excluirConta(idConta){
     
 }
 
+async function pegarDadosConta(idConta){
+    try {
+
+        var conta = await listaContaID(idConta);
+    
+        var result = new Result(conta, true, "", 200);
+        return result;
+      
+    } catch (error) {
+      var result = new Result(error, false, "Internal error", 500);
+      return result;
+    }
+    
+}
+
 async function resetarSenha(idConta, req){
     try {
         var hash = await bcrypt.hash(req.body.senha, 10)
@@ -231,5 +246,5 @@ const listaContaID = async (id) => {
 }
 
 module.exports = {
-    cadastrarConta, editarConta, excluirConta, resetarSenha, enviaEmailResetSenha
+    cadastrarConta, editarConta, excluirConta, resetarSenha, enviaEmailResetSenha, pegarDadosConta
 }
