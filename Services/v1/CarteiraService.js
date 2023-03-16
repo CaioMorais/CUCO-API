@@ -6,7 +6,7 @@ let estabelecimentoSchema = require('../../Domain/Models/v1/EstabelecimentoModel
 const CarteiraModel = require("../../Domain/Models/v1/CarteiraModel");
 const { status } = require("express/lib/response");
 
-//Ong
+
 async function  inserirCarteira(req) {
     try {
 
@@ -26,7 +26,7 @@ async function  inserirCarteira(req) {
 
 async function listagemCarteiraIDRestaurante(id) {
    try {
-      console.log(id)   
+      //console.log(id)   
       var retorno = await carteiraSchema
                .find({idRestaurante : id, status : "true"});
    
@@ -128,37 +128,36 @@ async function editandoCarteira(id, req) {
    }
 }
 
-async function insereValorCarteira(id, valor){
+async function insereValorCarteira (id, valorDoado){
    try {
       var carteira = await carteiraSchema.findOne({idRestaurante : id});
-   
-      if((parseFloat(carteira.valorAtual) + parseFloat(valor)) >= parseFloat(carteira.metaFinal))
+      var result;
+
+      if(parseFloat(carteira.valorAtual) + parseFloat(valorDoado) >= parseFloat(carteira.metaFinal))
       {
-         var montante = parseFloat(carteira.valorAtual) + parseFloat(valor);
-
-         while(montante >= parseFloat(carteira.metaFinal)){
-            envioMetaCarteiraAtingido(carteira);
-            var entregasPendentes = parseFloat(carteira.entregasPendentes) + 1;
-            montante = montante - parseFloat(carteira.metaFinal);
+         var retorno = await insereValorCarteiraComMetaAtingida(carteira, valorDoado)
+         
+         if (retorno != null) {
+            result = new Result(retorno, true, "Valor inserido com sucesso, carteira teve seu limite atingido", 200);
          }
-         
-         
-         aux = montante.toString();
-
-
-         var retorno = await carteiraSchema.updateOne({_id: carteira._id}, {$set:{valorAtual: aux, 
-            entregasPendentes: entregasPendentes}});
-         
-         var result = new Result(retorno, true, "Valor inserido com sucesso, carteira teve seu limite atingido", 200);
-         return result;
+         else{
+            result = new Result(retorno, false, "Valor não inserido", 400);
+         }
       }
       else{
-         var valorAtual = (parseFloat(carteira.valorAtual) + parseFloat(valor)).toString();
-         var retorno = await carteiraSchema.updateOne({_id: carteira._id}, {$set:{valorAtual: valorAtual}});
-         var result = new Result(retorno, true, "Valor inserido com sucesso", 200);
-         return result;
+         var retorno = await insereValorCarteiraSemMetaAtingida(carteira, valorDoado);
+
+         if(retorno != null){
+            var result = new Result(retorno, true, "Valor inserido com sucesso", 200);
+         }
+         else{
+            result = new Result(retorno, false, "Valor não inserido", 400);
+         }
+         
       }
-       
+
+      return result;
+
    } catch (error) {
      var result = new Result(error, false, "Internal error", 500);
      return result;
@@ -248,6 +247,36 @@ async function editandoValorPrato(id, novoValor){
 
 }
 
+///-------------------- Metodos Auxiliares --------------------------------
+
+const insereValorCarteiraComMetaAtingida = async (carteira, valorDoado) =>{
+   try {
+
+      envioMetaCarteiraAtingido(carteira);
+      var valorAtual = (parseFloat(carteira.valorAtual) + parseFloat(valorDoado) - parseFloat(carteira.metaFinal)).toString();
+      var entregasPendentes = parseFloat(carteira.entregasPendentes) + 1;
+      var retorno = await carteiraSchema.updateOne({_id: carteira.id}, {$set:{valorAtual: valorAtual, 
+         entregasPendentes: entregasPendentes}});
+      
+      return retorno;
+
+   } catch (error) {
+       return retorno = null;
+   }
+}
+
+const insereValorCarteiraSemMetaAtingida = async (carteira, valorDoado) =>{
+   try {
+
+      var valorAtual = (parseFloat(carteira.valorAtual) + parseFloat(valorDoado)).toString();
+      var retorno = await carteiraSchema.updateOne({_id: carteira.id}, {$set:{valorAtual: valorAtual}});
+
+      return retorno;
+
+   } catch (error) {
+       return retorno = null;
+   }
+}
 
 module.exports = {listaValorPratoId, editandoValorPrato, inserirCarteira, 
                   listagemCarteiras, listagemCarteirasId, editandoCarteira, 

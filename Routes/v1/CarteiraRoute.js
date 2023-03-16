@@ -7,7 +7,7 @@ const {verificaToken} = require("../../Security/usuarioMiddleware")
  * @swagger
  * tags:
  *  name: Carteira
- *  description: API's da Carteira
+ *  description: API's de Gerenciamento da carteira ONG/Estabelecimento
  * /api/v1/Carteira/InsereCarteira:
  *  post:
  *      tags: [Carteira]
@@ -19,7 +19,7 @@ const {verificaToken} = require("../../Security/usuarioMiddleware")
  *              type: string
  *      responses:
  *          default:
- *              description: This is the default response for it
+ *              description: teste resposta
  */
  carteirarouter.post('/v1/Carteira/InsereCarteira',verificaToken, carteiraController.InsereCarteira)
 
@@ -27,7 +27,7 @@ const {verificaToken} = require("../../Security/usuarioMiddleware")
  * @swagger
  * tags:
  *  name: Carteira
- *  description: API's da Carteira
+ *  description: API's de Gerenciamento da carteira ONG/Estabelecimento
  * /api/v1/Carteira/ListaCarteira:
  *  get:
  *      tags: [Carteira]
@@ -48,7 +48,7 @@ const {verificaToken} = require("../../Security/usuarioMiddleware")
  * @swagger
  * tags:
  *  name: Carteira
- *  description: API's da Carteira
+ *  description: API's de Gerenciamento da carteira ONG/Estabelecimento
  * /api/v1/Carteira/ListaCarteiraId/:id:
  *  get:
  *      tags: [Carteira]
@@ -68,7 +68,7 @@ const {verificaToken} = require("../../Security/usuarioMiddleware")
  * @swagger
  * tags:
  *  name: Carteira
- *  description: API's da Carteira
+ *  description: API's de Gerenciamento da carteira ONG/Estabelecimento
  * /api/v1/Carteira/EditaCarteira/:id:
  *  put:
  *      tags: [Carteira]
@@ -88,7 +88,7 @@ const {verificaToken} = require("../../Security/usuarioMiddleware")
  * @swagger
  * tags:
  *  name: Carteira
- *  description: API's da Carteira
+ *  description: API's de Gerenciamento da carteira ONG/Estabelecimento
  * /api/v1/Carteira/DeletaCarteira/:id:
  *  delete:
  *      tags: [Carteira]
@@ -108,7 +108,7 @@ carteirarouter.delete('/v1/Carteira/DeletaCarteira/:id', carteiraController.Dele
  * @swagger
  * tags:
  *  name: Carteira
- *  description: API's da Carteira
+ *  description: API's de Gerenciamento da carteira ONG/Estabelecimento
  * /api//v1/Carteira/EditaValorPrato/:
  *  put:
  *      tags: [Carteira]
@@ -128,7 +128,7 @@ carteirarouter.put('/v1/Carteira/EditaValorPrato/', carteiraController.EditaValo
  * @swagger
  * tags:
  *  name: Carteira
- *  description: API's da Carteira
+ *  description: API's de Gerenciamento da carteira ONG/Estabelecimento
  * /api/v1/Carteira/ListaCarteiraIdRestaurante/:id:
  *  get:
  *      tags: [Carteira]
@@ -148,7 +148,7 @@ carteirarouter.put('/v1/Carteira/EditaValorPrato/', carteiraController.EditaValo
  * @swagger
  * tags:
  *  name: Carteira
- *  description: API's da Carteira
+ *  description: API's de Gerenciamento da carteira ONG/Estabelecimento
  * /api/v1/Carteira/ListaCarteiraIdOng/:id:
  *  get:
  *      tags: [Carteira]
