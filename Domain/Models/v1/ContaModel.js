@@ -6,6 +6,10 @@ var contaSchema = new Schema({
         type: String,
         required: true 
     },
+    sobrenome: {
+        type: String,
+        required: true 
+    },
     cpf: {
         type: String,
         required: true 

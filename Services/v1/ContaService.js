@@ -87,6 +87,7 @@ async function editarConta (idConta, req){
   
 }
 
+
 async function excluirConta(idConta){
     try {
 
@@ -111,6 +112,20 @@ async function excluirConta(idConta){
         else{
             var result = new Result(error, false, "Exclusão falhou", 400);
         }
+        return result;
+     
+    } catch (error) {
+      var result = new Result(error, false, "Internal error", 500);
+      return result;
+    }
+}
+
+async function pegarDadosConta(idConta){
+    try {
+
+        var conta = await listaContaID(idConta);
+    
+        var result = new Result(conta, true, "", 200);
         return result;
       
     } catch (error) {
@@ -297,6 +312,7 @@ const cadastraUsuarioComIDEstabelecimento = async (body, estabelecimento_id) =>{
     
         var cont = {
             "nome" : body.nome,
+            "sobrenome" : body.sobrenome,
             "cpf": body.cpf,
             "email" : body.email,
             "senha" : hash,
@@ -315,11 +331,32 @@ const cadastraUsuarioComIDEstabelecimento = async (body, estabelecimento_id) =>{
 //Atualiza Estabelecimento/ONG
 const atualizaEstabelecimentoOng = async (body, idEstabelecimento) =>{
     try {
+
+        var estabelecimento_ong = listaEstabelecimentoOngID(idEstabelecimento);
+
+        var nomeEstabelecimento = body.nomeEstabelecimento == null? estabelecimento_ong.nomeEstabelecimento : body.nomeEstabelecimento;
+        var razaoSocial = body.razaoSocial == null? estabelecimento_ong.razaoSocial : body.razaoSocial;
+        var tipo = body.tipo == null? estabelecimento_ong.tipo : body.tipo;
+        var cnpj = body.cnpj == null? estabelecimento_ong.cnpj : body.cnpj;
+        var cep = body.cep == null? estabelecimento_ong.cep : body.cep;
+        var cidade = body.cidade == null? estabelecimento_ong.cidade : body.cidade;
+        var estado = body.estado == null? estabelecimento_ong.estado : body.estado;
+        var bairro = body.bairro == null? estabelecimento_ong.bairro : body.bairro;
+        var logadouro = body.logadouro == null? estabelecimento_ong.logadouro : body.logadouro;
+        var complemento = body.complemento == null? estabelecimento_ong.complemento : body.complemento;
+        var emailEstabelecimento = body.emailEstabelecimento == null? estabelecimento_ong.emailEstabelecimento : body.emailEstabelecimento;
+        var telefone = body.telefone == null? estabelecimento_ong.telefone : body.telefone;
+        var descPratoDoado = body.descPratoDoado == null? estabelecimento_ong.descPratoDoado : body.descPratoDoado;
+        var valorPrato = body.valorPrato == null? estabelecimento_ong.valorPrato : body.valorPrato;
+
         var estabelecimentoResult = await estabelecimentoSchema
-            .updateOne({_id: idEstabelecimento},{$set:{nomeEstabelecimento: body.nomeEstabelecimento, 
-                        tipoEstabelecimento: body.tipoEstabelecimento, cnpj: body.cnpj, 
-                        cidade: body.cidade, estado: body.estado, endereco: body.endereco, 
-                        emailEstabelecimento: body.emailEstabelecimento, contato: body.contato}
+            .updateOne({_id: idEstabelecimento},{$set:{nomeEstabelecimento: nomeEstabelecimento,
+                        razaoSocial: razaoSocial, tipo: tipo, cnpj: cnpj, cep: cep, 
+                        cidade: cidade, estado: estado, bairo: bairro, 
+                        logadouro: logadouro, complemento: complemento, 
+                        emailEstabelecimento: emailEstabelecimento, telefone: telefone, 
+                        descPratoDoado: descPratoDoado, valorPrato: valorPrato}
+
             });
         
         return estabelecimentoResult;
@@ -331,13 +368,22 @@ const atualizaEstabelecimentoOng = async (body, idEstabelecimento) =>{
 //Atualiza DadosConta
 const atualizaDadosConta = async (body, idConta, estabelecimentoAtual) =>{
     try {
-        var hash = await bcrypt.hash(body.senha, 10)
+            var conta = listaContaID(idConta);
+
+            var nome = body.nome == null? conta.nome : body.nome;
+            var sobrenome = body.sobrenome == null? conta.sobrenome : body.sobrenome;
+            var cpf = body.cpf == null? conta.cpf : body.cpf;
+            var email = body.email == null? conta.email : body.email;
+            var tipoConta = body.tipoConta == null? conta.tipoConta : body.tipoConta;
+            var idEstabelecimento = body.idEstabelecimento == null? conta.idEstabelecimento : body.idEstabelecimento;
+            var dataCadastro = body.dataCadastro == null? conta.dataCadastro : body.dataCadastro;
+            var senha = conta.senha;
         
         var contaResult = await contaSchema
-        .updateOne({_id: idConta}, {$set:{nome: body.nome, cpf: body.cpf, 
-                    email: body.email, senha: hash, 
-                    tipoConta: body.tipoConta, idEstabelecimento: body.idEstabelecimento,
-                    dataCadastro: body.dataCadastro}
+        .updateOne({_id: idConta}, {$set:{nome: nome, sobrenome: sobrenome, cpf: cpf, 
+                    email: email, senha: senha, 
+                    tipoConta: tipoConta, idEstabelecimento: idEstabelecimento,
+                    dataCadastro: dataCadastro}
         });
 
         return contaResult;
@@ -390,5 +436,5 @@ const listaEstabelecimentoOngID = async (id) => {
 }
 
 module.exports = {
-    cadastrarConta, editarConta, excluirConta, resetarSenha, enviaEmailResetSenha
+    cadastrarConta, editarConta, excluirConta, resetarSenha, enviaEmailResetSenha, pegarDadosConta
 }

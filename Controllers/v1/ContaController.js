@@ -1,6 +1,6 @@
 const express = require("express");
 let Result = require("../../Domain/Entities/Result.js");
-const {cadastrarConta, editarConta, excluirConta, resetarSenha, enviaEmailResetSenha} = require("../../Services/v1/ContaService");
+const {cadastrarConta, editarConta, pegarDadosConta, excluirConta, resetarSenha, enviaEmailResetSenha} = require("../../Services/v1/ContaService");
 
  
 exports.Editar = async (req, res, next) =>{
@@ -14,6 +14,13 @@ exports.Excluir = async (req, res, next) =>{
     var id = req.params["id"];
     var result = await excluirConta(id)
     console.log(result);
+    res.status(result.status).send(result);
+
+}
+
+exports.PegarDadosConta = async (req, res, next) =>{
+    var id = req.params["id"];
+    var result = await pegarDadosConta(id)
     res.status(result.status).send(result);
 
 }
