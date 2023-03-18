@@ -34,6 +34,7 @@ exports.GeraTokenEntrega =  async (req, res, next) =>{
 //deve chamar as duas functions cadastraDoacao e  enviarEmailRecompensa
 exports.CadastraDoacao = async (req, res, next) => {
     var idRestaurante = req.params["idRestaurante"];
+    console.log("passou por aqui");
     var result = await cadastraDoacao(req, idRestaurante);
     console.log(result);
     await enviarEmailRecompensa();

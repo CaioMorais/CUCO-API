@@ -54,7 +54,7 @@ mongoose.connect(uri).then(()=> {
    console.log("Banco conectado");
 })
 .catch((err) => {
-  console.error(error);
+  console.error(err);
   process.exit(1);
 });
 
