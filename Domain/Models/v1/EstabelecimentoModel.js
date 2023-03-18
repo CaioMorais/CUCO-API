@@ -6,11 +6,19 @@ var estabelecimentoSchema = new Schema({
         type: String,
         required: true 
     },
-    tipoEstabelecimento: {
+    razaoSocial: {
+        type: String,
+        required: true 
+    },
+    tipo: {
         type: String,
         required: true 
     },
     cnpj: {
+        type: String,
+        required: true 
+    },
+    cep: {
         type: String,
         required: true 
     },
@@ -22,7 +30,15 @@ var estabelecimentoSchema = new Schema({
         type: String,
         required: true 
     },
-    endereco: {
+    bairro: {
+        type: String,
+        required: true 
+    },
+    logadouro: {
+        type: String,
+        required: true 
+    },
+    complemento: {
         type: String,
         required: true 
     },
@@ -30,7 +46,15 @@ var estabelecimentoSchema = new Schema({
         type: String,
         required: true 
     },
-    contato: {
+    telefone: {
+        type: String,
+        required: true 
+    },
+    descPratoDoado: {
+        type: String,
+        required: true 
+    },
+    valorPrato: {
         type: String,
         required: true 
     }
