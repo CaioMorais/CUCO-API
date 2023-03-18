@@ -57,6 +57,14 @@ var estabelecimentoSchema = new Schema({
     valorPrato: {
         type: String,
         required: true 
+    },
+    chavePix: {
+        type: String,
+        required: true 
+    },
+    tipoChavePix: {
+        type: String,
+        required: true 
     }
 })
 

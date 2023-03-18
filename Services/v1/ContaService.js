@@ -87,6 +87,7 @@ async function editarConta (idConta, req){
   
 }
 
+
 async function excluirConta(idConta){
     try {
 
@@ -112,12 +113,11 @@ async function excluirConta(idConta){
             var result = new Result(error, false, "Exclusão falhou", 400);
         }
         return result;
-      
+     
     } catch (error) {
       var result = new Result(error, false, "Internal error", 500);
       return result;
     }
-    
 }
 
 async function pegarDadosConta(idConta){
@@ -356,6 +356,7 @@ const atualizaEstabelecimentoOng = async (body, idEstabelecimento) =>{
                         logadouro: logadouro, complemento: complemento, 
                         emailEstabelecimento: emailEstabelecimento, telefone: telefone, 
                         descPratoDoado: descPratoDoado, valorPrato: valorPrato}
+
             });
         
         return estabelecimentoResult;
