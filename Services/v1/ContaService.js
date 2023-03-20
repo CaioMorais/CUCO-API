@@ -318,6 +318,7 @@ const cadastraUsuarioComIDEstabelecimento = async (body, estabelecimento_id) =>{
             "senha" : hash,
             "tipoConta" : body.tipoConta,
             "idEstabelecimento" : estabelecimento_id,
+            "verificaAtivo" : "0",
             "dataCadastro" : today.toLocaleDateString()
         }
         console.log(cont);
@@ -338,6 +339,10 @@ const atualizaEstabelecimentoOng = async (body, idEstabelecimento) =>{
         var razaoSocial = body.razaoSocial == null? estabelecimento_ong.razaoSocial : body.razaoSocial;
         var tipo = body.tipo == null? estabelecimento_ong.tipo : body.tipo;
         var cnpj = body.cnpj == null? estabelecimento_ong.cnpj : body.cnpj;
+        var anexoDocumento1 = body.anexoDocumento1 == null? estabelecimento_ong.anexoDocumento1 : body.anexoDocumento1;
+        var anexoDocumento2 = body.anexoDocumento2 == null? estabelecimento_ong.anexoDocumento2 : body.anexoDocumento2;
+        var anexoComprovanteCNPJ = body.anexoComprovanteCNPJ == null? estabelecimento_ong.canexoComprovanteCNPJ : body.anexoComprovanteCNPJ;
+        var anexoComprovanteEndereco = body.anexoComprovanteEndereco == null? estabelecimento_ong.anexoComprovanteEndereco : body.anexoComprovanteEndereco;
         var cep = body.cep == null? estabelecimento_ong.cep : body.cep;
         var cidade = body.cidade == null? estabelecimento_ong.cidade : body.cidade;
         var estado = body.estado == null? estabelecimento_ong.estado : body.estado;
@@ -351,8 +356,10 @@ const atualizaEstabelecimentoOng = async (body, idEstabelecimento) =>{
 
         var estabelecimentoResult = await estabelecimentoSchema
             .updateOne({_id: idEstabelecimento},{$set:{nomeEstabelecimento: nomeEstabelecimento,
-                        razaoSocial: razaoSocial, tipo: tipo, cnpj: cnpj, cep: cep, 
-                        cidade: cidade, estado: estado, bairo: bairro, 
+                        razaoSocial: razaoSocial, tipo: tipo, cnpj: cnpj, 
+                        anexoDocumento1: anexoDocumento1, anexoDocumento2: anexoDocumento2, 
+                        anexoComprovanteCNPJ: anexoComprovanteCNPJ, anexoComprovanteEndereco: anexoComprovanteEndereco,
+                        cep: cep,cidade: cidade, estado: estado, bairo: bairro, 
                         logadouro: logadouro, complemento: complemento, 
                         emailEstabelecimento: emailEstabelecimento, telefone: telefone, 
                         descPratoDoado: descPratoDoado, valorPrato: valorPrato}
@@ -376,6 +383,7 @@ const atualizaDadosConta = async (body, idConta, estabelecimentoAtual) =>{
             var email = body.email == null? conta.email : body.email;
             var tipoConta = body.tipoConta == null? conta.tipoConta : body.tipoConta;
             var idEstabelecimento = body.idEstabelecimento == null? conta.idEstabelecimento : body.idEstabelecimento;
+            var verificaAtivo = body.verificaAtivo == null? conta.verificaAtivo : body.verificaAtivo;
             var dataCadastro = body.dataCadastro == null? conta.dataCadastro : body.dataCadastro;
             var senha = conta.senha;
         
@@ -383,7 +391,7 @@ const atualizaDadosConta = async (body, idConta, estabelecimentoAtual) =>{
         .updateOne({_id: idConta}, {$set:{nome: nome, sobrenome: sobrenome, cpf: cpf, 
                     email: email, senha: senha, 
                     tipoConta: tipoConta, idEstabelecimento: idEstabelecimento,
-                    dataCadastro: dataCadastro}
+                    verificaAtivo: verificaAtivo, dataCadastro: dataCadastro}
         });
 
         return contaResult;
