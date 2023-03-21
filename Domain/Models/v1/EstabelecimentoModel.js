@@ -18,6 +18,22 @@ var estabelecimentoSchema = new Schema({
         type: String,
         required: true 
     },
+    anexoDocumento1: {
+        type: String,
+        required: false 
+    },
+    anexoDocumento2: {
+        type: String,
+        required: false 
+    },
+    anexoComprovanteCNPJ: {
+        type: String,
+        required: false 
+    },
+    anexoComprovanteEndereco: {
+        type: String,
+        required: false 
+    },
     cep: {
         type: String,
         required: true 
@@ -40,7 +56,7 @@ var estabelecimentoSchema = new Schema({
     },
     complemento: {
         type: String,
-        required: true 
+        required: false
     },
     emailEstabelecimento: {
         type: String,
@@ -60,11 +76,11 @@ var estabelecimentoSchema = new Schema({
     },
     chavePix: {
         type: String,
-        required: true 
+        required: false 
     },
     tipoChavePix: {
         type: String,
-        required: true 
+        required: false 
     }
 })
 

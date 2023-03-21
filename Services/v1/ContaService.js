@@ -9,7 +9,6 @@ async function cadastrarConta(req){
     try {
         //Verificação a ja exixtencia dos dados 
         var verif = await verificaExistenciaDosDados(req.body)
-        console.log(verif, 'teste2');
         if (verif[0] == true){
             var result = new Result(null,  false, verif[1], 400);
             return result;
@@ -64,7 +63,7 @@ async function editarConta (idConta, req){
                 var contaAtualizada = await atualizaDadosConta(req.body, idConta, estabelecimentoAtual);
             }
             else{
-                var result = new Result(error, false, "Alterações não realizadas", 400);
+                var result = new Result(null, false, "Alterações não realizadas", 400);
                 return result;
             }
             
@@ -73,7 +72,7 @@ async function editarConta (idConta, req){
                 var result = new Result(vetorResult, true, "Conta alterada com sucesso!", 200); 
             }
             else{
-                var result = new Result(error, false, "Alterações não realizadas", 400);
+                var result = new Result(null, false, "Alterações não realizadas", 400);
             }
     
             return result;
@@ -87,31 +86,37 @@ async function editarConta (idConta, req){
   
 }
 
-
 async function excluirConta(idConta){
     try {
 
         var contaAtual = await listaContaID(idConta);
-        var estabelecimentoAtual = await listaEstabelecimentoOngID(contaAtual.idEstabelecimento);
-        var vetorResult = [];
-    
-        //Exclui Estabelcimento
-        var estabelecimentoExcluido = await excluiEstabelecimentoOng(contaAtual.idEstabelecimento);
-        if (estabelecimentoExcluido != null) {
-            //Exclui Conta
-            var contaExcluida = await excluiConta(idConta, estabelecimentoAtual);
-        } else {
-            var result = new Result(error, false, "Exclusão falhou", 400);
-            return result;
-        }
-        
-        if (contaExcluida != null) {
-            vetorResult.push(contaExcluida, estabelecimentoExcluido);
-            var result = new Result(vetorResult, true, "Conta excluida com sucesso", 200);
+        console.log(contaAtual);
+        if (contaAtual == null) {
+            var result = new Result(null, false, "Exclusão falhou, conta inexistente", 400);
         }
         else{
-            var result = new Result(error, false, "Exclusão falhou", 400);
+            var estabelecimentoAtual = await listaEstabelecimentoOngID(contaAtual.idEstabelecimento);
+            var vetorResult = [];
+        
+            //Exclui Estabelcimento
+            var estabelecimentoExcluido = await excluiEstabelecimentoOng(contaAtual.idEstabelecimento);
+            if (estabelecimentoExcluido != null) {
+                //Exclui Conta
+                var contaExcluida = await excluiConta(idConta, estabelecimentoAtual);
+            } else {
+                var result = new Result(null, false, "Exclusão falhou", 400);
+                return result;
+            }
+            
+            if (contaExcluida != null) {
+                vetorResult.push(contaExcluida, estabelecimentoExcluido);
+                var result = new Result(vetorResult, true, "Conta excluida com sucesso", 200);
+            }
+            else{
+                var result = new Result(null, false, "Exclusão falhou", 400);
+            }
         }
+
         return result;
      
     } catch (error) {
