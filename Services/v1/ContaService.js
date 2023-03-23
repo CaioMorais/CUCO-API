@@ -9,7 +9,6 @@ async function cadastrarConta(req){
     try {
         //Verificação a ja exixtencia dos dados 
         var verif = await verificaExistenciaDosDados(req.body)
-        console.log(verif, 'teste2');
         if (verif[0] == true){
             var result = new Result(null,  false, verif[1], 400);
             return result;
@@ -64,7 +63,7 @@ async function editarConta (idConta, req){
                 var contaAtualizada = await atualizaDadosConta(req.body, idConta, estabelecimentoAtual);
             }
             else{
-                var result = new Result(error, false, "Alterações não realizadas", 400);
+                var result = new Result(null, false, "Alterações não realizadas", 400);
                 return result;
             }
             
@@ -73,7 +72,7 @@ async function editarConta (idConta, req){
                 var result = new Result(vetorResult, true, "Conta alterada com sucesso!", 200); 
             }
             else{
-                var result = new Result(error, false, "Alterações não realizadas", 400);
+                var result = new Result(null, false, "Alterações não realizadas", 400);
             }
     
             return result;
@@ -87,31 +86,37 @@ async function editarConta (idConta, req){
   
 }
 
-
 async function excluirConta(idConta){
     try {
 
         var contaAtual = await listaContaID(idConta);
-        var estabelecimentoAtual = await listaEstabelecimentoOngID(contaAtual.idEstabelecimento);
-        var vetorResult = [];
-    
-        //Exclui Estabelcimento
-        var estabelecimentoExcluido = await excluiEstabelecimentoOng(contaAtual.idEstabelecimento);
-        if (estabelecimentoExcluido != null) {
-            //Exclui Conta
-            var contaExcluida = await excluiConta(idConta, estabelecimentoAtual);
-        } else {
-            var result = new Result(error, false, "Exclusão falhou", 400);
-            return result;
-        }
-        
-        if (contaExcluida != null) {
-            vetorResult.push(contaExcluida, estabelecimentoExcluido);
-            var result = new Result(vetorResult, true, "Conta excluida com sucesso", 200);
+        console.log(contaAtual);
+        if (contaAtual == null) {
+            var result = new Result(null, false, "Exclusão falhou, conta inexistente", 400);
         }
         else{
-            var result = new Result(error, false, "Exclusão falhou", 400);
+            var estabelecimentoAtual = await listaEstabelecimentoOngID(contaAtual.idEstabelecimento);
+            var vetorResult = [];
+        
+            //Exclui Estabelcimento
+            var estabelecimentoExcluido = await excluiEstabelecimentoOng(contaAtual.idEstabelecimento);
+            if (estabelecimentoExcluido != null) {
+                //Exclui Conta
+                var contaExcluida = await excluiConta(idConta, estabelecimentoAtual);
+            } else {
+                var result = new Result(null, false, "Exclusão falhou", 400);
+                return result;
+            }
+            
+            if (contaExcluida != null) {
+                vetorResult.push(contaExcluida, estabelecimentoExcluido);
+                var result = new Result(vetorResult, true, "Conta excluida com sucesso", 200);
+            }
+            else{
+                var result = new Result(null, false, "Exclusão falhou", 400);
+            }
         }
+
         return result;
      
     } catch (error) {
@@ -318,6 +323,7 @@ const cadastraUsuarioComIDEstabelecimento = async (body, estabelecimento_id) =>{
             "senha" : hash,
             "tipoConta" : body.tipoConta,
             "idEstabelecimento" : estabelecimento_id,
+            "verificaAtivo" : "0",
             "dataCadastro" : today.toLocaleDateString()
         }
         console.log(cont);
@@ -338,6 +344,10 @@ const atualizaEstabelecimentoOng = async (body, idEstabelecimento) =>{
         var razaoSocial = body.razaoSocial == null? estabelecimento_ong.razaoSocial : body.razaoSocial;
         var tipo = body.tipo == null? estabelecimento_ong.tipo : body.tipo;
         var cnpj = body.cnpj == null? estabelecimento_ong.cnpj : body.cnpj;
+        var anexoDocumento1 = body.anexoDocumento1 == null? estabelecimento_ong.anexoDocumento1 : body.anexoDocumento1;
+        var anexoDocumento2 = body.anexoDocumento2 == null? estabelecimento_ong.anexoDocumento2 : body.anexoDocumento2;
+        var anexoComprovanteCNPJ = body.anexoComprovanteCNPJ == null? estabelecimento_ong.canexoComprovanteCNPJ : body.anexoComprovanteCNPJ;
+        var anexoComprovanteEndereco = body.anexoComprovanteEndereco == null? estabelecimento_ong.anexoComprovanteEndereco : body.anexoComprovanteEndereco;
         var cep = body.cep == null? estabelecimento_ong.cep : body.cep;
         var cidade = body.cidade == null? estabelecimento_ong.cidade : body.cidade;
         var estado = body.estado == null? estabelecimento_ong.estado : body.estado;
@@ -347,15 +357,20 @@ const atualizaEstabelecimentoOng = async (body, idEstabelecimento) =>{
         var emailEstabelecimento = body.emailEstabelecimento == null? estabelecimento_ong.emailEstabelecimento : body.emailEstabelecimento;
         var telefone = body.telefone == null? estabelecimento_ong.telefone : body.telefone;
         var descPratoDoado = body.descPratoDoado == null? estabelecimento_ong.descPratoDoado : body.descPratoDoado;
-        var valorPrato = body.valorPrato == null? estabelecimento_ong.valorPrato : body.valorPrato;
+        var chavePix = body.chavePix == null? estabelecimento_ong.chavePix : body.chavePix;
+        var tipoChavePix = body.tipoChavePix == null? estabelecimento_ong.tipoChavePix : body.tipoChavePix;
+        var fotoPerfil = body.fotoPerfil == null? estabelecimento_ong.fotoPerfil : body.fotoPerfil;
 
         var estabelecimentoResult = await estabelecimentoSchema
             .updateOne({_id: idEstabelecimento},{$set:{nomeEstabelecimento: nomeEstabelecimento,
-                        razaoSocial: razaoSocial, tipo: tipo, cnpj: cnpj, cep: cep, 
-                        cidade: cidade, estado: estado, bairo: bairro, 
+                        razaoSocial: razaoSocial, tipo: tipo, cnpj: cnpj, 
+                        anexoDocumento1: anexoDocumento1, anexoDocumento2: anexoDocumento2, 
+                        anexoComprovanteCNPJ: anexoComprovanteCNPJ, anexoComprovanteEndereco: anexoComprovanteEndereco,
+                        cep: cep,cidade: cidade, estado: estado, bairo: bairro, 
                         logadouro: logadouro, complemento: complemento, 
                         emailEstabelecimento: emailEstabelecimento, telefone: telefone, 
-                        descPratoDoado: descPratoDoado, valorPrato: valorPrato}
+                        descPratoDoado: descPratoDoado, valorPrato: valorPrato, chavePix : chavePix,
+                        tipoChavePix : tipoChavePix, fotoPerfil : fotoPerfil}
 
             });
         
@@ -376,6 +391,7 @@ const atualizaDadosConta = async (body, idConta, estabelecimentoAtual) =>{
             var email = body.email == null? conta.email : body.email;
             var tipoConta = body.tipoConta == null? conta.tipoConta : body.tipoConta;
             var idEstabelecimento = body.idEstabelecimento == null? conta.idEstabelecimento : body.idEstabelecimento;
+            var verificaAtivo = body.verificaAtivo == null? conta.verificaAtivo : body.verificaAtivo;
             var dataCadastro = body.dataCadastro == null? conta.dataCadastro : body.dataCadastro;
             var senha = conta.senha;
         
@@ -383,7 +399,7 @@ const atualizaDadosConta = async (body, idConta, estabelecimentoAtual) =>{
         .updateOne({_id: idConta}, {$set:{nome: nome, sobrenome: sobrenome, cpf: cpf, 
                     email: email, senha: senha, 
                     tipoConta: tipoConta, idEstabelecimento: idEstabelecimento,
-                    dataCadastro: dataCadastro}
+                    verificaAtivo: verificaAtivo, dataCadastro: dataCadastro}
         });
 
         return contaResult;
