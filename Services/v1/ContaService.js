@@ -357,7 +357,9 @@ const atualizaEstabelecimentoOng = async (body, idEstabelecimento) =>{
         var emailEstabelecimento = body.emailEstabelecimento == null? estabelecimento_ong.emailEstabelecimento : body.emailEstabelecimento;
         var telefone = body.telefone == null? estabelecimento_ong.telefone : body.telefone;
         var descPratoDoado = body.descPratoDoado == null? estabelecimento_ong.descPratoDoado : body.descPratoDoado;
-        var valorPrato = body.valorPrato == null? estabelecimento_ong.valorPrato : body.valorPrato;
+        var chavePix = body.chavePix == null? estabelecimento_ong.chavePix : body.chavePix;
+        var tipoChavePix = body.tipoChavePix == null? estabelecimento_ong.tipoChavePix : body.tipoChavePix;
+        var fotoPerfil = body.fotoPerfil == null? estabelecimento_ong.fotoPerfil : body.fotoPerfil;
 
         var estabelecimentoResult = await estabelecimentoSchema
             .updateOne({_id: idEstabelecimento},{$set:{nomeEstabelecimento: nomeEstabelecimento,
@@ -367,7 +369,8 @@ const atualizaEstabelecimentoOng = async (body, idEstabelecimento) =>{
                         cep: cep,cidade: cidade, estado: estado, bairo: bairro, 
                         logadouro: logadouro, complemento: complemento, 
                         emailEstabelecimento: emailEstabelecimento, telefone: telefone, 
-                        descPratoDoado: descPratoDoado, valorPrato: valorPrato}
+                        descPratoDoado: descPratoDoado, valorPrato: valorPrato, chavePix : chavePix,
+                        tipoChavePix : tipoChavePix, fotoPerfil : fotoPerfil}
 
             });
         

@@ -81,7 +81,11 @@ var estabelecimentoSchema = new Schema({
     tipoChavePix: {
         type: String,
         required: false 
-    }
+    },
+    fotoPerfil: {
+        type: String,
+        required: false 
+    }    
 })
 
 module.exports = mongoose.model('estabelecimento', estabelecimentoSchema);
