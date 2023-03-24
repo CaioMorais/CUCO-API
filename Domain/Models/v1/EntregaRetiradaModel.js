@@ -10,18 +10,6 @@ var entregaRetiradasSchema = new Schema({
         type: String,
         required: true
     },
-    tokenRestaurante: {
-        type: String,
-        required: true
-    },
-    verificaTokenOng: {
-        type: String,
-        required: true
-    },
-    verificaTokenRestaurante: {
-        type: String,
-        required: true
-    }
 })
 
 module.exports = mongoose.model('entregaRetirada', entregaRetiradasSchema);
