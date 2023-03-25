@@ -340,10 +340,11 @@ const aceitaSolicitacao = async (idSolicitacao) =>{
     
     //Atualiza resposta da solicitação 
     var resultSolicitacao = await atualizaRespostaSolicitacao(solicitacao._id, "true", today.toLocaleDateString(), "true");
-    if(!resultSolicitacao){
+    if(resultSolicitacao != null){
       vetorResultado.push(resultSolicitacao);
     }
     else{
+      await atualizaRespostaSolicitacao(solicitacao._id, "pending", "", "pending");
       result = new Result("", false, "Erro ao atualizar solicitacao", 400);
       return result;
     }
@@ -352,7 +353,7 @@ const aceitaSolicitacao = async (idSolicitacao) =>{
     var carteira = await carteiraSchema.findOne({_id: solicitacao.idCarteira});
     //Atualiza status carteira 
     var resultCarteira = await atualizaStatusCarteira(carteira, "true");
-    if(!resultCarteira){
+    if(resultCarteira != null){
       vetorResultado.push(resultCarteira);
     }
     else{
@@ -366,7 +367,7 @@ const aceitaSolicitacao = async (idSolicitacao) =>{
 
     //Gera tabela de verificação para entrega e retirada 
     var resultEntregasRetirada = await geraTabelaVerificacaoEntregasRetiradas(carteira);
-    if(!resultEntregasRetirada){
+    if(resultEntregasRetirada != null){
       vetorResultado.push(resultEntregasRetirada);
     }
     else{
@@ -408,10 +409,11 @@ const recusaSolicitacao = async (idSolicitacao) =>{
 
     //Atualiza resposta da solicitacao
     var resultSolicitacao = await atualizaRespostaSolicitacao(solicitacao._id, "false", today.toLocaleDateString(), "false");
-    if(!resultSolicitacao){
+    if(resultSolicitacao != null){
       vetorResultado.push(resultSolicitacao);
     }
     else{
+      await atualizaRespostaSolicitacao(solicitacao._id, "pending", "", "pending");
       result = new Result("", false, "Erro ao atualizar solicitacao", 400);
       return result;
     }
