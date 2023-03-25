@@ -451,7 +451,7 @@ const listaContaCompletaPorID = async (id) => {
         "cpf": conta.cpf,
         "email": conta.email,
         "tipoConta": conta.tipoConta,
-        "idEstabelecimento": conta.tipoConta,
+        "idEstabelecimento": conta.idEstabelecimento,
         "verificaAtivo": conta.verificaAtivo,
         "dataCadastro": conta.dataCadastro,
         "nomeEstabelecimento": estabelecimento.nomeEstabelecimento,
