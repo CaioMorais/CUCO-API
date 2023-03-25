@@ -140,7 +140,7 @@ async function excluirConta(idConta) {
 
 async function pegarDadosConta(idConta) {
     try {
-        var contaCompleta = listaContaCompletaPorID(idConta)
+        var contaCompleta = await listaContaCompletaPorID(idConta)
 
         var result = new Result(contaCompleta, true, "Dados da conta", 200);
         return result;
@@ -329,7 +329,7 @@ const cadastraUsuarioComIDEstabelecimentoOuOng = async (body, estabelecimento_id
 const atualizaOngOuEstabelecimento = async (body, idEstabelecimento) => {
     try {
 
-        var estabelecimento_ong = listaOngOuEstabelecimentoPorID(idEstabelecimento);
+        var estabelecimento_ong = await listaOngOuEstabelecimentoPorID(idEstabelecimento);
 
         var nomeEstabelecimento = body.nomeEstabelecimento == null ? estabelecimento_ong.nomeEstabelecimento : body.nomeEstabelecimento;
         var razaoSocial = body.razaoSocial == null ? estabelecimento_ong.razaoSocial : body.razaoSocial;
@@ -380,7 +380,7 @@ const atualizaOngOuEstabelecimento = async (body, idEstabelecimento) => {
 //Atualiza DadosConta
 const atualizaDadosConta = async (body, idConta, estabelecimentoAtual) => {
     try {
-        var conta = listaContaID(idConta);
+        var conta = await listaContaID(idConta);
 
         var nome = body.nome == null ? conta.nome : body.nome;
         var sobrenome = body.sobrenome == null ? conta.sobrenome : body.sobrenome;
@@ -404,7 +404,7 @@ const atualizaDadosConta = async (body, idConta, estabelecimentoAtual) => {
 
         return contaResult;
     } catch (error) {
-        atualizaOngOuEstabelecimento(estabelecimentoAtual, estabelecimentoAtual._id);
+        await atualizaOngOuEstabelecimento(estabelecimentoAtual, estabelecimentoAtual._id);
         return contaResult = null;
     }
 
@@ -417,7 +417,7 @@ const excluiConta = async (idConta, estabelecimentoAtual) => {
         return contaResult;
 
     } catch (error) {
-        cadastraOngOuEstabelecimento(estabelecimentoAtual); //recadadastra o estabelecimento
+        await cadastraOngOuEstabelecimento(estabelecimentoAtual); //recadadastra o estabelecimento
         return contaResult = null;
     }
 
