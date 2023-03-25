@@ -90,17 +90,27 @@ async function listaSolicitacoesEstabelecimentos(idEstabelecimento){
 //Estabelecimento
  async function geraSolicitacaoParceriaParaOng(req){
     try{
+      var result;
+
       var verfContratosRestaurantes = await verificaSolicitacoesRestaurante(req.body.idRestaurante);
       if (verfContratosRestaurantes){
-        var result = new Result(null,  false, "Restaurante ja esta com uma solicitação pendente, ou contrato ativo", 400);
+        result = new Result(null,  false, "Restaurante ja esta com uma solicitação pendente, ou contrato ativo", 400);
         return result;
       };
   
       var carteira = await geraCarteiraPendenteDeResposta(req.body);
-  
-      var result = gerasolciitacaoParceria(req.body, carteira);
-  
-      var result = new Result( result, true, "Solicitação de parceria efetuada", 200);
+      if (carteira._id != null) {
+
+        result = gerasolciitacaoParceria(req.body, carteira);
+
+        if(result._id != null){
+          result = new Result( result, true, "Solicitação de parceria efetuada", 200);
+        }
+      }
+      else{
+        result = new Result( result, false, "Solicitação de parceria não efetuada ", 400);
+      }
+
       return result;
 
     } catch (error) {
@@ -261,7 +271,7 @@ const geraCarteiraPendenteDeResposta = async (body) =>{
 }
 
 //Gera solicitação de parceria
-const gerasolciitacaoParceria = async (body) =>{
+const gerasolciitacaoParceria = async (body, carteira) =>{
   
   const timeElapsed = Date.now();
   const today = new Date(timeElapsed); 
