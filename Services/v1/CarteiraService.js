@@ -27,14 +27,27 @@ async function inserirCarteira(req) {
 async function listagemCarteiraIDRestaurante(id) {
    try {
       var result;
-      var retorno = await carteiraSchema
+      var carteira = await carteiraSchema
          .find({ idRestaurante: id, status: "true" });
 
-      if (retorno) {
-         var result = new Result(retorno, true, "Carteira restaurante", 200);
+      if (carteira) {
+         var ong = await estabelecimentoSchema.findById(carteira.idOng);
+
+         var carteiraResult = {
+            "metaFinal": carteira.metaFinal,
+            "valorAtual": carteira.valorAtual,
+            "idRestaurante": carteira.idRestaurante,
+            "idOng": carteira.idOng,
+            "valorPrato": carteira.valorPrato,
+            "descPratoDoado": carteira.descPratoDoado,
+            "entregasPendentes": carteira.entregasPendentes,
+            "nomeOng" : ong.nomeEstabelecimento
+         }
+
+         var result = new Result(carteiraResult, true, "Carteira restaurante", 200);
       }
       else {
-         result = new Result(retorno, false, "Carteira não encontrada", 400);
+         result = new Result(carteira, false, "Carteira não encontrada", 400);
       }
       return result;
 
@@ -105,21 +118,7 @@ async function listagemCarteirasId(id) {
          .findById(id);
 
       if (carteira) {
-         
-         var ong = await estabelecimentoSchema.findById(carteira.idOng);
-
-         var carteiraResult = {
-            "metaFinal": carteira.metaFinal,
-            "valorAtual": carteira.valorAtual,
-            "idRestaurante": carteira.idRestaurante,
-            "idOng": carteira.idOng,
-            "valorPrato": carteira.valorPrato,
-            "descPratoDoado": carteira.descPratoDoado,
-            "entregasPendentes": carteira.entregasPendentes,
-            "nomeOng" : ong.nomeEstabelecimento
-         }
-
-         result = new Result(carteiraResult, true, "Carteira encontrada", 200);
+         result = new Result(carteira, true, "Carteira encontrada", 200);
       }
       else {
          result = new Result(carteira, false, "Carteira não encontrada", 400);
