@@ -66,14 +66,6 @@ var estabelecimentoSchema = new Schema({
         type: String,
         required: true 
     },
-    descPratoDoado: {
-        type: String,
-        required: true 
-    },
-    valorPrato: {
-        type: String,
-        required: true 
-    },
     chavePix: {
         type: String,
         required: false 
@@ -85,7 +77,15 @@ var estabelecimentoSchema = new Schema({
     fotoPerfil: {
         type: String,
         required: false 
-    }    
+    },    
+    descricao: {
+        type: String,
+        required: false 
+    },
+    paginaWeb: {
+        type: String,
+        required: false 
+    } 
 })
 
 module.exports = mongoose.model('estabelecimento', estabelecimentoSchema);
