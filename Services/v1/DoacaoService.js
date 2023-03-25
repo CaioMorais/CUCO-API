@@ -253,7 +253,7 @@ async function criaDoacao() {
     const timeElapsed = Date.now();
     const today = new Date(timeElapsed);
     var doa = {
-        "valorDoacao": req.body.valorDoacao,
+        "quantidadePratosDoados": req.body.quantidadePratosDoados,
         "dataDoacao": today.toLocaleDateString(),
         "idClienteDoador": clienteDoador._id,
         "idRestaurante": idRestaurante
