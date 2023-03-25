@@ -235,6 +235,7 @@ const listaSolicitacoesPendentesOng = async (solicitacoes) =>{
         "idSolicitacao" : solicitacoes[index]._id,
         "nomeEstabelecimento" : restaurante.nomeEstabelecimento,
         "estado" : restaurante.estado,
+        "cidade" : restaurante.cidade,
         "bairro" : restaurante.bairro,
         "cep" : restaurante.cep,
         "logradouro" : restaurante.logradouro,
