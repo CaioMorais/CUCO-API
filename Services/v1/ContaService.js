@@ -343,7 +343,8 @@ const atualizaOngOuEstabelecimento = async (body, idEstabelecimento) => {
         var cidade = body.cidade == null ? estabelecimento_ong.cidade : body.cidade;
         var estado = body.estado == null ? estabelecimento_ong.estado : body.estado;
         var bairro = body.bairro == null ? estabelecimento_ong.bairro : body.bairro;
-        var logadouro = body.logadouro == null ? estabelecimento_ong.logadouro : body.logadouro;
+        var logradouro = body.logradouro == null ? estabelecimento_ong.logradouro : body.logradouro;
+        var numero = body.logradouro == null ? estabelecimento_ong.numero : body.numero;
         var complemento = body.complemento == null ? estabelecimento_ong.complemento : body.complemento;
         var emailEstabelecimento = body.emailEstabelecimento == null ? estabelecimento_ong.emailEstabelecimento : body.emailEstabelecimento;
         var telefone = body.telefone == null ? estabelecimento_ong.telefone : body.telefone;
@@ -362,7 +363,7 @@ const atualizaOngOuEstabelecimento = async (body, idEstabelecimento) => {
                     anexoDocumento1: anexoDocumento1, anexoDocumento2: anexoDocumento2,
                     anexoComprovanteCNPJ: anexoComprovanteCNPJ, anexoComprovanteEndereco: anexoComprovanteEndereco,
                     cep: cep, cidade: cidade, estado: estado, bairo: bairro,
-                    logadouro: logadouro, complemento: complemento,
+                    logadouro: logradouro, numero: numero, complemento: complemento,
                     emailEstabelecimento: emailEstabelecimento, telefone: telefone,
                     chavePix: chavePix, tipoChavePix: tipoChavePix, fotoPerfil: fotoPerfil,
                     descricao: descricao, paginaWeb: paginaWeb
@@ -465,7 +466,8 @@ const listaContaCompletaPorID = async (id) => {
         "cidade": estabelecimento.cidade,
         "estado": estabelecimento.estado,
         "bairro": estabelecimento.bairro,
-        "logadouro": estabelecimento.logadouro,
+        "logradouro": estabelecimento.logradouro,
+        "numero": estabelecimento.numero,
         "complemento": estabelecimento.complemento,
         "emailEstabelecimento": estabelecimento.emailEstabelecimento,
         "telefone": estabelecimento.telefone,
