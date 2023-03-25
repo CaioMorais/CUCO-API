@@ -492,7 +492,7 @@ const listaContaID = async (id) => {
         "cpf": conta.cpf,
         "email": conta.email,
         "tipoConta": conta.tipoConta,
-        "idEstabelecimento": conta.emailEstabelecimento,
+        "idEstabelecimento": conta.idEstabelecimento,
         "verificaAtivo": conta.verificaAtivo,
         "dataCadastro": conta.dataCadastro
     }
