@@ -7,7 +7,7 @@ const CarteiraModel = require("../../Domain/Models/v1/CarteiraModel");
 const { status } = require("express/lib/response");
 
 
-async function  inserirCarteira(req) {
+async function inserirCarteira(req) {
     try {
 
       var carteira = carteiraSchema(req.body);
@@ -25,12 +25,17 @@ async function  inserirCarteira(req) {
 }
 
 async function listagemCarteiraIDRestaurante(id) {
-   try {
-      //console.log(id)   
+   try { 
+      var result;
       var retorno = await carteiraSchema
                .find({idRestaurante : id, status : "true"});
-   
-      var result = new Result(retorno, true, "lista de Carteiras", 200);
+
+      if (retorno) {
+         var result = new Result(retorno, true, "Carteira restaurante", 200);
+      }
+      else{
+         result = new Result(retorno, false, "Carteira não encontrada", 400);
+      }
       return result;
 
    } catch (error) {
@@ -41,10 +46,16 @@ async function listagemCarteiraIDRestaurante(id) {
 
 async function listagemCarteiraIDOng(id) {
    try { 
+      var result;
       var retorno = await carteiraSchema
                .find({idOng : id, status : "true"});
-   
-      var result = new Result(retorno, true, "lista de Carteiras", 200);
+
+      if (retorno) {
+         var result = new Result(retorno, true, "lista de Carteiras Ong", 200);
+      }
+      else{
+         result = new Result(retorno, false, "Nenhuma Carteira encontrada", 400);
+      }
       return result;
 
    } catch (error) {
@@ -55,11 +66,16 @@ async function listagemCarteiraIDOng(id) {
 
 async function listagemCarteiras() {
    try {
-   
+      var result;
       var retorno = await carteiraSchema
                .find();
    
-      var result = new Result(retorno, true, "lista de Carteiras", 200);
+      if (retorno) {
+         var result = new Result(retorno, true, "lista de Carteiras", 200);
+      }
+      else{
+         result = new Result(retorno, false, "Nenhuma Carteira encontrada", 400);
+      }
       return result;
 
    } catch (error) {
@@ -70,10 +86,16 @@ async function listagemCarteiras() {
 
 async function listagemCarteirasId(id) {
    try {
+      var result;
       var retorno = await carteiraSchema
                 .findById(id); 
     
-      var result = new Result(retorno, true, "Carteira encontrada", 200);
+      if (retorno) {
+         result = new Result(retorno, true, "Carteira encontrada", 200);
+      }
+      else{
+         result = new Result(retorno, false, "Carteira não encontrada", 400);
+      }
       return result; 
 
    } catch (error) {
@@ -86,9 +108,15 @@ async function listagemCarteirasId(id) {
 
 async function listaValorPratoId(id) {
    try {
+      var result;
       var retorno = await carteiraSchema.findOne({idRestaurante: id}); 
-      
-      var result = new Result(retorno.valorPrato, true, "Valor encontrado", 200);
+   
+      if (retorno) {
+         result = new Result(retorno.valorPrato, true, "Valor encontrado", 200);
+      }
+      else{
+         result = new Result(retorno, false, "Carteira não encontrada", 400);
+      }
       return result; 
 
    } catch (error) {
@@ -114,10 +142,21 @@ async function listagemEstabelecimentoId(id) {
 
 async function editandoCarteira(id, req) {
    try {
+      var carteira = listagemCarteirasId(id);
+
+      var metaFinal = body.metaFinal == null? carteira.metaFinal : body.metaFinal;
+      var valorAtual = body.valorAtual == null? carteira.valorAtual : body.valorAtual;
+      var idRestaurante = body.idRestaurante == null? carteira.idRestaurante : body.idRestaurante;
+      var idOng = body.idOng == null? carteira.idOng : body.idOng;
+      var valorPrato = body.valorPrato == null? carteira.valorPrato : body.valorPrato;
+      var descPratoDoado = body.descPratoDoado == null? carteira.descPratoDoado : body.descPratoDoado;
+      var entregasPendentes = body.entregasPendentes == null? carteira.entregasPendentes : body.entregasPendentes;
+      var status = body.status == null? carteira.status : body.status;
+
       var retorno = await carteiraSchema
-               .updateOne({_id: id}, {$set:{metaFinal: req.body.metaFinal, valorAtual: req.body.valorAtual, 
-                  idRestaurante: req.body.idRestaurante, idOng: req.body.idOng, valorPrato: req.body.valorPrato,
-                  entregasPendentes: req.body.entregasPendentes}});
+               .updateOne({_id: id}, {$set:{metaFinal: metaFinal, valorAtual: valorAtual, 
+                  idRestaurante: idRestaurante, idOng: idOng, valorPrato: valorPrato,
+                  descPratoDoado : descPratoDoado, entregasPendentes: entregasPendentes, status: status}});
    
       var result = new Result(retorno, true, "Carteira editada com sucesso", 200);
       return result;
