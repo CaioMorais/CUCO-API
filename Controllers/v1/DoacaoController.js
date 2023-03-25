@@ -1,7 +1,7 @@
 let Result = require("../../Domain/Entities/Result.js");
 const {gerarTokenIndentificacaoRetiradaDoacoes,
     /*gerarQRCodeLinkDoacao,*/ cadastraDoacao, enviarEmailRecompensa,
-    gerarTokenIndentificacaoEntregaDoacoes,validacaoTokens} = require("../../Services/v1/DoacaoService");
+    validacaoTokens} = require("../../Services/v1/DoacaoService");
 
 // exports.QRCodeLinkDoacao = (req, res, next) =>{
 //     var id = req.params["id"];
@@ -20,13 +20,6 @@ exports.ValidaToken = async (req, res, next) =>{
 exports.GeraTokenRetirada =  async (req, res, next) =>{
     var id = req.params["idCarteira"];
     var result =  await gerarTokenIndentificacaoRetiradaDoacoes(id);
-    console.log(result);
-    res.status(result.status).send(result);
-}
-
-exports.GeraTokenEntrega =  async (req, res, next) =>{
-    var id = req.params["idCarteira"];
-    var result =  await gerarTokenIndentificacaoEntregaDoacoes(id);
     console.log(result);
     res.status(result.status).send(result);
 }

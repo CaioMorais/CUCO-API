@@ -22,6 +22,10 @@ var carteiraSchema = new Schema({
         type: String,
         required: true 
     },
+    descPratoDoado: {
+        type: String,
+        required: true 
+    },
     entregasPendentes: {
         type: String,
         required: true 
