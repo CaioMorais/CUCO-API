@@ -107,7 +107,7 @@ const {verificaToken} = require("../../Security/usuarioMiddleware")
  *          404:
  *            description: The requested tax filing was not found.
  */
- Gerenciamentorouter.get('/v1/Gerenciamento/HistoricoEntregas/:id',verificaToken, GerenciamentoController.HistoricoEntregas)
+ Gerenciamentorouter.get('/v1/Gerenciamento/HistoricoEntregasRetiradas/:id',verificaToken, GerenciamentoController.HistoricoEntregasRetiradas)
 
 /**
  * @swagger

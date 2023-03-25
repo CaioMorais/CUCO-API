@@ -2,54 +2,33 @@ let Result = require("../../Domain/Entities/Result");
 let estabelecimentoSchema = require('../../Domain/Models/v1/EstabelecimentoModel');
 let doacaoSchema = require('../../Domain/Models/v1/DoacaoModel');
 let clienteDoadorSchema = require('../../Domain/Models/v1/ClienteDoadorModel');
-let contratoORSchema =  require('../../Domain/Models/v1/ContratoORModel');
+let solicitacaoParceriaSchema =  require('../../Domain/Models/v1/SolicitacaoParceriaModel');
 let carteiraSchema = require('../../Domain/Models/v1/CarteiraModel');
 let entregaRetiradasSchema = require('../../Domain/Models/v1/EntregaRetiradaModel');
 let historicoEntregaRetiradasSchema = require('../../Domain/Models/v1/HistoricoEntregaRetiradas');
 
-//Ong
-async function hitoricoRetiradas(idEstabelecimento){
+//Ong/Estabelecimento
+async function historicoEntregasRetiradas(idEstabelecimento){
     try {
       var element = [];
       var retiradas = await historicoEntregaRetiradasSchema.find({idRestaurante: idEstabelecimento}); 
-      for (let index = 0; index < retiradas.length; index++) {
-          var ret = {
-              "dataEntregaRetirada" : retiradas[index].dataEntregaRetirada,
-              "nomeOng": retiradas[index].nomeOng,
-              "nomeRestaurante" : retiradas[index].nomeRestaurante,
-              "valorEntregado" : retiradas[index].valorEntregado
-          }
-          console.log(ret);
-          element.push(ret);
-      }
-      console.log(element);
-      var result = new Result(element, true, "Historico de Retiradas", 200);
-      return result;
-    } catch (error) {
-      var result = new Result(error, false, "Internal error", 500);
-      return result;
-    }
-}
 
-//Estabelecimento
-async function hisotricoEntrega(idEstabelecimento){
-    try {
-      var element = [];
-      var retiradas = await historicoEntregaRetiradasSchema.find({idRestaurante: idEstabelecimento}); 
       for (let index = 0; index < retiradas.length; index++) {
           var ret = {
               "dataEntregaRetirada" : retiradas[index].dataEntregaRetirada,
               "nomeOng": retiradas[index].nomeOng,
               "nomeRestaurante" : retiradas[index].nomeRestaurante,
-              "valorEntregado" : retiradas[index].valorEntregado
+              "quantidadePratosEntregues" : retiradas[index].quantidadePratosEntregues
+
           }
           console.log(ret);
           element.push(ret);
       }
+
       console.log(element);
-      var result = new Result(element, true, "Historico de Entregas", 200);
+      var result = new Result(element, true, "Historico de Entregas e Retiradas", 200);
       return result;
-       
+
     } catch (error) {
       var result = new Result(error, false, "Internal error", 500);
       return result;
@@ -85,9 +64,11 @@ async function hisotricoDoacoes(idRestaurante){
 //Estabelecimento
 async function listaOngs(){
     try {
-        var listaOngs = await estabelecimentoSchema.find({tipoEstabelecimento: "ONG"}); 
+
+        var listaOngs = await estabelecimentoSchema.find({tipo: "ONG"}); 
         var result = new Result(listaOngs, true, "Lista de Ongs", 200);
         return result;
+
     } catch (error) {
       var result = new Result(error, false, "Internal error", 500);
       return result;
@@ -96,10 +77,12 @@ async function listaOngs(){
 
 async function listaSolicitacoesEstabelecimentos(idEstabelecimento){
   try {
-      var solicitacao = await contratoORSchema.find({idRestaurante: idEstabelecimento});
+    
+      var solicitacao = await solicitacaoParceriaSchema.find({idRestaurante: idEstabelecimento});
 
-      var result = new Result(solicitacao, true, "Solicitação efetuada", 200);
+      var result = new Result(solicitacao, true, "lista de solicitacoes", 200);
       return result;
+
   } catch (error) {
     var result = new Result(error, false, "Internal error", 500);
     return result;
@@ -162,7 +145,7 @@ async function listaSolicitacoesEstabelecimentos(idEstabelecimento){
 async function listaSolicitacoesParaOng(idOng){
     try {
       var listaDeSolicitacoes = [];
-      var solicitacoes = await contratoORSchema.find({idOng: idOng, respostaOng: "pending"}); 
+      var solicitacoes = await solicitacaoParceriaSchema.find({idOng: idOng, respostaOng: "pending"}); 
       for (let index = 0; index < solicitacoes.length; index++) {
         var restaurante =  await estabelecimentoSchema.findOne({_id: solicitacoes[index].idRestaurante});
         var carteira = await carteiraSchema.findOne({_id: solicitacoes[index].idCarteira});
@@ -229,7 +212,7 @@ async function aceitarSolicitacoesDeEstabelecimentos(idSolicitacao){
 //ONG
 async function recusaSolicitacoesDeEstabelecimentos(idSolicitacao){
   try {
-    var solicitacao = await contratoORSchema.findById(idSolicitacao);
+    var solicitacao = await solicitacaoParceriaSchema.findById(idSolicitacao);
     var carteira = await carteiraSchema.findOne({_id: solicitacao.idCarteira});
     
     var resultado = [];
@@ -238,7 +221,7 @@ async function recusaSolicitacoesDeEstabelecimentos(idSolicitacao){
 
     const timeElapsed = Date.now();
     const today = new Date(timeElapsed); 
-    var resultContrato = await contratoORSchema.updateOne({_id: solicitacao._id},{$set:{status: "false", dataResposta: today.toLocaleDateString(),
+    var resultContrato = await solicitacaoParceriaSchema.updateOne({_id: solicitacao._id},{$set:{status: "false", dataResposta: today.toLocaleDateString(),
     respostaOng : "false"}});
 
     resultado.push(resultContrato);
@@ -255,7 +238,7 @@ async function recusaSolicitacoesDeEstabelecimentos(idSolicitacao){
 async function excluirSolicitacaoDeEstabelecimento(idSolicitacao){
   try {
       
-      var resultado = await contratoORSchema.deleteOne({_id: idSolicitacao});
+      var resultado = await solicitacaoParceriaSchema.deleteOne({_id: idSolicitacao});
 
       var result = new Result(resultado, true, "Solicitação excluida com sucesso", 200);
       return result;
@@ -266,20 +249,20 @@ async function excluirSolicitacaoDeEstabelecimento(idSolicitacao){
   }
   
 }
-////Auxiares----------------------------------------------------
+////------------------------------------------Auxiliares----------------------------------------------------
 
 const verificaSolicitacoesRestaurante = async (idRestaurante) =>{
     
   let contrato = null;   
   if (idRestaurante) {
-      contrato = await contratoORSchema
+      contrato = await solicitacaoParceriaSchema
                  .findOne({idRestaurante: idRestaurante});
   }
   return contrato;
 }
 
 module.exports = {
-    hitoricoRetiradas, hisotricoEntrega, hisotricoDoacoes, geraSolicitacaoParceriaParaOng, 
+    historicoEntregasRetiradas, hisotricoDoacoes, geraSolicitacaoParceriaParaOng, 
     aceitarSolicitacoesDeEstabelecimentos, listaOngs, listaSolicitacoesParaOng, 
     recusaSolicitacoesDeEstabelecimentos, excluirSolicitacaoDeEstabelecimento,listaSolicitacoesEstabelecimentos
 }
