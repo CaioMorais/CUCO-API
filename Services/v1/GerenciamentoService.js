@@ -420,7 +420,7 @@ const recusaSolicitacao = async (idSolicitacao) =>{
 
     //Deleta carteira pendente
     var resultCarteira = await deletaCarteiraPendente(solicitacao);
-    if(!resultCarteira){
+    if(resultCarteira != null){
       vetorResultado.push(resultCarteira);
     }
     else{
