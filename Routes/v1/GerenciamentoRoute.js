@@ -62,7 +62,7 @@ const {verificaToken} = require("../../Security/usuarioMiddleware")
  *          default:
  *              description: This is the default response for it
  */
- Gerenciamentorouter.get('/v1/Gerenciamento/AceitarSolicitacoesDeEstabelecimentos/:id', GerenciamentoController.AceitarSolicitacoesDeEstabelecimentos)
+ Gerenciamentorouter.get('/v1/Gerenciamento/AceitarSolicitacoesDeEstabelecimentos/:id',verificaToken, GerenciamentoController.AceitarSolicitacoesDeEstabelecimentos)
 
 
 /**
@@ -107,7 +107,7 @@ const {verificaToken} = require("../../Security/usuarioMiddleware")
  *          default:
  *              description: This is the default response for it
  */
- Gerenciamentorouter.post('/v1/Gerenciamento/GeraSolicitacaoParceriaParaOng', GerenciamentoController.GeraSolicitacaoParceriaParaOng)
+ Gerenciamentorouter.post('/v1/Gerenciamento/GeraSolicitacaoParceriaParaOng',verificaToken, GerenciamentoController.GeraSolicitacaoParceriaParaOng)
 
 /**
  * @swagger
@@ -127,7 +127,7 @@ const {verificaToken} = require("../../Security/usuarioMiddleware")
  *          default:
  *              description: This is the default response for it
  */
- Gerenciamentorouter.get('/v1/Gerenciamento/listaSolicitacoesParaOng/:id', GerenciamentoController.ListaSolicitacoesParaOng)
+ Gerenciamentorouter.get('/v1/Gerenciamento/listaSolicitacoesParaOng/:id',verificaToken, GerenciamentoController.ListaSolicitacoesParaOng)
 
  /**
  * @swagger
@@ -147,7 +147,7 @@ const {verificaToken} = require("../../Security/usuarioMiddleware")
  *          default:
  *              description: This is the default response for it
  */
-  Gerenciamentorouter.get('/v1/Gerenciamento/listaSolicitacoesParaEstabelecimento/:id', GerenciamentoController.ListaSolicitacoesParaEstabelecimento)
+  Gerenciamentorouter.get('/v1/Gerenciamento/listaSolicitacoesParaEstabelecimento/:id',verificaToken, GerenciamentoController.ListaSolicitacoesParaEstabelecimento)
 
  /**
  * @swagger
@@ -167,7 +167,7 @@ const {verificaToken} = require("../../Security/usuarioMiddleware")
  *          default:
  *              description: This is the default response for it
  */
-  Gerenciamentorouter.get('/v1/Gerenciamento/RecusaSolicitacoesDeEstabelecimentos/:id', GerenciamentoController.RecusaSolicitacoesDeEstabelecimentos)
+  Gerenciamentorouter.get('/v1/Gerenciamento/RecusaSolicitacoesDeEstabelecimentos/:id',verificaToken, GerenciamentoController.RecusaSolicitacoesDeEstabelecimentos)
 
 
   /**
@@ -188,6 +188,6 @@ const {verificaToken} = require("../../Security/usuarioMiddleware")
  *          default:
  *              description: This is the default response for it
  */
- Gerenciamentorouter.delete('/v1/Gerenciamento/ExcluirSolicitacoesDeEstabelecimentos/:id', GerenciamentoController.ExcluirSolicitacoesDeEstabelecimentos)
+ Gerenciamentorouter.delete('/v1/Gerenciamento/ExcluirSolicitacoesDeEstabelecimentos/:id',verificaToken, GerenciamentoController.ExcluirSolicitacoesDeEstabelecimentos)
 
 module.exports = Gerenciamentorouter

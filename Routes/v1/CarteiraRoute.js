@@ -41,7 +41,7 @@ const {verificaToken} = require("../../Security/usuarioMiddleware")
  *          default:
  *              description: This is the default response for it
  */
- carteirarouter.get('/v1/Carteira/ListaCarteiraId/:id', carteiraController.ListaCarteiraId)
+ carteirarouter.get('/v1/Carteira/ListaCarteiraId/:id',verificaToken, carteiraController.ListaCarteiraId)
 
 
 /**
@@ -62,7 +62,7 @@ const {verificaToken} = require("../../Security/usuarioMiddleware")
  *          default:
  *              description: This is the default response for it
  */
- carteirarouter.get('/v1/Carteira/ListaCarteira', carteiraController.ListaCarteira)
+ carteirarouter.get('/v1/Carteira/ListaCarteira',verificaToken, carteiraController.ListaCarteira)
 
 /**
  * @swagger
@@ -82,7 +82,7 @@ const {verificaToken} = require("../../Security/usuarioMiddleware")
  *          default:
  *              description: This is the default response for it
  */
- carteirarouter.put('/v1/Carteira/EditarCarteira/:id', carteiraController.EditaCarteira)
+ carteirarouter.put('/v1/Carteira/EditarCarteira/:id',verificaToken, carteiraController.EditaCarteira)
 
 /**
  * @swagger
@@ -102,7 +102,7 @@ const {verificaToken} = require("../../Security/usuarioMiddleware")
  *          default:
  *              description: This is the default response for it
  */
-carteirarouter.delete('/v1/Carteira/DeletaCarteira/:id', carteiraController.DeletaCarteira)
+carteirarouter.delete('/v1/Carteira/DeletaCarteira/:id',verificaToken, carteiraController.DeletaCarteira)
 
 /**
  * @swagger
@@ -122,7 +122,7 @@ carteirarouter.delete('/v1/Carteira/DeletaCarteira/:id', carteiraController.Dele
  *          default:
  *              description: This is the default response for it
  */
-carteirarouter.put('/v1/Carteira/EditaValorPrato/', carteiraController.EditaValorPrato)
+carteirarouter.put('/v1/Carteira/EditaValorPrato/',verificaToken, carteiraController.EditaValorPrato)
 
 /**
  * @swagger
@@ -142,7 +142,7 @@ carteirarouter.put('/v1/Carteira/EditaValorPrato/', carteiraController.EditaValo
  *          default:
  *              description: This is the default response for it
  */
- carteirarouter.get('/v1/Carteira/ListaCarteiraIdRestaurante/:id', carteiraController.ListaCarteiraIdRestaurante)
+ carteirarouter.get('/v1/Carteira/ListaCarteiraIdRestaurante/:id',verificaToken, carteiraController.ListaCarteiraIdRestaurante)
 
  /**
  * @swagger
@@ -162,9 +162,27 @@ carteirarouter.put('/v1/Carteira/EditaValorPrato/', carteiraController.EditaValo
  *          default:
  *              description: This is the default response for it
  */
-  carteirarouter.get('/v1/Carteira/ListaCarteiraIdOng/:id', carteiraController.ListaCarteiraIdOng)
+  carteirarouter.get('/v1/Carteira/ListaCarteiraIdOng/:id',verificaToken, carteiraController.ListaCarteiraIdOng)
 
-  carteirarouter.get('/v1/Carteira/PegarValorPrato/:id', carteiraController.PegarValorPrato)
+   /**
+ * @swagger
+ * tags:
+ *  name: Carteira
+ *  description: API's de Gerenciamento da carteira ONG/Estabelecimento
+ * /api/v1/Carteira/PegarValorPrato/:id':
+ *  get:
+ *      tags: [Carteira]
+ *      parameters:
+ *          - name: page_number
+ *            default: 1
+ *            in: body
+ *            schema:
+ *              type: string
+ *      responses:
+ *          default:
+ *              description: This is the default response for it
+ */
+  carteirarouter.get('/v1/Carteira/PegarValorPrato/:id',verificaToken, carteiraController.PegarValorPrato)
 
 
 module.exports = carteirarouter

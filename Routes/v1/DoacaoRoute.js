@@ -1,6 +1,7 @@
 const express = require("express")
 const Doacaorouter = express.Router();
 const DoacaoController = require("../../Controllers/v1/DoacaoController");
+const {verificaToken} = require("../../Security/usuarioMiddleware");
 
 /**
  * @swagger
@@ -61,7 +62,7 @@ const DoacaoController = require("../../Controllers/v1/DoacaoController");
  *          default:
  *              description: This is the default response for it
  */
- Doacaorouter.get('/v1/Doacao/GeraTokenRetirada/:idCarteira', DoacaoController.GeraTokenRetirada)
+ Doacaorouter.get('/v1/Doacao/GeraTokenRetirada/:idCarteira',verificaToken, DoacaoController.GeraTokenRetirada)
 
 /**
  * @swagger
@@ -81,6 +82,6 @@ const DoacaoController = require("../../Controllers/v1/DoacaoController");
  *          default:
  *              description: This is the default response for it
  */
- Doacaorouter.post('/v1/Doacao/ValidaToken/:idCarteira', DoacaoController.ValidaToken)
+ Doacaorouter.post('/v1/Doacao/ValidaToken/:idCarteira',verificaToken, DoacaoController.ValidaToken)
 
 module.exports = Doacaorouter
