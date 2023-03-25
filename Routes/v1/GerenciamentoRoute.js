@@ -50,7 +50,7 @@ const {verificaToken} = require("../../Security/usuarioMiddleware")
  *  name: Gerenciamento
  *  description: API's de Gerenciamento
  * /api/v1/Gerenciamento/RespondeSolicitacaoDeEstabelecimentos/:id:
- *  get:
+ *  post:
  *      tags: [Gerenciamento]
  *      parameters:
  *          - name: page_number
@@ -62,7 +62,7 @@ const {verificaToken} = require("../../Security/usuarioMiddleware")
  *          default:
  *              description: This is the default response for it
  */
- Gerenciamentorouter.get('/v1/Gerenciamento/RespondeSolicitacaoDeEstabelecimentos/:id',verificaToken, GerenciamentoController.RespondeSolicitacaoDeEstabelecimentos)
+ Gerenciamentorouter.post('/v1/Gerenciamento/RespondeSolicitacaoDeEstabelecimentos/:id',verificaToken, GerenciamentoController.RespondeSolicitacaoDeEstabelecimentos)
 
 
 /**
