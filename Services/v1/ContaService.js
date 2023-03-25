@@ -362,8 +362,8 @@ const atualizaOngOuEstabelecimento = async (body, idEstabelecimento) => {
                     razaoSocial: razaoSocial, tipo: tipo, cnpj: cnpj,
                     anexoDocumento1: anexoDocumento1, anexoDocumento2: anexoDocumento2,
                     anexoComprovanteCNPJ: anexoComprovanteCNPJ, anexoComprovanteEndereco: anexoComprovanteEndereco,
-                    cep: cep, cidade: cidade, estado: estado, bairo: bairro,
-                    logadouro: logradouro, numero: numero, complemento: complemento,
+                    cep: cep, cidade: cidade, estado: estado, bairro: bairro,
+                    logradouro: logradouro, numero: numero, complemento: complemento,
                     emailEstabelecimento: emailEstabelecimento, telefone: telefone,
                     chavePix: chavePix, tipoChavePix: tipoChavePix, fotoPerfil: fotoPerfil,
                     descricao: descricao, paginaWeb: paginaWeb
