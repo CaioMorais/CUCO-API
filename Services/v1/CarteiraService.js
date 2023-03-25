@@ -28,7 +28,7 @@ async function listagemCarteiraIDRestaurante(id) {
    try {
       var result;
       var carteira = await carteiraSchema
-         .find({ idRestaurante: id, status: "true" });
+         .findOne({ idRestaurante: id, status: "true" });
 
       if (carteira) {
          var ong = await estabelecimentoSchema.findById(carteira.idOng);
@@ -61,7 +61,7 @@ async function listagemCarteiraIDOng(id) {
    try {
       var result;
       var carteira = await carteiraSchema
-         .find({ idOng: id, status: "true" });
+         .findOne({ idOng: id, status: "true" });
 
       if (carteira) {
 
