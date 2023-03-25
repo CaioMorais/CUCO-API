@@ -47,15 +47,15 @@ async function editarConta(idConta, req) {
 
         //Verificação a ja exixtencia dos dados  
         var contaAntesEditar = await listaContaCompletaPorID(idConta)
-        if (contaAntesEditar.cpf != req.cpf) {
-            let dadoCPF = await verificaCPF(body.cpf);
+        if (contaAntesEditar.cpf != req.body.cpf) {
+            let dadoCPF = await verificaCPF(body.body.cpf);
             if (dadoCPF) {
                 var result = new Result(null, false, "Edição não Efetuado, CPF ja utilizado", 400);
                 return result;
             }
         }
-        else if (contaAntesEditar.cnpj != req.cnpj) {
-            let dadoCNPJ = await verificaCNPJ(body.cnpj);
+        else if (contaAntesEditar.cnpj != req.body.cnpj) {
+            let dadoCNPJ = await verificaCNPJ(req.body.cnpj);
             if (dadoCNPJ) {
                 var result = new Result(null, false, "Edição não Efetuado, CNPJ ja utilizado", 400);
                 return result;
@@ -344,7 +344,7 @@ const atualizaOngOuEstabelecimento = async (body, idEstabelecimento) => {
         var estado = body.estado == null ? estabelecimento_ong.estado : body.estado;
         var bairro = body.bairro == null ? estabelecimento_ong.bairro : body.bairro;
         var logradouro = body.logradouro == null ? estabelecimento_ong.logradouro : body.logradouro;
-        var numero = body.logradouro == null ? estabelecimento_ong.numero : body.numero;
+        var numero = body.numero == null ? estabelecimento_ong.numero : body.numero;
         var complemento = body.complemento == null ? estabelecimento_ong.complemento : body.complemento;
         var emailEstabelecimento = body.emailEstabelecimento == null ? estabelecimento_ong.emailEstabelecimento : body.emailEstabelecimento;
         var telefone = body.telefone == null ? estabelecimento_ong.telefone : body.telefone;
