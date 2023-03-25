@@ -7,6 +7,8 @@ let carteiraSchema = require('../../Domain/Models/v1/CarteiraModel');
 let entregaRetiradasSchema = require('../../Domain/Models/v1/EntregaRetiradaModel');
 let historicoEntregaRetiradasSchema = require('../../Domain/Models/v1/HistoricoEntregaRetiradas');
 
+//#region Metodos Principais
+
 //Ong/Estabelecimento
 async function historicoEntregasRetiradas(idEstabelecimento){
     try {
@@ -137,67 +139,12 @@ async function listaSolicitacoesParaOng(idOng){
     }
 }
 
-//ONG
-async function aceitarSolicitacoesDeEstabelecimentos(idSolicitacao){
-    try {
-      console.log(idSolicitacao);
-      var solicitacao = await contratoORSchema.findById(idSolicitacao);
-      var carteira = await carteiraSchema.findOne({_id: solicitacao.idCarteira});
-      
-      var resultado = [];
-      var resultCarteira = await carteiraSchema.updateOne({_id: carteira._id},{$set:{status: "true"}});
-      resultado.push(resultCarteira);
-
-      const timeElapsed = Date.now();
-      const today = new Date(timeElapsed); 
-      var resultContrato = await contratoORSchema.updateOne({_id: solicitacao._id},{$set:{status: "true", dataResposta: today.toLocaleDateString(),
-      respostaOng : "true"}});
-      resultado.push(resultContrato);
-      
-      var entrRet = {
-        "idCarteira" : carteira._id,
-        "tokenOng" : " ",
-        "tokenRestaurante" : " ",
-        "verificaTokenOng" : "false", 
-        "verificaTokenRestaurante" : "false" 
-      }
-      var entregaRetiradas = entregaRetiradasSchema(entrRet);
-      var resultEntregasRetirada = await entregaRetiradas.save();
-      resultado.push(resultEntregasRetirada);
-
-      var result = new Result(resultado, true, "Solicitação aceita com sucesso", 200);
-      return result;
-
-    } catch (error) {
-      var result = new Result(error, false, "Internal error", 500);
-      return result;
-    }
-}
-
-//ONG
-async function recusaSolicitacoesDeEstabelecimentos(idSolicitacao){
-  try {
-    var solicitacao = await solicitacaoParceriaSchema.findById(idSolicitacao);
-    var carteira = await carteiraSchema.findOne({_id: solicitacao.idCarteira});
-    
-    var resultado = [];
-    var resultCarteira = await carteiraSchema.deleteOne({_id: carteira._id});
-    resultado.push(resultCarteira);
-
-    const timeElapsed = Date.now();
-    const today = new Date(timeElapsed); 
-    var resultContrato = await solicitacaoParceriaSchema.updateOne({_id: solicitacao._id},{$set:{status: "false", dataResposta: today.toLocaleDateString(),
-    respostaOng : "false"}});
-
-    resultado.push(resultContrato);
-
-    var result = new Result(resultado, true, "Solicitação recusada com sucesso", 200);
-    return result;
-
-  } catch (error) {
-    var result = new Result(error, false, "Internal error", 500);
-    return result;
-  }
+async function respondeSolicitacao(idSolicitacao, body){
+   if (body.resposta == true) {
+      return await aceitaSolicitacao(idSolicitacao);
+   } else {
+    return await recusaSolicitacao(idSolicitacao);
+   }
 }
 
 async function excluirSolicitacaoDeEstabelecimento(idSolicitacao){
@@ -214,16 +161,19 @@ async function excluirSolicitacaoDeEstabelecimento(idSolicitacao){
   }
   
 }
-////------------------------------------------Auxiliares----------------------------------------------------
+//#endregion
 
+//#region Metodos Auxiliares
+
+//verifica solicitações ativas de restaurantes
 const verificaSolicitacoesRestaurante = async (idRestaurante) =>{
     
-  let contrato = null;   
+  let solicitacao = null;   
   if (idRestaurante) {
-      contrato = await solicitacaoParceriaSchema
-                 .findOne({idRestaurante: idRestaurante});
+    solicitacao = await solicitacaoParceriaSchema
+                 .findOne({idRestaurante: idRestaurante, respostaOng: "pending"});
   }
-  return contrato;
+  return solicitacao;
 }
 
 //Gera carteira com status pendente 
@@ -305,10 +255,191 @@ const listaSolicitacoesPendentesOng = async (solicitacoes) =>{
   return listaDeSolicitacoes;
 }
 
+//Atualiza resposta da solicitação 
+const atualizaRespostaSolicitacao = async (solicitacao , status, data, respostaOng) =>{ 
+  var retorno = null;
+  
+  try {
+
+    retorno = await solicitacaoParceriaSchema.updateOne({_id: solicitacao._id},{$set:{status: status, dataResposta: data,
+      respostaOng : respostaOng}}); 
+
+  } catch (error) {
+    return retorno;
+  }
+
+  return retorno;
+}
+
+//Atualiza status da carteira
+const atualizaStatusCarteira = async (carteira, status) =>{ 
+  var retorno = null;
+  
+  try {
+
+    retorno = await carteiraSchema.updateOne({_id: carteira._id},{$set:{status: status}});
+
+  } catch (error) {
+    return retorno;
+  }
+
+  return retorno;
+}
+
+//Deleta carteira pendente
+const deletaCarteiraPendente = async (solicitacao) =>{ 
+  var retorno = null;
+  try {
+
+    var carteira = await carteiraSchema.findOne({_id: solicitacao.idCarteira});
+    retorno = await carteiraSchema.deleteOne({_id: carteira._id});
+
+  } catch (error) {
+    return retorno;
+  }
+
+  return retorno;
+}
+
+//Gera tabela para verificacao de entregas e retiradas
+const geraTabelaVerificacaoEntregasRetiradas = async (carteira) =>{ 
+  var retorno = null;
+  
+  try {
+
+    var entrRet = {
+      "idCarteira" : carteira._id,
+      "tokenOng" : " ",
+    }
+    var entregaRetiradas = entregaRetiradasSchema(entrRet);
+    var retorno = await entregaRetiradas.save();
+
+  } catch (error) {
+    return retorno;
+  }
+
+  return retorno;
+}
+
+//Ong Aceita solicitacao estabelecimento
+const aceitaSolicitacao = async (idSolicitacao) =>{ 
+  try {
+    var result;
+    var vetorResultado = [];
+
+    //verifica existencia da solicitação
+    var solicitacao = await solicitacaoParceriaSchema.findById(idSolicitacao);
+    if (!solicitacao) {
+      result = new Result("", false, "Solicitação não encontrada", 400);
+      return result;
+    }
+
+    const timeElapsed = Date.now();
+    const today = new Date(timeElapsed);
+    
+    //Atualiza resposta da solicitação 
+    var resultSolicitacao = await atualizaRespostaSolicitacao(solicitacao._id, "true", today.toLocaleDateString(), "true");
+    if(!resultSolicitacao){
+      vetorResultado.push(resultSolicitacao);
+    }
+    else{
+      result = new Result("", false, "Erro ao atualizar solicitacao", 400);
+      return result;
+    }
+
+
+    var carteira = await carteiraSchema.findOne({_id: solicitacao.idCarteira});
+    //Atualiza status carteira 
+    var resultCarteira = await atualizaStatusCarteira(carteira, "true");
+    if(!resultCarteira){
+      vetorResultado.push(resultCarteira);
+    }
+    else{
+      //retorna solicitação para pendente 
+      await atualizaRespostaSolicitacao(solicitacao._id, "pending", "", "pending");
+
+      result = new Result("", false, "Erro ao atualizar status da carteira", 400);
+      return result;
+    }
+
+
+    //Gera tabela de verificação para entrega e retirada 
+    var resultEntregasRetirada = await geraTabelaVerificacaoEntregasRetiradas(carteira);
+    if(!resultEntregasRetirada){
+      vetorResultado.push(resultEntregasRetirada);
+    }
+    else{
+      //retorna solicitação para pendente 
+      await atualizaRespostaSolicitacao(solicitacao._id, "pending", "", "pending");
+
+      //retorna carteira para status false 
+      await atualizaStatusCarteira(carteira, "false");
+
+      result = new Result("", false, "Erro ao criar tabela para validar entregas e retiradas", 400);
+      return result;
+    }
+
+    result = new Result(vetorResultado, true, "Solicitação aceita com sucesso", 200);
+    return result;
+
+  } catch (error) {
+    var result = new Result(error, false, "Internal error", 500);
+    return result;
+  }
+}
+
+//Ong Recusa solicitacao estabelecimento
+const recusaSolicitacao = async (idSolicitacao) =>{ 
+  try {
+
+    var vetorResultado = [];
+    var result;
+
+    //verifica existencia da solicitação
+    var solicitacao = await solicitacaoParceriaSchema.findById(idSolicitacao);
+    if (!solicitacao) {
+      result = new Result("", false, "Solicitação não encontrada", 400);
+      return result;
+    }
+    
+    const timeElapsed = Date.now();
+    const today = new Date(timeElapsed); 
+
+    //Atualiza resposta da solicitacao
+    var resultSolicitacao = await atualizaRespostaSolicitacao(solicitacao._id, "false", today.toLocaleDateString(), "false");
+    if(!resultSolicitacao){
+      vetorResultado.push(resultSolicitacao);
+    }
+    else{
+      result = new Result("", false, "Erro ao atualizar solicitacao", 400);
+      return result;
+    }
+
+    //Deleta carteira pendente
+    var resultCarteira = await deletaCarteiraPendente(solicitacao);
+    if(!resultCarteira){
+      vetorResultado.push(resultCarteira);
+    }
+    else{
+      await atualizaRespostaSolicitacao(solicitacao._id, "pending", "", "pending");
+      result = new Result("", false, "Erro ao excluir carteira pendente", 400);
+      return result;
+    } 
+
+    result = new Result(vetorResultado, true, "Solicitação recusada com sucesso", 200);
+    return result;
+
+  } catch (error) {
+    var result = new Result(error, false, "Internal error", 500);
+    return result;
+  }
+}
+//#endregion
+
 module.exports = {
     historicoEntregasRetiradas, hisotricoDoacoes, geraSolicitacaoParceriaParaOng, 
-    aceitarSolicitacoesDeEstabelecimentos, listaOngs, listaSolicitacoesParaOng, 
-    recusaSolicitacoesDeEstabelecimentos, excluirSolicitacaoDeEstabelecimento,listaSolicitacoesEstabelecimentos
+    respondeSolicitacao, listaOngs, listaSolicitacoesParaOng, 
+    excluirSolicitacaoDeEstabelecimento,listaSolicitacoesEstabelecimentos
 }
 
 

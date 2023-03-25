@@ -49,7 +49,7 @@ const {verificaToken} = require("../../Security/usuarioMiddleware")
  * tags:
  *  name: Gerenciamento
  *  description: API's de Gerenciamento
- * /api/v1/Gerenciamento/AceitarSolicitacoesDeEstabelecimentos/:id:
+ * /api/v1/Gerenciamento/RespondeSolicitacaoDeEstabelecimentos/:id:
  *  get:
  *      tags: [Gerenciamento]
  *      parameters:
@@ -62,7 +62,7 @@ const {verificaToken} = require("../../Security/usuarioMiddleware")
  *          default:
  *              description: This is the default response for it
  */
- Gerenciamentorouter.get('/v1/Gerenciamento/AceitarSolicitacoesDeEstabelecimentos/:id',verificaToken, GerenciamentoController.AceitarSolicitacoesDeEstabelecimentos)
+ Gerenciamentorouter.get('/v1/Gerenciamento/RespondeSolicitacaoDeEstabelecimentos/:id',verificaToken, GerenciamentoController.RespondeSolicitacaoDeEstabelecimentos)
 
 
 /**
@@ -149,25 +149,6 @@ const {verificaToken} = require("../../Security/usuarioMiddleware")
  */
   Gerenciamentorouter.get('/v1/Gerenciamento/listaSolicitacoesParaEstabelecimento/:id',verificaToken, GerenciamentoController.ListaSolicitacoesParaEstabelecimento)
 
- /**
- * @swagger
- * tags:
- *  name: Gerenciamento
- *  description: API's de Gerenciamento
- * /api/v1/Gerenciamento/RecusaSolicitacoesDeEstabelecimentos/:id:
- *  get:
- *      tags: [Gerenciamento]
- *      parameters:
- *          - name: page_number
- *            default: 1
- *            in: body
- *            schema:
- *              type: string
- *      responses:
- *          default:
- *              description: This is the default response for it
- */
-  Gerenciamentorouter.get('/v1/Gerenciamento/RecusaSolicitacoesDeEstabelecimentos/:id',verificaToken, GerenciamentoController.RecusaSolicitacoesDeEstabelecimentos)
 
 
   /**

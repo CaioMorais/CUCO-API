@@ -5,7 +5,6 @@ let estabelecimentoSchema = require('../../Domain/Models/v1/EstabelecimentoModel
 var nodemailer = require('nodemailer');
 
 
-
 //#region Metodos Principais
 async function cadastrarConta(req) {
     try {
