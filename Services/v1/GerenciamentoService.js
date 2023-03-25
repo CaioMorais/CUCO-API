@@ -10,7 +10,7 @@ let historicoEntregaRetiradasSchema = require('../../Domain/Models/v1/HistoricoE
 //Ong/Estabelecimento
 async function historicoEntregasRetiradas(idEstabelecimento){
     try {
-      var element = [];
+      var listaRetiradas = [];
       var retiradas = await historicoEntregaRetiradasSchema.find({idRestaurante: idEstabelecimento}); 
 
       for (let index = 0; index < retiradas.length; index++) {
@@ -22,11 +22,10 @@ async function historicoEntregasRetiradas(idEstabelecimento){
 
           }
           console.log(ret);
-          element.push(ret);
+          listaRetiradas.push(ret);
       }
 
-      console.log(element);
-      var result = new Result(element, true, "Historico de Entregas e Retiradas", 200);
+      var result = new Result(listaRetiradas, true, "Historico de Entregas e Retiradas", 200);
       return result;
 
     } catch (error) {
@@ -39,20 +38,20 @@ async function historicoEntregasRetiradas(idEstabelecimento){
 async function hisotricoDoacoes(idRestaurante){
     try {
         //Function junta os dados das docaoes e dos doadores e devolve um array
-        var element = [];
+        var listaDoacoes = [];
         var doacoes = await doacaoSchema.find({idRestaurante: idRestaurante}); 
+
         for (let index = 0; index < doacoes.length; index++) {
             doador = await clienteDoadorSchema.findOne({_id: doacoes[index].idClienteDoador});
-            var doa = {
+            var doacao = {
                 "valorDoacao" : doacoes[index].valorDoacao,
                 "dataDoacao": doacoes[index].dataDoacao,
                 "nomeDoador" : doador.nome
             }
-            console.log(doa);
-            element.push(doa);
+            listaDoacoes.push(doacao);
         }
-        console.log(element);
-        var result = new Result(element, true, "Historico de doações", 200);
+
+        var result = new Result(listaDoacoes, true, "Historico de doações", 200);
         return result;
 
     } catch (error) {
@@ -79,7 +78,6 @@ async function listaSolicitacoesEstabelecimentos(idEstabelecimento){
   try {
     
       var solicitacao = await solicitacaoParceriaSchema.find({idRestaurante: idEstabelecimento});
-
       var result = new Result(solicitacao, true, "lista de solicitacoes", 200);
       return result;
 
@@ -91,47 +89,18 @@ async function listaSolicitacoesEstabelecimentos(idEstabelecimento){
 
 //Estabelecimento
  async function geraSolicitacaoParceriaParaOng(req){
-    var verfContratosRestaurantes = await verificaSolicitacoesRestaurante(req.body.idRestaurante);
-    console.log(verfContratosRestaurantes)
-
-    if (verfContratosRestaurantes){
-      var result = new Result(null,  false, "Restaurante ja esta com uma solicitação pendente, ou contrato ativo", 400);
-      return result;
-    };
-
-    var carteira = {
-      "metaFinal": req.body.metaFinal, 
-      "valorAtual": "0", 
-      "idRestaurante": req.body.idRestaurante, 
-      "idOng": req.body.idOng,
-      "valorPrato": req.body.valorPrato,
-      "entregasPendentes" : "0",
-      "status" : "pending"
-    }
-
-    var carteira = carteiraSchema(carteira); //Gera a Carteira com que vai aguarda a aprovação da ong
-
-    const timeElapsed = Date.now();
-    const today = new Date(timeElapsed); 
-
-    try {
-      var cont = {
-        "idOng": req.body.idOng,
-        "idRestaurante" : req.body.idRestaurante,  
-        "respostaOng": "pending", 
-        "respostaRestaurante": "true", 
-        "status": "pending",
-        "dataSolicitacao" : today.toLocaleDateString(),
-        "dataResposta" : "pending",
-        "idCarteira" : carteira._id
-      } 
-
-      var contrato = contratoORSchema(cont); // Gera um contrato que aguarda a resposta da Ong, para liberar a carteira
-      var resultado = await contrato.save();
-
-      await carteira.save();
-
-      var result = new Result( resultado, true, "Solicitação de parceria efetuada", 200);
+    try{
+      var verfContratosRestaurantes = await verificaSolicitacoesRestaurante(req.body.idRestaurante);
+      if (verfContratosRestaurantes){
+        var result = new Result(null,  false, "Restaurante ja esta com uma solicitação pendente, ou contrato ativo", 400);
+        return result;
+      };
+  
+      var carteira = await geraCarteiraPendenteDeResposta(req.body);
+  
+      var result = gerasolciitacaoParceria(req.body, carteira);
+  
+      var result = new Result( result, true, "Solicitação de parceria efetuada", 200);
       return result;
 
     } catch (error) {
@@ -146,23 +115,32 @@ async function listaSolicitacoesParaOng(idOng){
     try {
       var listaDeSolicitacoes = [];
       var solicitacoes = await solicitacaoParceriaSchema.find({idOng: idOng, respostaOng: "pending"}); 
+
       for (let index = 0; index < solicitacoes.length; index++) {
+
         var restaurante =  await estabelecimentoSchema.findOne({_id: solicitacoes[index].idRestaurante});
-        var carteira = await carteiraSchema.findOne({_id: solicitacoes[index].idCarteira});
+        var carteiraPendente = await carteiraSchema.findOne({_id: solicitacoes[index].idCarteira});
 
         var resultado = {
             "idSolicitacao" : solicitacoes[index]._id,
             "nomeEstabelecimento" : restaurante.nomeEstabelecimento,
-            "endereco" : restaurante.endereco,
-            "contato" : restaurante.contato,
+            "estado" : restaurante.estado,
+            "bairro" : restaurante.bairro,
+            "cep" : restaurante.cep,
+            "logradouro" : restaurante.logradouro,
+            "numero" : restaurante.numero,
+            "complemento" : restaurante.complemento,
+            "telefone" : restaurante.telefone,
+            "paginaWeb" : restaurante.paginaWeb,
             "dataSolicitacao": solicitacoes[index].dataSolicitacao,
-            "metaFinal": carteira.metaFinal,
-            "valorPrato": carteira.valorPrato
+            "metaFinal": carteiraPendente.metaFinal,
+            "valorPrato": carteiraPendente.valorPrato,
+            "descPratoDoado" : carteiraPendente.descPratoDoado
         }
-        console.log(resultado);
+
         listaDeSolicitacoes.push(resultado);
+
       }
-      console.log(listaDeSolicitacoes);
       var result = new Result(listaDeSolicitacoes, true, "Lista de Solicitações abertas para a Ong", 200);
       return result;
 
@@ -259,6 +237,50 @@ const verificaSolicitacoesRestaurante = async (idRestaurante) =>{
                  .findOne({idRestaurante: idRestaurante});
   }
   return contrato;
+}
+
+//Gera carteira com status pendente 
+const geraCarteiraPendenteDeResposta = async (body) =>{
+    
+  var car = {
+    "metaFinal": body.metaFinal, 
+    "valorAtual": "0", 
+    "idRestaurante": body.idRestaurante, 
+    "idOng": body.idOng,
+    "valorPrato": body.valorPrato,
+    "descPratoDoado" : body.descPratoDoado,
+    "entregasPendentes" : "0",
+    "status" : "pending"
+  }
+
+  var carteira = carteiraSchema(car); //Gera a Carteira com que vai aguarda a aprovação da ong
+  
+  await carteira.save();
+
+  return carteira;
+}
+
+//Gera solicitação de parceria
+const gerasolciitacaoParceria = async (body) =>{
+  
+  const timeElapsed = Date.now();
+  const today = new Date(timeElapsed); 
+
+  var solicitacao = {
+    "idOng": body.idOng,
+    "idRestaurante" : body.idRestaurante,  
+    "respostaOng": "pending", 
+    "respostaRestaurante": "true", 
+    "status": "pending",
+    "dataSolicitacao" : today.toLocaleDateString(),
+    "dataResposta" : "pending",
+    "idCarteira" : carteira._id
+  } 
+
+  var contrato = solicitacaoParceriaSchema(solicitacao); // Gera uma solicitação que aguarda a resposta da Ong, para liberar a carteira
+  var resultado = await contrato.save();
+
+  return resultado
 }
 
 module.exports = {
