@@ -224,7 +224,6 @@ async function insereValorCarteira(id, valorDoado) {
          }
 
       }
-
       return result;
 
    } catch (error) {

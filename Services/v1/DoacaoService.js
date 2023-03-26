@@ -25,148 +25,196 @@ var nodemailer = require('nodemailer');
 
 // }
 
-async function cadastraDoacao(req, idRestaurante){
+async function cadastraDoacao(req, idRestaurante) {
     try {
         var result;
+        var clienteAntigoBackup;
+        var clienteNovo = false;
 
-        //Verifica se o cliente ja existe e cria ou atualiza    
-        var clienteDoador = await criaOuAtualizaClienteDoador(); 
+        //Verifica se o cliente ja existe, caso não, o cria.   
+        var clienteDoador = await retornaClientePorCPF(req.body.cpf);
+        if (clienteDoador == null) {
+            clienteDoador = criaClienteDoador(req.body)
+            if (clienteDoador == null) {
+                result = new Result(resultDoacao, false, "Doação não efetuada, não foi possivel localizar ou criar o doador!", 400);
+                return result;
+            }
+            clienteNovo = true;
+        }
 
         //Cria Doação
-        var doacao = await criaDoacao();
+        var doacao = await criaDoacao(body, clienteDoador, idRestaurante);
+        if (doacao == null) {
+            result = new Result(resultDoacao, false, "Doação não efetuada, não foi possivel criar a doação!", 400);
+            return result;
+        }
 
-        //salva cliente e doação, em caso de sucesso insere valor na carteira
-        if (await clienteDoador.save()) {
-            if (await doacao.save()) {
-                //insere valor carteira
-                await carteira.insereValorCarteira(idRestaurante, req.body.valorDoacao);
-
-                var resultDoacao = {
-                    "nomeDoador" : req.body.nome,
-                    "valor": req.body.valorDoacao,
+        //salva a doação, em caso de sucesso salva cliente ou atualiza seu pratos doados, depois insere valor na carteira
+        if (await doacao.save()) {
+             
+            //verifica se o cliente é novo ou ja existente, atualiza seus pratos em caso de existente, ou apenas on salva em caso de novo cliente
+            if (clienteNovo == false) {
+                clienteAntigoBackup = clienteDoador;
+                var valorTotaldeDoacoesDesseCliente = parseFloat(clienteExistente.totalPratosDoados) + parseFloat(body.quantidadePratosDoados);
+                if (await clienteDoadorSchema.updateOne({ _id: clienteExistente._id }, { $set: { nome: body.nome, email: body.email, totalPratosDoados: valorTotaldeDoacoesDesseCliente } })) {
+                    // erro ao atualizar pratos do cliente existente, doação é excluida
+                    await doacaoSchema.deleteOne({ _id: doacao._id });
+                    result = new Result(resultDoacao, false, "Doação não efetuada, não foi atualizar doações do doador!", 400);
+                    return result;
                 }
+            }
+            else if (!(await clienteDoador.save())) {
+                //erro em caso de salvar cliente novo doação é excluida
+                await doacaoSchema.deleteOne({ _id: doacao._id });
+                result = new Result(resultDoacao, false, "Doação não efetuada, não foi possivel criar novo doador!", 400);
+                return result;
+            }
+
+            //insere valor carteira
+            var resultadoIncersao = await carteira.insereValorCarteira(idRestaurante, req.body.valorDoacao);
+            
+            if (resultadoIncersao.success) {
                 
+                var resultDoacao = {
+                    "nomeDoador": req.body.nome,
+                    "quantidadePratosDoados": req.body.quantidadePratosDoados,
+                }
+    
                 //envia email com recompensa para cliente
                 enviarEmailRecompensa(req.body.email);
-        
-                result = new Result(resultDoacao, true, "Doacao inserida com sucesso!", 200);
+    
+                result = new Result(resultDoacao, true, "Prato doado com sucesso!", 200);
+            } else {
+                
+                //em caso de erro em inserir valor da carteira o cliente doador é excluido se for novo, ou os pratos doados nessa docao são retirados do seu registro
+                if(clienteNovo == true){
+                    await clienteDoadorSchema.updateOne({ _id: clienteExistente._id }, { $set: { totalPratosDoados: clienteAntigoBackup.totalPratosDoados } })
+                }
+                else{
+                    await excluiDoador(clienteDoador._id);
+                }
+
+                //em caso de erro ao inserir valor na carteira doação é excluida
+                await doacaoSchema.deleteOne({ _id: doacao._id });
+                result = new Result(resultDoacao, false, "Doacao não efetuada, não foi possivel inserir valor na carteira!", 400);
+                return result;
             }
-            else{
-                excluiDoador(clienteDoador._id)
-                result = new Result(resultDoacao, false, "Doacao não efetuada!", 400);
-            }
+
+        }
+        else {
+            result = new Result(resultDoacao, false, "Doacao não efetuada!", 400);
         }
         return result;
 
     } catch (error) {
-      var result = new Result(error, false, "Internal error", 500);
-      return result;
+        var result = new Result(error, false, "Internal error", 500);
+        return result;
     }
 
 }
 
-async function enviarEmailRecompensa(emailcliente){
+async function enviarEmailRecompensa(emailcliente) {
     try {
 
-        var remetente = nodemailer.createTransport( {
+        var remetente = nodemailer.createTransport({
             host: "smtp-mail.outlook.com",
             service: "outlook",
             port: 587,
             secureConnection: false,
             tls: {
-              ciphers: 'SSLv3'                            // tls version
+                ciphers: 'SSLv3'                            // tls version
             },
             auth: {
-               user:"no-reply.cuco@outlook.com.br",
-               pass:"Cuco1234"
+                user: "no-reply.cuco@outlook.com.br",
+                pass: "Cuco1234"
             }
-         });
-      
-         var emailASerEnviado = {
-      
+        });
+
+        var emailASerEnviado = {
+
             from: "no-reply.cuco@outlook.com.br",
-            
+
             to: emailcliente,
-            
+
             subject: "Obrigado por Doar",
-            
-            text: "Sua doação ajudara uma pessoa com fome, por esse motivo a equipe do CUCO"+ 
-            "em conjunto com o estabelecimento te fornecera um NFC esclusivo, que pode ser resgatado"
-            + " pelo link a seguir:  www.nfcexclusivoscucodoadores.com"     
-         };
-      
-      
-         remetente.sendMail(emailASerEnviado, function(error){
-             if (error) {
-                 console.log(error);
-             } else {
-                 console.log("Email enviado com sucesso.");
-             }
-         });
-       
+
+            text: "Sua doação ajudara uma pessoa com fome, por esse motivo a equipe do CUCO" +
+                "em conjunto com o estabelecimento te fornecera um NFC esclusivo, que pode ser resgatado"
+                + " pelo link a seguir:  www.nfcexclusivoscucodoadores.com"
+        };
+
+
+        remetente.sendMail(emailASerEnviado, function (error) {
+            if (error) {
+                console.log(error);
+            } else {
+                console.log("Email enviado com sucesso.");
+            }
+        });
+
     } catch (error) {
-      return error;
+        return error;
     }
 }
 
 //Ong
-async function gerarTokenIndentificacaoRetiradaDoacoes(idCarteira){
+async function gerarTokenIndentificacaoRetiradaDoacoes(idCarteira) {
     try {
         var result;
 
         //Gera token  de identificação
         var tokenIdentificacao = geraTokenIdentificacao();
-        
+
         //Salva token para ser consultado na entrega pelo restaurante
-        var entregaRetiradasDocument = await entregaRetiradasSchema.findOne({idCarteira: idCarteira});
+        var entregaRetiradasDocument = await entregaRetiradasSchema.findOne({ idCarteira: idCarteira });
         if (entregaRetiradasDocument) {
-            await entregaRetiradasSchema.updateOne({_id: entregaRetiradasDocument._id},
-                {$set:{tokenOng: tokenIdentificacao}})
-            
+            await entregaRetiradasSchema.updateOne({ _id: entregaRetiradasDocument._id },
+                { $set: { tokenOng: tokenIdentificacao } })
+
             var result = new Result(tokenIdentificacao, true, "Token de identificação para retirada de doações", 200);
         }
-        else{
+        else {
             var result = new Result(null, false, "Token de identificação não gerado", 400);
         }
-        
+
         return result;
-       
+
     } catch (error) {
-      var result = new Result(error, false, "Internal error", 500);
-      return result;
+        var result = new Result(error, false, "Internal error", 500);
+        return result;
     }
 
-} 
+}
 
 
 //Estabelecimento
-async function validacaoTokens(idCarteira, req){
+async function validacaoTokens(idCarteira, req) {
     try {
         var result;
 
-        var entregaRetiradasDocument = await entregaRetiradasSchema.findOne({idCarteira: idCarteira});
-        
-        var validaToken = await entregaRetiradasDocument.findOne({idCarteira: idCarteira, tokenOng: req.body.token});
-    
-        if(validaToken){
-            
-            var  resultadoHistoricoDeEntrega = await geraHistoricoEntregaRetirada(idCarteira);
+        var entregaRetiradasDocument = await entregaRetiradasSchema.findOne({ idCarteira: idCarteira });
 
-            await entregaRetiradasSchema.updateOne({_id: entregaRetiradasDocument._id},
-                {$set:{tokenOng: ""}})
+        var validaToken = await entregaRetiradasDocument.findOne({ idCarteira: idCarteira, tokenOng: req.body.token });
+
+        if (validaToken) {
+
+            var resultadoHistoricoDeEntrega = await geraHistoricoEntregaRetirada(idCarteira);
+
+            await entregaRetiradasSchema.updateOne({ _id: entregaRetiradasDocument._id },
+                { $set: { tokenOng: "" } })
 
             result = new Result(resultadoHistoricoDeEntrega, true, "Token Validado", 200);
         }
-        else{
-            result = new Result(resultado, false, "Token não Validado", 400);   
+        else {
+            result = new Result(resultado, false, "Token não Validado", 400);
         }
         return result;
-            
+
     } catch (error) {
-      var result = new Result(error, false, "Internal error", 500);
-      return result;
+        var result = new Result(error, false, "Internal error", 500);
+        return result;
     }
-    
+
 }
 
 
@@ -174,31 +222,57 @@ async function validacaoTokens(idCarteira, req){
 ///--------------------------------------- Metodos Auxiliares --------------------------------
 
 //Verifica se o cpf do cliente ja existe
-const verificaCpfCliente = async (cpf) =>{
-    
-    let usuario = null;   
-    if (cpf) {
-        usuario = await clienteDoadorSchema
-                   .findOne({cpf: cpf});
+const retornaClientePorCPF = async (cpf) => {
+
+    let usuario = null;
+    try {
+        if (cpf) {
+            usuario = await clienteDoadorSchema
+                .findOne({ cpf: cpf });
+        }
+    } catch (error) {
+        return usuario;
     }
+
     return usuario;
 }
 
-//Exclui Doador
-const excluiDoador = async (idDoador) =>{
-    try {       
-        var doadorResult = await clienteDoadorSchema.deleteOne({_id: idDoador});
-        return doadorResult;
-    } catch (error) {
-        return doadorResult = null;
-    }
+//Cria Cliente Doador
+const criaClienteDoador = async (body) => {
+    var clienteDoador = null;
 
+    try {
+        var clienteNew = {
+            "nome": body.nome,
+            "cpf": body.cpf,
+            "email": body.email,
+            "totalPratosDoados": body.quantidadePratosDoados
+        };
+
+        clienteDoador = clienteDoadorSchema(clienteNew);
+
+    } catch (error) {
+        return clienteDoador;
+    }
+    return clienteDoador;
+}
+
+//Exclui Doador
+const excluiDoador = async (idDoador) => {
+    doadorResult = null;
+    try {
+        var doadorResult = await clienteDoadorSchema.deleteOne({ _id: idDoador });
+        
+    } catch (error) {
+        return doadorResult;
+    }
+    return doadorResult;
 }
 
 //Exclui Doacao
-const excluiDoacao = async (idDaoacao) =>{
-    try {       
-        var doacaoResult = await estabelecimentoSchema.deleteOne({_id: idDaoacao});
+const excluiDoacao = async (idDaoacao) => {
+    try {
+        var doacaoResult = await estabelecimentoSchema.deleteOne({ _id: idDaoacao });
         return doacaoResult;
     } catch (error) {
         return doacaoResult = null;
@@ -210,7 +284,7 @@ const excluiDoacao = async (idDaoacao) =>{
 async function geraHistoricoEntregaRetirada(idCarteira) {
 
     var resultadoHistoricoDeEntrega
-    
+
     const timeElapsed = Date.now();
     const today = new Date(timeElapsed);
     var carteira = await carteiraSchema.findOne({ _id: idCarteira });
@@ -233,33 +307,47 @@ async function geraHistoricoEntregaRetirada(idCarteira) {
 }
 
 //Cria clinte ou atualiza caso ja exista
-async function criaOuAtualizaClienteDoador() {
+async function criaOuAtualizaClienteDoador(body) {
     var clienteDoador;
 
-    let clienteExistente = await verificaCpfCliente(req.body.cpf);
+    let clienteExistente = await retornaClientePorCPF(body.cpf);
 
-    if (clienteExistente) {
-        await clienteDoadorSchema.updateOne({ _id: clienteExistente._id }, { $set: { nome: req.body.nome, email: req.body.email } });
+    if (clienteExistente != null) {
+
+        var valorTotaldeDoacoesDesseCliente = parseFloat(clienteExistente.totalPratosDoados) + parseFloat(body.quantidadePratosDoados);
+
+        await clienteDoadorSchema.updateOne({ _id: clienteExistente._id }, { $set: { nome: body.nome, email: body.email, totalPratosDoados: valorTotaldeDoacoesDesseCliente } });
         clienteDoador = clienteExistente;
     }
     else {
-        clienteDoador = clienteDoadorSchema(req.body);
+        var clienteNew = {
+            "nome": body.nome,
+            "cpf": body.cpf,
+            "email": body.email,
+            "totalPratosDoados": body.quantidadePratosDoados
+        };
+        clienteDoador = clienteDoadorSchema(clienteNew);
     }
     return clienteDoador;
 }
 
 //Cria doação 
-async function criaDoacao() {
-    const timeElapsed = Date.now();
-    const today = new Date(timeElapsed);
-    var doa = {
-        "quantidadePratosDoados": req.body.quantidadePratosDoados,
-        "dataDoacao": today.toLocaleDateString(),
-        "idClienteDoador": clienteDoador._id,
-        "idRestaurante": idRestaurante
-    };
-    console.log(doa);
-    var doacao = doacaoSchema(doa);
+async function criaDoacao(body, clienteDoador, idRestaurante) {
+    var doacao = null;
+    try {
+        const timeElapsed = Date.now();
+        const today = new Date(timeElapsed);
+        var doa = {
+            "quantidadePratosDoados": body.quantidadePratosDoados,
+            "dataDoacao": today.toLocaleDateString(),
+            "idClienteDoador": clienteDoador._id,
+            "idRestaurante": idRestaurante
+        };
+        console.log(doa);
+        doacao = doacaoSchema(doa);
+    } catch (error) {
+        return doacao;
+    }
     return doacao;
 }
 
