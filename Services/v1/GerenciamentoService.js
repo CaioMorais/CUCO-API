@@ -46,7 +46,7 @@ async function hisotricoDoacoes(idRestaurante){
         for (let index = 0; index < doacoes.length; index++) {
             doador = await clienteDoadorSchema.findOne({_id: doacoes[index].idClienteDoador});
             var doacao = {
-                "valorDoacao" : doacoes[index].valorDoacao,
+                "quantidadePratosDoados" : doacoes[index].quantidadePratosDoados,
                 "dataDoacao": doacoes[index].dataDoacao,
                 "nomeDoador" : doador.nome
             }
