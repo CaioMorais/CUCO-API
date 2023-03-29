@@ -1,7 +1,7 @@
 let Result = require("../../Domain/Entities/Result.js");
-const {hitoricoRetiradas, hisotricoEntrega, hisotricoDoacoes, geraSolicitacaoParceriaParaOng,  
-    aceitarSolicitacoesDeEstabelecimentos,listaOngs, listaSolicitacoesParaOng, 
-    recusaSolicitacoesDeEstabelecimentos, excluirSolicitacaoDeEstabelecimento, listaSolicitacoesEstabelecimentos} = require("../../Services/v1/GerenciamentoService");
+const {historicoEntregasRetiradas, hisotricoDoacoes, geraSolicitacaoParceriaParaOng,  
+    respondeSolicitacao,listaOngs, listaSolicitacoesParaOng, 
+    excluirSolicitacaoDeEstabelecimento, listaSolicitacoesEstabelecimentos} = require("../../Services/v1/GerenciamentoService");
 
 exports.HistoricoDoacoes = async (req, res, next) =>{
     var id = req.params["id"];
@@ -22,7 +22,7 @@ exports.GeraSolicitacaoParceriaParaOng = async (req, res, next) =>{
     res.status(result.status).send(result); 
 }
 
-//Ong
+//Estabelecimento
 exports.ListaSolicitacoesParaEstabelecimento = async (req, res, next) =>{
     var id = req.params["id"];
     var result = await listaSolicitacoesEstabelecimentos(id);
@@ -30,6 +30,7 @@ exports.ListaSolicitacoesParaEstabelecimento = async (req, res, next) =>{
     res.status(result.status).send(result); 
 }
 
+//Ong
 exports.ListaSolicitacoesParaOng = async (req, res, next) =>{
     var id = req.params["id"];
     var result = await listaSolicitacoesParaOng(id);
@@ -39,21 +40,15 @@ exports.ListaSolicitacoesParaOng = async (req, res, next) =>{
 
 
 //Ong
-exports.AceitarSolicitacoesDeEstabelecimentos = async (req, res, next) =>{
+exports.RespondeSolicitacaoDeEstabelecimentos = async (req, res, next) =>{
     var id = req.params["id"];
     console.log(id);
-    var result = await aceitarSolicitacoesDeEstabelecimentos(id);
+    var result = await respondeSolicitacao(id, req.body);
     console.log(result)
     res.status(result.status).send(result)
 }
 
-exports.RecusaSolicitacoesDeEstabelecimentos = async (req, res, next) =>{
-    var id = req.params["id"];
-    var result = await recusaSolicitacoesDeEstabelecimentos(id);
-    console.log(result)
-    res.status(result.status).send(result)
-}
-
+//Estabelcimento
 exports.ExcluirSolicitacoesDeEstabelecimentos = async (req, res, next) =>{
     var id = req.params["id"];
     var result = await excluirSolicitacaoDeEstabelecimento(id);
@@ -62,18 +57,10 @@ exports.ExcluirSolicitacoesDeEstabelecimentos = async (req, res, next) =>{
 }
 
 
-//Estabelecimento
-exports.HistoricoRetiradas = async (req, res, next) =>{
+//Estabelecimento/Ong
+exports.HistoricoEntregasRetiradas = async (req, res, next) =>{
     var id = req.params["id"];
-    var result = await hitoricoRetiradas(id);
-    res.status(result.status).send(result);
-}
-
-
-//Ong
-exports.HistoricoEntregas = async (req, res, next) =>{
-    var id = req.params["id"];
-    var result = await hisotricoEntrega(id);
+    var result = await historicoEntregasRetiradas(id);
     res.status(result.status).send(result);
 }
 

@@ -29,26 +29,6 @@ const {verificaToken} = require("../../Security/usuarioMiddleware")
  * tags:
  *  name: Gerenciamento
  *  description: API's de Gerenciamento
- * /api/v1/Gerenciamento/HistoricoRetiradas/:id:
- *  get:
- *      tags: [Gerenciamento]
- *      parameters:
- *          - name: page_number
- *            default: 1
- *            in: body
- *            schema:
- *              type: string
- *      responses:
- *          default:
- *              description: This is the default response for it
- */
- Gerenciamentorouter.get('/v1/Gerenciamento/HistoricoRetiradas/:id',verificaToken, GerenciamentoController.HistoricoRetiradas)
-
-/**
- * @swagger
- * tags:
- *  name: Gerenciamento
- *  description: API's de Gerenciamento
  * /api/v1/Gerenciamento/ListaOngs:
  *  get:
  *      tags: [Gerenciamento]
@@ -69,8 +49,8 @@ const {verificaToken} = require("../../Security/usuarioMiddleware")
  * tags:
  *  name: Gerenciamento
  *  description: API's de Gerenciamento
- * /api/v1/Gerenciamento/AceitarSolicitacoesDeEstabelecimentos/:id:
- *  get:
+ * /api/v1/Gerenciamento/RespondeSolicitacaoDeEstabelecimentos/:id:
+ *  post:
  *      tags: [Gerenciamento]
  *      parameters:
  *          - name: page_number
@@ -82,7 +62,7 @@ const {verificaToken} = require("../../Security/usuarioMiddleware")
  *          default:
  *              description: This is the default response for it
  */
- Gerenciamentorouter.get('/v1/Gerenciamento/AceitarSolicitacoesDeEstabelecimentos/:id', GerenciamentoController.AceitarSolicitacoesDeEstabelecimentos)
+ Gerenciamentorouter.post('/v1/Gerenciamento/RespondeSolicitacaoDeEstabelecimentos/:id',verificaToken, GerenciamentoController.RespondeSolicitacaoDeEstabelecimentos)
 
 
 /**
@@ -107,7 +87,7 @@ const {verificaToken} = require("../../Security/usuarioMiddleware")
  *          404:
  *            description: The requested tax filing was not found.
  */
- Gerenciamentorouter.get('/v1/Gerenciamento/HistoricoEntregas/:id',verificaToken, GerenciamentoController.HistoricoEntregas)
+ Gerenciamentorouter.get('/v1/Gerenciamento/HistoricoEntregasRetiradas/:id',verificaToken, GerenciamentoController.HistoricoEntregasRetiradas)
 
 /**
  * @swagger
@@ -127,7 +107,7 @@ const {verificaToken} = require("../../Security/usuarioMiddleware")
  *          default:
  *              description: This is the default response for it
  */
- Gerenciamentorouter.post('/v1/Gerenciamento/GeraSolicitacaoParceriaParaOng', GerenciamentoController.GeraSolicitacaoParceriaParaOng)
+ Gerenciamentorouter.post('/v1/Gerenciamento/GeraSolicitacaoParceriaParaOng',verificaToken, GerenciamentoController.GeraSolicitacaoParceriaParaOng)
 
 /**
  * @swagger
@@ -147,7 +127,7 @@ const {verificaToken} = require("../../Security/usuarioMiddleware")
  *          default:
  *              description: This is the default response for it
  */
- Gerenciamentorouter.get('/v1/Gerenciamento/listaSolicitacoesParaOng/:id', GerenciamentoController.ListaSolicitacoesParaOng)
+ Gerenciamentorouter.get('/v1/Gerenciamento/listaSolicitacoesParaOng/:id',verificaToken, GerenciamentoController.ListaSolicitacoesParaOng)
 
  /**
  * @swagger
@@ -167,27 +147,8 @@ const {verificaToken} = require("../../Security/usuarioMiddleware")
  *          default:
  *              description: This is the default response for it
  */
-  Gerenciamentorouter.get('/v1/Gerenciamento/listaSolicitacoesParaEstabelecimento/:id', GerenciamentoController.ListaSolicitacoesParaEstabelecimento)
+  Gerenciamentorouter.get('/v1/Gerenciamento/listaSolicitacoesParaEstabelecimento/:id',verificaToken, GerenciamentoController.ListaSolicitacoesParaEstabelecimento)
 
- /**
- * @swagger
- * tags:
- *  name: Gerenciamento
- *  description: API's de Gerenciamento
- * /api/v1/Gerenciamento/RecusaSolicitacoesDeEstabelecimentos/:id:
- *  get:
- *      tags: [Gerenciamento]
- *      parameters:
- *          - name: page_number
- *            default: 1
- *            in: body
- *            schema:
- *              type: string
- *      responses:
- *          default:
- *              description: This is the default response for it
- */
-  Gerenciamentorouter.get('/v1/Gerenciamento/RecusaSolicitacoesDeEstabelecimentos/:id', GerenciamentoController.RecusaSolicitacoesDeEstabelecimentos)
 
 
   /**
@@ -208,6 +169,6 @@ const {verificaToken} = require("../../Security/usuarioMiddleware")
  *          default:
  *              description: This is the default response for it
  */
- Gerenciamentorouter.delete('/v1/Gerenciamento/ExcluirSolicitacoesDeEstabelecimentos/:id', GerenciamentoController.ExcluirSolicitacoesDeEstabelecimentos)
+ Gerenciamentorouter.delete('/v1/Gerenciamento/ExcluirSolicitacoesDeEstabelecimentos/:id',verificaToken, GerenciamentoController.ExcluirSolicitacoesDeEstabelecimentos)
 
 module.exports = Gerenciamentorouter

@@ -10,7 +10,7 @@ var HistoricoEntregaRetiradasSchema = new Schema({
         type: String,
         required: true
     },
-    valorEntregado: {
+    quantidadePratosEntregues: {
         type: String,
         required: true
     },
