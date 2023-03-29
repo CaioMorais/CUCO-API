@@ -202,7 +202,7 @@ async function insereValorCarteira(id, valorDoado) {
    try {
       var carteira = await carteiraSchema.findOne({ idRestaurante: id });
       var result;
-
+      console.log(carteira);
       if (parseFloat(carteira.valorAtual) + parseFloat(valorDoado) >= parseFloat(carteira.metaFinal)) {
          var retorno = await insereValorCarteiraComMetaAtingida(carteira, valorDoado)
 

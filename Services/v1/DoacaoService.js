@@ -27,6 +27,7 @@ var nodemailer = require('nodemailer');
 
 async function cadastraDoacao(req, idRestaurante) {
     try {
+        console.log(req.body)
         var result;
         var clienteAntigoBackup;
         var clienteNovo = false;
@@ -34,16 +35,17 @@ async function cadastraDoacao(req, idRestaurante) {
         //Verifica se o cliente ja existe, caso não, o cria.   
         var clienteDoador = await retornaClientePorCPF(req.body.cpf);
         if (clienteDoador == null) {
-            clienteDoador = criaClienteDoador(req.body)
+            clienteDoador = await criaClienteDoador(req.body)
             if (clienteDoador == null) {
                 result = new Result(resultDoacao, false, "Doação não efetuada, não foi possivel localizar ou criar o doador!", 400);
                 return result;
             }
             clienteNovo = true;
         }
-
+        console.log(clienteDoador)
+        // console.log(clienteDoador._id.toString())
         //Cria Doação
-        var doacao = await criaDoacao(body, clienteDoador, idRestaurante);
+        var doacao = await criaDoacao(req.body, clienteDoador, idRestaurante);
         if (doacao == null) {
             result = new Result(resultDoacao, false, "Doação não efetuada, não foi possivel criar a doação!", 400);
             return result;
@@ -51,12 +53,13 @@ async function cadastraDoacao(req, idRestaurante) {
 
         //salva a doação, em caso de sucesso salva cliente ou atualiza seu pratos doados, depois insere valor na carteira
         if (await doacao.save()) {
-             
+
             //verifica se o cliente é novo ou ja existente, atualiza seus pratos em caso de existente, ou apenas on salva em caso de novo cliente
             if (clienteNovo == false) {
                 clienteAntigoBackup = clienteDoador;
-                var valorTotaldeDoacoesDesseCliente = parseFloat(clienteExistente.totalPratosDoados) + parseFloat(body.quantidadePratosDoados);
-                if (await clienteDoadorSchema.updateOne({ _id: clienteExistente._id }, { $set: { nome: body.nome, email: body.email, totalPratosDoados: valorTotaldeDoacoesDesseCliente } })) {
+                var valorTotaldeDoacoesDesseCliente = parseFloat(clienteDoador.totalPratosDoados) + parseFloat(req.body.quantidadePratosDoados);
+                if (await clienteDoadorSchema.updateOne({ _id: clienteDoador._id }, { $set: { nome: req.body.nome, email: req.body.email, totalPratosDoados: valorTotaldeDoacoesDesseCliente } })) {
+                    console.log("entrou")
                     // erro ao atualizar pratos do cliente existente, doação é excluida
                     await doacaoSchema.deleteOne({ _id: doacao._id });
                     result = new Result(resultDoacao, false, "Doação não efetuada, não foi atualizar doações do doador!", 400);
@@ -72,25 +75,25 @@ async function cadastraDoacao(req, idRestaurante) {
 
             //insere valor carteira
             var resultadoIncersao = await carteira.insereValorCarteira(idRestaurante, req.body.valorDoacao);
-            
+
             if (resultadoIncersao.success) {
-                
+
                 var resultDoacao = {
                     "nomeDoador": req.body.nome,
                     "quantidadePratosDoados": req.body.quantidadePratosDoados,
                 }
-    
+
                 //envia email com recompensa para cliente
                 enviarEmailRecompensa(req.body.email);
-    
+
                 result = new Result(resultDoacao, true, "Prato doado com sucesso!", 200);
             } else {
-                
+
                 //em caso de erro em inserir valor da carteira o cliente doador é excluido se for novo, ou os pratos doados nessa docao são retirados do seu registro
-                if(clienteNovo == true){
-                    await clienteDoadorSchema.updateOne({ _id: clienteExistente._id }, { $set: { totalPratosDoados: clienteAntigoBackup.totalPratosDoados } })
+                if (clienteNovo == true) {
+                    await clienteDoadorSchema.updateOne({ _id: clienteDoador._id }, { $set: { totalPratosDoados: clienteAntigoBackup.totalPratosDoados } })
                 }
-                else{
+                else {
                     await excluiDoador(clienteDoador._id);
                 }
 
@@ -224,11 +227,12 @@ async function validacaoTokens(idCarteira, req) {
 //Verifica se o cpf do cliente ja existe
 const retornaClientePorCPF = async (cpf) => {
 
-    let usuario = null;
+    var usuario = null;
     try {
         if (cpf) {
             usuario = await clienteDoadorSchema
                 .findOne({ cpf: cpf });
+            console.log(usuario)
         }
     } catch (error) {
         return usuario;
@@ -249,7 +253,8 @@ const criaClienteDoador = async (body) => {
             "totalPratosDoados": body.quantidadePratosDoados
         };
 
-        clienteDoador = clienteDoadorSchema(clienteNew);
+        clienteDoador = await clienteDoadorSchema(clienteNew);
+        console.log("cadastrei novo doador")
 
     } catch (error) {
         return clienteDoador;
@@ -262,7 +267,7 @@ const excluiDoador = async (idDoador) => {
     doadorResult = null;
     try {
         var doadorResult = await clienteDoadorSchema.deleteOne({ _id: idDoador });
-        
+
     } catch (error) {
         return doadorResult;
     }
@@ -340,7 +345,7 @@ async function criaDoacao(body, clienteDoador, idRestaurante) {
         var doa = {
             "quantidadePratosDoados": body.quantidadePratosDoados,
             "dataDoacao": today.toLocaleDateString(),
-            "idClienteDoador": clienteDoador._id,
+            "idClienteDoador": clienteDoador._id.toString(),
             "idRestaurante": idRestaurante
         };
         console.log(doa);

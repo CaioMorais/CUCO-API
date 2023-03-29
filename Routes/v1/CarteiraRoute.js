@@ -182,7 +182,7 @@ carteirarouter.put('/v1/Carteira/EditaValorPrato/',verificaToken, carteiraContro
  *          default:
  *              description: This is the default response for it
  */
-  carteirarouter.get('/v1/Carteira/PegarValorPrato/:id',verificaToken, carteiraController.PegarValorPrato)
+  carteirarouter.get('/v1/Carteira/PegarValorPrato/:id', carteiraController.PegarValorPrato)
 
 
 module.exports = carteirarouter
