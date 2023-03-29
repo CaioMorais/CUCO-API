@@ -1,7 +1,7 @@
 let Result = require("../../Domain/Entities/Result.js");
 const {gerarTokenIndentificacaoRetiradaDoacoes,
     /*gerarQRCodeLinkDoacao,*/ cadastraDoacao, enviarEmailRecompensa,
-    gerarTokenIndentificacaoEntregaDoacoes,validacaoTokens} = require("../../Services/v1/DoacaoService");
+    validacaoTokens} = require("../../Services/v1/DoacaoService");
 
 // exports.QRCodeLinkDoacao = (req, res, next) =>{
 //     var id = req.params["id"];
@@ -24,17 +24,9 @@ exports.GeraTokenRetirada =  async (req, res, next) =>{
     res.status(result.status).send(result);
 }
 
-exports.GeraTokenEntrega =  async (req, res, next) =>{
-    var id = req.params["idCarteira"];
-    var result =  await gerarTokenIndentificacaoEntregaDoacoes(id);
-    console.log(result);
-    res.status(result.status).send(result);
-}
-
 //deve chamar as duas functions cadastraDoacao e  enviarEmailRecompensa
 exports.CadastraDoacao = async (req, res, next) => {
     var idRestaurante = req.params["idRestaurante"];
-    console.log("passou por aqui");
     var result = await cadastraDoacao(req, idRestaurante);
     console.log(result);
     await enviarEmailRecompensa();
