@@ -5,7 +5,7 @@ const router = express.Router();
 const swaggerJsDoc = require("swagger-jsdoc");
 const swaggerUi = require("swagger-ui-express");
 const mongoose = require('mongoose');
-const app = express();
+const app = express(); 
 app.use(bodyParser.json())
 app.use(express.urlencoded({ extended: true} ));
 app.use(express.json());

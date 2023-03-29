@@ -8,13 +8,13 @@ var clienteDoadorSchema = new Schema({
     },
     cpf: {
         type: String,
-        required: true 
+        required: false
     },
     email: {
         type: String,
         required: true 
     },
-    totalValorDoado: {
+    totalPratosDoados: {
         type: String,
         required: false
     } 
