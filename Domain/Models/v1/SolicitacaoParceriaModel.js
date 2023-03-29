@@ -1,7 +1,7 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
-var contratoORSchema = new Schema({
+var solicitacaoParceriaSchema = new Schema({
     idOng: {
         type: String,
         required: true 
@@ -36,4 +36,4 @@ var contratoORSchema = new Schema({
     }
 })
 
-module.exports = mongoose.model('contrato', contratoORSchema);
+module.exports = mongoose.model('solicitacaoParceria', solicitacaoParceriaSchema);

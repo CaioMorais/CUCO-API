@@ -1,6 +1,7 @@
 const express = require("express")
 const Contarouter = express.Router();
 const ContaController = require("../../Controllers/v1/ContaController");
+const {verificaToken} = require("../../Security/usuarioMiddleware");
 
 
 
@@ -22,7 +23,7 @@ const ContaController = require("../../Controllers/v1/ContaController");
  *          default:
  *              description: This is the default response for it
  */
- Contarouter.put('/v1/Conta/Editar/:id', ContaController.Editar)
+ Contarouter.put('/v1/Conta/Editar/:id',verificaToken, ContaController.Editar)
 
 
 /**
@@ -43,7 +44,7 @@ const ContaController = require("../../Controllers/v1/ContaController");
  *          default:
  *              description: This is the default response for it
  */
- Contarouter.delete('/v1/Conta/Excluir/:id', ContaController.Excluir)
+ Contarouter.delete('/v1/Conta/Excluir/:id',verificaToken, ContaController.Excluir)
 
 
 /**
@@ -142,7 +143,7 @@ Contarouter.post('/v1/Conta/ResetarSenha/:id', ContaController.ResetarSenha)
  *          default:
  *              description: This is the default response for it
  */
- Contarouter.get('/v1/Conta/PegarDadosConta/:id', ContaController.PegarDadosConta)
+ Contarouter.get('/v1/Conta/PegarDadosConta/:id',verificaToken, ContaController.PegarDadosConta)
  
 
 
