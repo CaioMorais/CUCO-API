@@ -60,6 +60,8 @@ async function cadastraDoacao(req, idRestaurante) {
                 var valorTotaldeDoacoesDesseCliente = parseFloat(clienteDoador.totalPratosDoados) + parseFloat(req.body.quantidadePratosDoados);
                 if (await clienteDoadorSchema.updateOne({ _id: clienteDoador._id }, { $set: { nome: req.body.nome, email: req.body.email, totalPratosDoados: valorTotaldeDoacoesDesseCliente } })) {
                     console.log("entrou")
+                }
+                else{
                     // erro ao atualizar pratos do cliente existente, doação é excluida
                     await doacaoSchema.deleteOne({ _id: doacao._id });
                     result = new Result(resultDoacao, false, "Doação não efetuada, não foi atualizar doações do doador!", 400);
@@ -74,7 +76,7 @@ async function cadastraDoacao(req, idRestaurante) {
             }
 
             //insere valor carteira
-            var resultadoIncersao = await carteira.insereValorCarteira(idRestaurante, req.body.valorDoacao);
+            var resultadoIncersao = await carteira.insereValorCarteira(idRestaurante, req.body.quantidadePratosDoados);
 
             if (resultadoIncersao.success) {
 

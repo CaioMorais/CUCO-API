@@ -202,7 +202,7 @@ async function insereValorCarteira(id, valorDoado) {
    try {
       var carteira = await carteiraSchema.findOne({ idRestaurante: id });
       var result;
-      console.log(carteira);
+      console.log(valorDoado);
       if (parseFloat(carteira.valorAtual) + parseFloat(valorDoado) >= parseFloat(carteira.metaFinal)) {
          var retorno = await insereValorCarteiraComMetaAtingida(carteira, valorDoado)
 
@@ -319,7 +319,7 @@ async function editandoValorPrato(id, novoValor) {
 
 const insereValorCarteiraComMetaAtingida = async (carteira, valorDoado) => {
    try {
-
+      console.log(valorDoado)
       envioMetaCarteiraAtingido(carteira);
       var valorAtual = (parseFloat(carteira.valorAtual) + parseFloat(valorDoado) - parseFloat(carteira.metaFinal)).toString();
       var entregasPendentes = parseFloat(carteira.entregasPendentes) + 1;
