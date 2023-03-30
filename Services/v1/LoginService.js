@@ -1,6 +1,6 @@
 let Result = require("../../Domain/Entities/Result");
 const jwt = require('jsonwebtoken');
-const usuarioSchema = require('../../Domain/Models/v1/ContaModel');
+const contaSchema = require('../../Domain/Models/v1/ContaModel');
 const bcrypt = require("bcryptjs");
 const SECRET = 'chavesegurancadetestecucoapi';
 
@@ -23,8 +23,7 @@ async function realizarLogin(email, senha) {
 
 const procuraUsuario = async ({ email }) => {
     try {
-        var usuario = await usuarioSchema
-            .findOne({ email: email });
+        var usuario = await contaSchema.findOne({ email: email });
         return usuario;
     } catch (error) {
         return error;
@@ -39,12 +38,11 @@ const autentica = async ({ email, senha }) => {
     var autenticaSenha = await bcrypt.compare(senha, usuario.senha);
     if (!autenticaSenha) return false;
 
-    const { _id } = usuario;
+    const { _id } = usuario._id;
     const token = jwt.sign(
         {
             userid: _id,
             email, 
-            usuario,
             tipoconta: usuario.tipoConta,
             nome: usuario.nome,
             idestabelecimento: usuario.idEstabelecimento
