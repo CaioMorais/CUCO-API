@@ -17,7 +17,7 @@ async function cadastrarConta(req) {
         else {
             //Salvando estbelecimento
             var estabelecimento = await cadastraOngOuEstabelecimento(req.body);
-
+            
             //Salvando usuario com id do estabelecimento
             if (estabelecimento != null) {
                 await cadastraUsuarioComIDEstabelecimentoOuOng(req.body, estabelecimento._id);
@@ -290,10 +290,11 @@ const cadastraOngOuEstabelecimento = async (body) => {
     try {
         var estabelecimento = estabelecimentoSchema(body);
         await estabelecimento.save();
+        console.log(estabelecimento);
     } catch (error) {
+        console.log(error)
         return estabelecimento = null;
     }
-    console.log(estabelecimento);
     return estabelecimento;
 }
 
@@ -311,7 +312,7 @@ const cadastraUsuarioComIDEstabelecimentoOuOng = async (body, estabelecimento_id
             "cpf": body.cpf,
             "email": body.email,
             "senha": hash,
-            "tipoConta": body.tipoConta,
+            "tipoConta": body.tipo,
             "idEstabelecimento": estabelecimento_id,
             "verificaAtivo": "0",
             "dataCadastro": today.toLocaleDateString()
