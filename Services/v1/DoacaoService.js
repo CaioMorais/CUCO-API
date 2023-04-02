@@ -209,7 +209,7 @@ async function validacaoTokens(idCarteira, req) {
             result = new Result(resultadoHistoricoDeEntrega, true, "Token Validado", 200);
         }
         else {
-            result = new Result(resultado, false, "Token não Validado", 400);
+            result = new Result(resultado, false, "Token não Validado", 200);
         }
         return result;
 

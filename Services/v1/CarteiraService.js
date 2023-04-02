@@ -47,7 +47,7 @@ async function listagemCarteiraIDRestaurante(id) {
          var result = new Result(carteiraResult, true, "Carteira restaurante", 200);
       }
       else {
-         result = new Result(carteira, false, "Carteira não encontrada", 400);
+         result = new Result(carteira, false, "Carteira não encontrada", 200);
       }
       return result;
 
@@ -81,7 +81,7 @@ async function listagemCarteiraIDOng(id) {
          var result = new Result(carteiraResult, true, "lista de Carteiras Ong", 200);
       }
       else {
-         result = new Result(carteira, false, "Nenhuma Carteira encontrada", 400);
+         result = new Result(carteira, false, "Nenhuma Carteira encontrada", 200);
       }
       return result;
 
@@ -101,7 +101,7 @@ async function listagemCarteiras() {
          var result = new Result(retorno, true, "lista de Carteiras", 200);
       }
       else {
-         result = new Result(retorno, false, "Nenhuma Carteira encontrada", 400);
+         result = new Result(retorno, false, "Nenhuma Carteira encontrada", 200);
       }
       return result;
 
@@ -121,7 +121,7 @@ async function listagemCarteirasId(id) {
          result = new Result(carteira, true, "Carteira encontrada", 200);
       }
       else {
-         result = new Result(carteira, false, "Carteira não encontrada", 400);
+         result = new Result(carteira, false, "Carteira não encontrada", 200);
       }
       return result;
 
@@ -142,7 +142,7 @@ async function listaValorPratoId(id) {
          result = new Result(retorno.valorPrato, true, "Valor encontrado", 200);
       }
       else {
-         result = new Result(retorno, false, "Carteira não encontrada", 400);
+         result = new Result(retorno, false, "Carteira não encontrada", 200);
       }
       return result;
 

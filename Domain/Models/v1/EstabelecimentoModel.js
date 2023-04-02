@@ -92,4 +92,4 @@ var estabelecimentoSchema = new Schema({
     } 
 })
 
-module.exports = mongoose.model('estabelecimento', estabelecimentoSchema);
+ module.exports = mongoose.model('estabelecimento', estabelecimentoSchema);
