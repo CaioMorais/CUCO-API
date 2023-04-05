@@ -361,8 +361,8 @@ async function criaDoacao(body, clienteDoador, idRestaurante) {
 //Gera Token identificação para entrega de doações
 function geraTokenIdentificacao() {
     var tokenIdentificacao;
-    for (var i = 80; i > 0; --i) {
-        tokenIdentificacao += (Math.floor(Math.random() * 256)).toString(16);
+    for (var i = 6; i > 0; --i) {
+        tokenIdentificacao += (Math.floor(10 * Math.random())).toString();
     }
     return tokenIdentificacao;
 }
