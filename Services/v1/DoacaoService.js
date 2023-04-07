@@ -167,11 +167,15 @@ async function gerarTokenIndentificacaoRetiradaDoacoes(idCarteira) {
     try {
         var result;
 
+        var entregaRetiradasDocument = await entregaRetiradasSchema.findOne({ idCarteira: idCarteira });
+        if(entregaRetiradasDocument.tokenOng != ""){
+            return new Result(entregaRetiradasDocument.tokenOng, true, "", 200);
+        }
         //Gera token  de identificação
         var tokenIdentificacao = geraTokenIdentificacao();
 
         //Salva token para ser consultado na entrega pelo restaurante
-        var entregaRetiradasDocument = await entregaRetiradasSchema.findOne({ idCarteira: idCarteira });
+        
         if (entregaRetiradasDocument) {
             await entregaRetiradasSchema.updateOne({ _id: entregaRetiradasDocument._id },
                 { $set: { tokenOng: tokenIdentificacao } })
@@ -197,21 +201,20 @@ async function validacaoTokens(idCarteira, req) {
     try {
         var result;
 
-        var entregaRetiradasDocument = await entregaRetiradasSchema.findOne({ idCarteira: idCarteira });
+        // var entregaRetiradasDocument = await entregaRetiradasSchema.findOne({ idCarteira: idCarteira });
 
-        var validaToken = await entregaRetiradasDocument.findOne({ idCarteira: idCarteira, tokenOng: req.body.token });
-
+        var validaToken = await entregaRetiradasSchema.findOne({ idCarteira: idCarteira, tokenOng: req.body.token });
         if (validaToken) {
 
             var resultadoHistoricoDeEntrega = await geraHistoricoEntregaRetirada(idCarteira);
 
-            await entregaRetiradasSchema.updateOne({ _id: entregaRetiradasDocument._id },
+            await entregaRetiradasSchema.updateOne({ _id: validaToken._id },
                 { $set: { tokenOng: "" } })
 
             result = new Result(resultadoHistoricoDeEntrega, true, "Token Validado", 200);
         }
         else {
-            result = new Result(resultado, false, "Token não Validado", 400);
+            result = new Result(null, false, "Token não Validado", 200);
         }
         return result;
 
@@ -295,20 +298,21 @@ async function geraHistoricoEntregaRetirada(idCarteira) {
     const timeElapsed = Date.now();
     const today = new Date(timeElapsed);
     var carteira = await carteiraSchema.findOne({ _id: idCarteira });
-    var ong = await estabelecimentoSchema.findOne({ _id: ctr.idOng });
-    var restaurante = await estabelecimentoSchema.findOne({ _id: ctr.idRestaurante });
+    var ong = await estabelecimentoSchema.findOne({ _id: carteira.idOng });
+    var restaurante = await estabelecimentoSchema.findOne({ _id: carteira.idRestaurante });
 
-    var historico = {
+    var historicoRestaurante = {
         "idCarteira": idCarteira,
         "dataEntregaRetirada": today.toLocaleDateString(),
         "valorEntregado": carteira.metaFinal,
         "nomeOng": ong.nomeEstabelecimento,
         "nomeRestaurante": restaurante.nomeEstabelecimento,
         "idOng": ong._id,
-        "idRestaurante": rest._id
+        "idRestaurante": restaurante._id,
+        "quantidadePratosEntregues": carteira.entregasPendentes * carteira.metaFinal
     };
 
-    var geraHistoricoEntregaRetirada = historicoEntregaRetiradasSchema(historico);
+    var geraHistoricoEntregaRetirada = historicoEntregaRetiradasSchema(historicoRestaurante);
     resultadoHistoricoDeEntrega = await geraHistoricoEntregaRetirada.save();
     return resultadoHistoricoDeEntrega;
 }
@@ -360,9 +364,9 @@ async function criaDoacao(body, clienteDoador, idRestaurante) {
 
 //Gera Token identificação para entrega de doações
 function geraTokenIdentificacao() {
-    var tokenIdentificacao;
-    for (var i = 80; i > 0; --i) {
-        tokenIdentificacao += (Math.floor(Math.random() * 256)).toString(16);
+    var tokenIdentificacao = "";
+    for (var i = 6; i > 0; --i) {
+        tokenIdentificacao += (Math.floor(10 * Math.random())).toString();
     }
     return tokenIdentificacao;
 }
