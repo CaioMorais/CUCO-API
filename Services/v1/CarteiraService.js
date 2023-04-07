@@ -41,7 +41,8 @@ async function listagemCarteiraIDRestaurante(id) {
             "valorPrato": carteira.valorPrato,
             "descPratoDoado": carteira.descPratoDoado,
             "entregasPendentes": carteira.entregasPendentes,
-            "nomeOng": ong.nomeEstabelecimento
+            "nomeOng": ong.nomeEstabelecimento,
+            "idCarteira": carteira._id
          }
 
          var result = new Result(carteiraResult, true, "Carteira restaurante", 200);
@@ -75,7 +76,8 @@ const listagemCarteiraIDOng = async function(id) {
                "valorPrato": carteira[index].valorPrato,
                "descPratoDoado": carteira[index].descPratoDoado,
                "entregasPendentes": carteira[index].entregasPendentes,
-               "nomeRestaurante": restaurante
+               "nomeRestaurante": restaurante,
+               "idCarteira": carteira[index]._id
             }
             result.content.push(carteiraResult);
          }
