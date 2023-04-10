@@ -314,6 +314,8 @@ async function geraHistoricoEntregaRetirada(idCarteira) {
 
     var geraHistoricoEntregaRetirada = historicoEntregaRetiradasSchema(historicoRestaurante);
     resultadoHistoricoDeEntrega = await geraHistoricoEntregaRetirada.save();
+    carteira.entregasPendentes = 0;
+    await carteiraSchema.updateOne(carteira);
     return resultadoHistoricoDeEntrega;
 }
 
