@@ -151,6 +151,27 @@ async function pegarDadosConta(idConta) {
 
 }
 
+async function verificaExisteciaEmail(email) {
+    try {
+        var result;
+        let dadoEmail = await verificaEmailExiste(email);
+        if (dadoEmail) {
+            message = "E-mail ja utilizado";
+            result = new Result(null, true, message, 200);
+        }
+        else{
+            message = "E-mail não encontrado";
+            result = new Result(null, false, message, 200);
+        }
+        return result;
+
+    } catch (error) {
+        var result = new Result(error, false, "Internal error", 500);
+        return result;
+    }
+
+}
+
 async function resetarSenha(idConta, req) {
     try {
         var hash = await bcrypt.hash(req.body.senha, 10)
@@ -508,5 +529,5 @@ const listaOngOuEstabelecimentoPorID = async (id) => {
 //#endregion
 
 module.exports = {
-    cadastrarConta, editarConta, excluirConta, resetarSenha, enviaEmailResetSenha, pegarDadosConta
+    cadastrarConta, editarConta, excluirConta, resetarSenha, enviaEmailResetSenha, pegarDadosConta, verificaExisteciaEmail
 }
