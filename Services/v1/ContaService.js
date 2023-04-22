@@ -30,7 +30,7 @@ async function cadastrarConta(req) {
                 "nomeEstabelecimento": req.body.nomeEstabelecimento
             }
 
-            var result = new Result(contaResult, true, "Conta inserida com sucesso!", 200);
+            var result = new Result(contaResult, true, "Cadastro realizado com sucesso!", 200);
             return result;
         }
 
@@ -43,11 +43,10 @@ async function cadastrarConta(req) {
 async function editarConta(idConta, req) {
     console.log("editarConta");
     try {
-
         //Verificação a ja exixtencia dos dados  
         var contaAntesEditar = await listaContaCompletaPorID(idConta)
         if (contaAntesEditar.cpf != req.body.cpf) {
-            let dadoCPF = await verificaCPF(body.body.cpf);
+            let dadoCPF = await verificaCPF(req.body.cpf);
             if (dadoCPF) {
                 var result = new Result(null, false, "Edição não Efetuado, CPF ja utilizado", 400);
                 return result;
@@ -374,7 +373,6 @@ const atualizaOngOuEstabelecimento = async (body, idEstabelecimento) => {
         var fotoPerfil = body.fotoPerfil == null ? estabelecimento_ong.fotoPerfil : body.fotoPerfil;
         var descricao = body.descricao == null ? estabelecimento_ong.descricao : body.descricao;
         var paginaWeb = body.paginaWeb == null ? estabelecimento_ong.paginaWeb : body.paginaWeb;
-
 
         var estabelecimentoResult = await estabelecimentoSchema
             .updateOne({ _id: idEstabelecimento }, {
