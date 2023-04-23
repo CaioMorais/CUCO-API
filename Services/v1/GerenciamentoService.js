@@ -96,7 +96,7 @@ async function listaSolicitacoesEstabelecimentos(idEstabelecimento){
 
       var verfContratosRestaurantes = await verificaSolicitacoesRestaurante(req.body.idRestaurante);
       if (verfContratosRestaurantes){
-        result = new Result(null,  false, "Restaurante ja esta com uma solicitação pendente, ou contrato ativo", 400);
+        result = new Result(null,  false, "Restaurante ja esta com uma solicitação pendente, ou contrato ativo", 200);
         return result;
       };
   
@@ -331,7 +331,7 @@ const aceitaSolicitacao = async (idSolicitacao) =>{
     //verifica existencia da solicitação
     var solicitacao = await solicitacaoParceriaSchema.findById(idSolicitacao);
     if (!solicitacao) {
-      result = new Result("", false, "Solicitação não encontrada", 400);
+      result = new Result("", false, "Solicitação não encontrada", 200);
       return result;
     }
 
@@ -345,7 +345,7 @@ const aceitaSolicitacao = async (idSolicitacao) =>{
     }
     else{
       await atualizaRespostaSolicitacao(solicitacao._id, "pending", "", "pending");
-      result = new Result("", false, "Erro ao atualizar solicitacao", 400);
+      result = new Result("", false, "Erro ao atualizar solicitacao", 200);
       return result;
     }
 
@@ -360,7 +360,7 @@ const aceitaSolicitacao = async (idSolicitacao) =>{
       //retorna solicitação para pendente 
       await atualizaRespostaSolicitacao(solicitacao._id, "pending", "", "pending");
 
-      result = new Result("", false, "Erro ao atualizar status da carteira", 400);
+      result = new Result("", false, "Erro ao atualizar status da carteira", 200);
       return result;
     }
 
@@ -377,7 +377,7 @@ const aceitaSolicitacao = async (idSolicitacao) =>{
       //retorna carteira para status false 
       await atualizaStatusCarteira(carteira, "false");
 
-      result = new Result("", false, "Erro ao criar tabela para validar entregas e retiradas", 400);
+      result = new Result("", false, "Erro ao criar tabela para validar entregas e retiradas", 200);
       return result;
     }
 
@@ -400,7 +400,7 @@ const recusaSolicitacao = async (idSolicitacao) =>{
     //verifica existencia da solicitação
     var solicitacao = await solicitacaoParceriaSchema.findById(idSolicitacao);
     if (!solicitacao) {
-      result = new Result("", false, "Solicitação não encontrada", 400);
+      result = new Result("", false, "Solicitação não encontrada", 200);
       return result;
     }
     
@@ -414,7 +414,7 @@ const recusaSolicitacao = async (idSolicitacao) =>{
     }
     else{
       await atualizaRespostaSolicitacao(solicitacao._id, "pending", "", "pending");
-      result = new Result("", false, "Erro ao atualizar solicitacao", 400);
+      result = new Result("", false, "Erro ao atualizar solicitacao", 200);
       return result;
     }
 
@@ -425,7 +425,7 @@ const recusaSolicitacao = async (idSolicitacao) =>{
     }
     else{
       await atualizaRespostaSolicitacao(solicitacao._id, "pending", "", "pending");
-      result = new Result("", false, "Erro ao excluir carteira pendente", 400);
+      result = new Result("", false, "Erro ao excluir carteira pendente", 200);
       return result;
     } 
 

@@ -1,10 +1,7 @@
 let Result = require("../../Domain/Entities/Result");
 let carteiraSchema = require('../../Domain/Models/v1/CarteiraModel');
-let token = require("../../Services/v1/LoginService");
 var nodemailer = require('nodemailer');
 let estabelecimentoSchema = require('../../Domain/Models/v1/EstabelecimentoModel');
-const CarteiraModel = require("../../Domain/Models/v1/CarteiraModel");
-const { status } = require("express/lib/response");
 
 
 async function inserirCarteira(req) {
@@ -41,13 +38,18 @@ async function listagemCarteiraIDRestaurante(id) {
             "valorPrato": carteira.valorPrato,
             "descPratoDoado": carteira.descPratoDoado,
             "entregasPendentes": carteira.entregasPendentes,
-            "nomeOng" : ong.nomeEstabelecimento
+            "nomeOng": ong.nomeEstabelecimento,
+            "enderecoOng": await retornaEndereco(ong),
+            "descricaoOng": ong.descricao,
+            "contatoOng": ong.telefone,
+            "paginaWebOng" : ong.paginaWeb,
+            "idCarteira": carteira._id
          }
 
          var result = new Result(carteiraResult, true, "Carteira restaurante", 200);
       }
       else {
-         result = new Result(carteira, false, "Carteira não encontrada", 400);
+         result = new Result(carteira, false, "Carteira não encontrada", 200);
       }
       return result;
 
@@ -57,31 +59,40 @@ async function listagemCarteiraIDRestaurante(id) {
    }
 }
 
-async function listagemCarteiraIDOng(id) {
+const listagemCarteirasIDOng = async function(id) {
    try {
-      var result;
-      var carteira = await carteiraSchema
-         .findOne({ idOng: id, status: "true" });
+      var result = new Result();
+      var carteiras = await carteiraSchema
+         .find({ idOng: id, status: "true" });
+      console.log(carteiras);
 
-      if (carteira) {
-
-         var restaurante = await estabelecimentoSchema.findById(carteira.idRestaurante);
-
-         var carteiraResult = {
-            "metaFinal": carteira.metaFinal,
-            "valorAtual": carteira.valorAtual,
-            "idRestaurante": carteira.idRestaurante,
-            "idOng": carteira.idOng,
-            "valorPrato": carteira.valorPrato,
-            "descPratoDoado": carteira.descPratoDoado,
-            "entregasPendentes": carteira.entregasPendentes,
-            "nomeRestaurante" : restaurante.nomeEstabelecimento
+      if (carteiras.length != 0) {         
+         result.content = [];
+         for (let index = 0; index < carteiras.length; index++) {
+            var restaurante = await retornaDadosEstalecimento(carteiras[index].idRestaurante);
+            var carteiraResult = {
+               "metaFinal": carteiras[index].metaFinal,
+               "valorAtual": carteiras[index].valorAtual,
+               "idRestaurante": carteiras[index].idRestaurante,
+               "idOng": carteiras[index].idOng,
+               "valorPrato": carteiras[index].valorPrato,
+               "descPratoDoado": carteiras[index].descPratoDoado,
+               "entregasPendentes": carteiras[index].entregasPendentes,
+               "nomeRestaurante": restaurante.nomeEstabelecimento,
+               "enderecoRestaurante": await retornaEndereco(restaurante),
+               "descricaoRestaurante": restaurante.descricao,
+               "contatoRestaurante": restaurante.telefone,
+               "paginaWebRestaurante" : restaurante.paginaWeb,
+               "idCarteira": carteiras[index]._id
+            }
+            result.content.push(carteiraResult);
          }
-
-         var result = new Result(carteiraResult, true, "lista de Carteiras Ong", 200);
+         result.success = true;
+         result.status = 200
+         result.messages = "" 
       }
       else {
-         result = new Result(carteira, false, "Nenhuma Carteira encontrada", 400);
+         result = new Result([], false, "Nenhuma Carteira encontrada", 200);
       }
       return result;
 
@@ -101,7 +112,7 @@ async function listagemCarteiras() {
          var result = new Result(retorno, true, "lista de Carteiras", 200);
       }
       else {
-         result = new Result(retorno, false, "Nenhuma Carteira encontrada", 400);
+         result = new Result(retorno, false, "Nenhuma Carteira encontrada", 200);
       }
       return result;
 
@@ -121,7 +132,7 @@ async function listagemCarteirasId(id) {
          result = new Result(carteira, true, "Carteira encontrada", 200);
       }
       else {
-         result = new Result(carteira, false, "Carteira não encontrada", 400);
+         result = new Result(carteira, false, "Carteira não encontrada", 200);
       }
       return result;
 
@@ -142,7 +153,7 @@ async function listaValorPratoId(id) {
          result = new Result(retorno.valorPrato, true, "Valor encontrado", 200);
       }
       else {
-         result = new Result(retorno, false, "Carteira não encontrada", 400);
+         result = new Result(retorno, false, "Carteira não encontrada", 200);
       }
       return result;
 
@@ -202,7 +213,7 @@ async function insereValorCarteira(id, valorDoado) {
    try {
       var carteira = await carteiraSchema.findOne({ idRestaurante: id });
       var result;
-      console.log(carteira);
+      console.log(valorDoado);
       if (parseFloat(carteira.valorAtual) + parseFloat(valorDoado) >= parseFloat(carteira.metaFinal)) {
          var retorno = await insereValorCarteiraComMetaAtingida(carteira, valorDoado)
 
@@ -319,7 +330,7 @@ async function editandoValorPrato(id, novoValor) {
 
 const insereValorCarteiraComMetaAtingida = async (carteira, valorDoado) => {
    try {
-
+      console.log(valorDoado)
       envioMetaCarteiraAtingido(carteira);
       var valorAtual = (parseFloat(carteira.valorAtual) + parseFloat(valorDoado) - parseFloat(carteira.metaFinal)).toString();
       var entregasPendentes = parseFloat(carteira.entregasPendentes) + 1;
@@ -350,9 +361,24 @@ const insereValorCarteiraSemMetaAtingida = async (carteira, valorDoado) => {
    }
 }
 
+const retornaDadosEstalecimento = async function (idEstabelecimento) {
+   var result = await estabelecimentoSchema.findById(idEstabelecimento);
+   return result;
+}
+
+const retornaEndereco = async function (estabelecimento) {
+   var endereco = estabelecimento.logradouro + ", " + 
+                  estabelecimento.numero + ", " + 
+                  estabelecimento.complemento + ", " +
+                  estabelecimento.bairro + ", " +
+                  estabelecimento.cidade;
+   return endereco;
+   
+}
+
 module.exports = {
    listaValorPratoId, editandoValorPrato, inserirCarteira,
    listagemCarteiras, listagemCarteirasId, editandoCarteira,
-   deletandoCarteira, insereValorCarteira, listagemCarteiraIDRestaurante, listagemCarteiraIDOng
+   deletandoCarteira, insereValorCarteira, listagemCarteiraIDRestaurante, listagemCarteirasIDOng
 }
 
