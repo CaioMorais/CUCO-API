@@ -30,7 +30,7 @@ async function cadastrarConta(req) {
                 "nomeEstabelecimento": req.body.nomeEstabelecimento
             }
 
-            var result = new Result(contaResult, true, "Conta inserida com sucesso!", 200);
+            var result = new Result(contaResult, true, "Cadastro realizado com sucesso!", 200);
             return result;
         }
 
@@ -43,11 +43,10 @@ async function cadastrarConta(req) {
 async function editarConta(idConta, req) {
     console.log("editarConta");
     try {
-
         //Verificação a ja exixtencia dos dados  
         var contaAntesEditar = await listaContaCompletaPorID(idConta)
         if (contaAntesEditar.cpf != req.body.cpf) {
-            let dadoCPF = await verificaCPF(body.body.cpf);
+            let dadoCPF = await verificaCPF(req.body.cpf);
             if (dadoCPF) {
                 var result = new Result(null, false, "Edição não Efetuado, CPF ja utilizado", 400);
                 return result;
@@ -146,6 +145,27 @@ async function pegarDadosConta(idConta) {
 
     } catch (error) {
         console.log(error)
+        var result = new Result(error, false, "Internal error", 500);
+        return result;
+    }
+
+}
+
+async function verificaExisteciaEmail(email) {
+    try {
+        var result;
+        let dadoEmail = await verificaEmailExiste(email);
+        if (dadoEmail) {
+            message = "E-mail ja utilizado";
+            result = new Result(null, true, message, 200);
+        }
+        else{
+            message = "E-mail não encontrado";
+            result = new Result(null, false, message, 200);
+        }
+        return result;
+
+    } catch (error) {
         var result = new Result(error, false, "Internal error", 500);
         return result;
     }
@@ -390,7 +410,6 @@ const atualizaOngOuEstabelecimento = async (body, idEstabelecimento) => {
         var descricao = body.descricao == null ? estabelecimento_ong.descricao : body.descricao;
         var paginaWeb = body.paginaWeb == null ? estabelecimento_ong.paginaWeb : body.paginaWeb;
 
-
         var estabelecimentoResult = await estabelecimentoSchema
             .updateOne({ _id: idEstabelecimento }, {
                 $set: {
@@ -545,5 +564,5 @@ const listaOngOuEstabelecimentoPorID = async (id) => {
 //#endregion
 
 module.exports = {
-    cadastrarConta, editarConta, excluirConta, resetarSenha, enviaEmailResetSenha, pegarDadosConta, aprovaOuNegaContas, listaContasPendentes
+    cadastrarConta, editarConta, excluirConta, resetarSenha, enviaEmailResetSenha, pegarDadosConta, aprovaOuNegaContas, listaContasPendentes, verificaExisteciaEmail
 }
