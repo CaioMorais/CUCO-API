@@ -144,6 +144,10 @@ Contarouter.post('/v1/Conta/ResetarSenha/:id', ContaController.ResetarSenha)
  *              description: This is the default response for it
  */
  Contarouter.get('/v1/Conta/PegarDadosConta/:id',verificaToken, ContaController.PegarDadosConta)
+
+ Contarouter.get('/v1/Conta/ListarContasPendentes',verificaToken, ContaController.listaContasPendentes)
+
+ Contarouter.put('/v1/Conta/aprovaOuNegaContas/:idEstabelecimento', verificaToken, ContaController.aprovaOuNegaContas)
  
 
 

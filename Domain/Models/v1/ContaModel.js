@@ -31,8 +31,7 @@ var contaSchema = new Schema({
         required: true 
     },
     verificaAtivo: {
-        type: String,
-        required: true 
+        type: String
     },
     dataCadastro: {
         type: String,

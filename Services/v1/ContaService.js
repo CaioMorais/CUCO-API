@@ -17,7 +17,7 @@ async function cadastrarConta(req) {
         else {
             //Salvando estbelecimento
             var estabelecimento = await cadastraOngOuEstabelecimento(req.body);
-            
+
             //Salvando usuario com id do estabelecimento
             if (estabelecimento != null) {
                 await cadastraUsuarioComIDEstabelecimentoOuOng(req.body, estabelecimento._id);
@@ -145,6 +145,7 @@ async function pegarDadosConta(idConta) {
         return result;
 
     } catch (error) {
+        console.log(error)
         var result = new Result(error, false, "Internal error", 500);
         return result;
     }
@@ -223,6 +224,41 @@ async function enviaEmailResetSenha(req) {
         return result;
     }
 
+}
+
+async function listaContasPendentes() {
+    try {
+        var contas = await contaSchema.find({ verificaAtivo: "0" })
+        return new Result(contas, true, "", 200);
+    }
+    catch (error) {
+        return new Result(error, false, "Internal error", 500)
+    }
+}
+
+async function aprovaOuNegaContas(req) {
+    try{
+        var conta = await contaSchema.findOne({ _id: req.params.idEstabelecimento })
+        conta.verificaAtivo = req.body.verificaAtivo;
+        var resultado = await contaSchema.updateOne({ _id: req.params.idEstabelecimento }, {
+            $set: {
+                verificaAtivo: conta.verificaAtivo
+            }
+        });
+        if(resultado.acknowledged){
+            if(req.body.verificaAtivo == 1){
+                return new Result(true, true, "Aprovado com sucesso!", 200)
+            }
+            else if(req.body.verificaAtivo == 2){
+                return new Result(true, true, "Negado com sucesso!", 200)
+            }
+            
+        }
+    }
+    catch(error){
+        return new Result(error, false, "Internal error", 500)
+    }
+    
 }
 //#endregion
 
@@ -314,7 +350,7 @@ const cadastraUsuarioComIDEstabelecimentoOuOng = async (body, estabelecimento_id
             "senha": hash,
             "tipoConta": body.tipo,
             "idEstabelecimento": estabelecimento_id,
-            "verificaAtivo": "0",
+            "verificaAtivo": null,
             "dataCadastro": today.toLocaleDateString()
         }
         console.log(cont);
@@ -441,10 +477,10 @@ const listaContas = async () => {
 
 //Lista conta + estabelecimento por ID
 const listaContaCompletaPorID = async (id) => {
-
+    console.log("entrou")
     var conta = await listaContaID(id);
     var estabelecimento = await listaOngOuEstabelecimentoPorID(conta.idEstabelecimento)
-
+    console.log(conta)
     var retorno = {
         "nome": conta.nome,
         "sobrenome": conta.sobrenome,
@@ -485,6 +521,7 @@ const listaContaCompletaPorID = async (id) => {
 const listaContaID = async (id) => {
     var conta = await contaSchema
         .findById(id);
+    console.log(conta)
 
     var retorno = {
         "nome": conta.nome,
@@ -508,5 +545,5 @@ const listaOngOuEstabelecimentoPorID = async (id) => {
 //#endregion
 
 module.exports = {
-    cadastrarConta, editarConta, excluirConta, resetarSenha, enviaEmailResetSenha, pegarDadosConta
+    cadastrarConta, editarConta, excluirConta, resetarSenha, enviaEmailResetSenha, pegarDadosConta, aprovaOuNegaContas, listaContasPendentes
 }
