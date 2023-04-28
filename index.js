@@ -11,7 +11,6 @@ app.use(express.urlencoded({ extended: true} ));
 app.use(express.json());
 app.use(express.json({ type: 'application/json' }));
 app.use(cors({origin: '*'}));
-const https = require("https");
 
 
 const port = process.env.PORT || 3000;
@@ -61,15 +60,8 @@ mongoose.connect(uri).then(()=> {
   process.exit(1);
 });
 
-const httpsOptions = {
-  rejectUnauthorized: false, //Mantenha como false para que os demais endpoints da API não rejeitem requisições sem MTLS
-};
-const httpsServer = https.createServer(httpsOptions, app);
-// const server = app.listen(port, () => {
-//   console.log(`Example app listening on port ${port}`)
-// });
-httpsServer.listen(port, () =>
-    console.log(`Express server currently running on port ${port}`)
-);
+const server = app.listen(port, () => {
+  console.log(`Example app listening on port ${port}`)
+});
 
-// module.exports = server;
+module.exports = server;
