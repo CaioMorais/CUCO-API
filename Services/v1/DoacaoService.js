@@ -43,11 +43,14 @@ async function cadastraDoacao(req, idRestaurante) {
             clienteNovo = true;
         }
 
-        let restaurante = await estabelecimentoSchema.findOne({_id: idRestaurante})
-        
+        let restaurante = await estabelecimentoSchema.findOne({ _id: idRestaurante })
+        req.body.pixRestaurante = restaurante.chavePix;
+
         //EFI Cria Cobrança
         let cobranca = await efiService.gerarCobranca(req.body);
         console.log(cobranca);
+
+
 
         //Cria Doação
         var doacao = await criaDoacao(req.body, clienteDoador, idRestaurante, cobranca);
@@ -81,35 +84,42 @@ async function cadastraDoacao(req, idRestaurante) {
                 return result;
             }
 
-            //insere valor carteira
-            var resultadoIncersao = await carteira.insereValorCarteira(idRestaurante, req.body.quantidadePratosDoados);
-
-            if (resultadoIncersao.success) {
-
-                var resultDoacao = {
-                    "nomeDoador": req.body.nome,
-                    "quantidadePratosDoados": req.body.quantidadePratosDoados,
-                }
-
-                //envia email com recompensa para cliente
-                enviarEmailRecompensa(req.body.email);
-
-                result = new Result(resultDoacao, true, "Prato doado com sucesso!", 200);
-            } else {
-
-                //em caso de erro em inserir valor da carteira o cliente doador é excluido se for novo, ou os pratos doados nessa docao são retirados do seu registro
-                if (clienteNovo == true) {
-                    await clienteDoadorSchema.updateOne({ _id: clienteDoador._id }, { $set: { totalPratosDoados: clienteAntigoBackup.totalPratosDoados } })
-                }
-                else {
-                    await excluiDoador(clienteDoador._id);
-                }
-
-                //em caso de erro ao inserir valor na carteira doação é excluida
-                await doacaoSchema.deleteOne({ _id: doacao._id });
-                result = new Result(resultDoacao, false, "Doacao não efetuada, não foi possivel inserir valor na carteira!", 400);
-                return result;
+            var resultDoacao = {
+                "nomeDoador": req.body.nome,
+                "quantidadePratosDoados": req.body.quantidadePratosDoados,
             }
+
+            result = new Result(resultDoacao, true, "Prato doado com sucesso!", 200);
+
+            // //insere valor carteira
+            // var resultadoIncersao = await carteira.insereValorCarteira(idRestaurante, req.body.quantidadePratosDoados);
+
+            // if (resultadoIncersao.success) {
+
+            //     var resultDoacao = {
+            //         "nomeDoador": req.body.nome,
+            //         "quantidadePratosDoados": req.body.quantidadePratosDoados,
+            //     }
+
+            //     //envia email com recompensa para cliente
+            //     enviarEmailRecompensa(req.body.email);
+
+            //     result = new Result(resultDoacao, true, "Prato doado com sucesso!", 200);
+            // } else {
+
+            //     //em caso de erro em inserir valor da carteira o cliente doador é excluido se for novo, ou os pratos doados nessa docao são retirados do seu registro
+            //     if (clienteNovo == true) {
+            //         await clienteDoadorSchema.updateOne({ _id: clienteDoador._id }, { $set: { totalPratosDoados: clienteAntigoBackup.totalPratosDoados } })
+            //     }
+            //     else {
+            //         await excluiDoador(clienteDoador._id);
+            //     }
+
+            //     //em caso de erro ao inserir valor na carteira doação é excluida
+            //     await doacaoSchema.deleteOne({ _id: doacao._id });
+            //     result = new Result(resultDoacao, false, "Doacao não efetuada, não foi possivel inserir valor na carteira!", 400);
+            //     return result;
+            // }
 
         }
         else {
@@ -125,7 +135,7 @@ async function cadastraDoacao(req, idRestaurante) {
 }
 
 async function efiCallback(body) {
-    var doacao = await doacaoSchema.findOne({txid: body.txid});
+    var doacao = await doacaoSchema.findOne({ txid: body.pix.txid });
     var doador = await clienteDoadorSchema.findOne({ _id: doacao.idClienteDoador });
 
     //insere valor carteira
@@ -153,7 +163,7 @@ async function enviarEmailRecompensa(emailcliente, quantidadePratosDoados, nome)
             },
             auth: {
                 user: "no-reply.cuco@outlook.com.br",
-                pass: "Cuco1234"
+                pass: "CucoProjeto1@"
             }
         });
 
