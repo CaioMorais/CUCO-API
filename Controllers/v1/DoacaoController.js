@@ -33,7 +33,7 @@ exports.CadastraDoacao = async (req, res, next) => {
     res.status(result.status).send(result);
 }
 
-exports.efiCallback = async (req, res, next) => {
+exports.efiCallback = async (req, res) => {
     var result = await efiCallback(req.body);
     res.status(result.status).send(result);
 }

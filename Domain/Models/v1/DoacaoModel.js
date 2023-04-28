@@ -29,6 +29,10 @@ var doacaoSchema = new Schema({
     txId: {
         type: String,
         required: true
+    },
+    status: {
+        type: String,
+        required: true
     }
 })
 

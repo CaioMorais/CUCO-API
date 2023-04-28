@@ -135,16 +135,23 @@ async function cadastraDoacao(req, idRestaurante) {
 }
 
 async function efiCallback(body) {
-    var doacao = await doacaoSchema.findOne({ txid: body.pix.txid });
-    var doador = await clienteDoadorSchema.findOne({ _id: doacao.idClienteDoador });
+    try {
+        var doacao = await doacaoSchema.findOne({ txid: body.pix.txid });
+        var doador = await clienteDoadorSchema.findOne({ _id: doacao.idClienteDoador });
 
-    //insere valor carteira
-    var resultadoIncersao = await carteira.insereValorCarteira(doacao.idRestaurante, doacao.quantidadePratosDoados);
+        if (body.pix.status)
+            //insere valor carteira
+            var resultadoIncersao = await carteira.insereValorCarteira(doacao.idRestaurante, doacao.quantidadePratosDoados);
 
-    if (resultadoIncersao.success) {
-        //envia email com recompensa para cliente
-        enviarEmailRecompensa(doador.email, doacao.quantidadePratosDoados, doador.nome);
+        if (resultadoIncersao.success) {
+            //envia email com recompensa para cliente
+            enviarEmailRecompensa(doador.email, doacao.quantidadePratosDoados, doador.nome);
 
+            result = new Result("Recebido", true, "Prato doado com sucesso!", 200);
+            return result;
+        }
+    }
+    catch (e) {
         result = new Result("Recebido", true, "Prato doado com sucesso!", 200);
         return result;
     }
@@ -386,7 +393,8 @@ async function criaDoacao(body, clienteDoador, idRestaurante, cobranca) {
             "idClienteDoador": clienteDoador._id.toString(),
             "idRestaurante": idRestaurante,
             "locId": cobranca.data.loc.id,
-            "txId": cobranca.data.txid
+            "txId": cobranca.data.txid,
+            "status": cobranca.data.status
         };
         console.log(doa);
         doacao = doacaoSchema(doa);
