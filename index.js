@@ -44,9 +44,6 @@ routes.forEach(route => {
 app.get('/teste', function(req, res) {
   res.send('hello world');
 });
-app.post('/testewebhook', function(req, res) {
-  res.send('web hook funfou');
-});
 
 // app.use('/api', routes.loginRoute);
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs))

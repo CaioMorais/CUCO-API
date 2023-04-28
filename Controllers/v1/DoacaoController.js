@@ -1,7 +1,7 @@
 let Result = require("../../Domain/Entities/Result.js");
 const {gerarTokenIndentificacaoRetiradaDoacoes,
     /*gerarQRCodeLinkDoacao,*/ cadastraDoacao, enviarEmailRecompensa,
-    validacaoTokens} = require("../../Services/v1/DoacaoService");
+    validacaoTokens, efiCallback} = require("../../Services/v1/DoacaoService");
 
 // exports.QRCodeLinkDoacao = (req, res, next) =>{
 //     var id = req.params["id"];
@@ -30,5 +30,10 @@ exports.CadastraDoacao = async (req, res, next) => {
     var result = await cadastraDoacao(req, idRestaurante);
     console.log(result);
     await enviarEmailRecompensa();
+    res.status(result.status).send(result);
+}
+
+exports.efiCallback = async (req, res, next) => {
+    var result = await efiCallback(req.body);
     res.status(result.status).send(result);
 }
