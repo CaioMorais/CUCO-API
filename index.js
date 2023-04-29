@@ -1,17 +1,17 @@
 const express = require('express');
 const cors = require('cors')
-const bodyParser = require ("body-parser")
+const bodyParser = require("body-parser")
 const router = express.Router();
 const swaggerJsDoc = require("swagger-jsdoc");
 const swaggerUi = require("swagger-ui-express");
 const mongoose = require('mongoose');
 const app = express();
 app.use(bodyParser.json())
-app.use(express.urlencoded({ extended: true} ));
+app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(express.json({ type: 'application/json' }));
-app.use(cors({origin: '*'}));
-
+app.use(cors({ origin: '*' }));
+const doacaoController = require("./Controllers/v1/DoacaoController");
 
 const port = process.env.PORT || 3000;
 
@@ -41,7 +41,7 @@ routes.forEach(route => {
   app.use('/api/', route);
 });
 
-app.get('/teste', function(req, res) {
+app.get('/teste', function (req, res) {
   res.send('hello world');
 });
 
@@ -52,12 +52,32 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs))
 const Mongo_URL = 'mongodb+srv://admin:admin123@cluster0.kxyqc.mongodb.net/'
 const banco = 'cucoprod?retryWrites=true&w=majority'
 var uri = Mongo_URL + banco;
-mongoose.connect(uri).then(()=> {
-   console.log("Banco conectado");
+mongoose.connect(uri).then(() => {
+  console.log("Banco conectado");
 })
-.catch((err) => {
-  console.error(err);
-  process.exit(1);
+  .catch((err) => {
+    console.error(err);
+    process.exit(1);
+  });
+
+// Endpoint para configuração do webhook, você precisa cadastrar https://SEUDOMINIO.com/webhook
+app.post("/webhook", (request, response) => {
+  // Verifica se a requisição que chegou nesse endpoint foi autorizada
+  if (request.socket.authorized) {
+    response.status(200).end();
+  } else {
+    response.status(401).end();
+  }
+});
+
+// Endpoind para recepção do webhook tratando o /pix
+app.post("/webhook/pix", (request, response) => {
+  if (request.socket.authorized) {
+    result = doacaoController.efiCallback(request);
+    response.status(200).end();
+  } else {
+    response.status(401).end();
+  }
 });
 
 const server = app.listen(port, () => {
