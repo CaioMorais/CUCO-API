@@ -8,10 +8,11 @@ var nodemailer = require('nodemailer');
 //#region Metodos Principais
 async function cadastrarConta(req) {
     try {
+        var result;
         //Verificação a ja exixtencia dos dados 
         var verif = await verificaExistenciaDosDados(req.body)
         if (verif[0] == true) {
-            var result = new Result(null, false, verif[1], 400);
+            result = new Result(null, false, verif[1], 400);
             return result;
         }
         else {
@@ -20,18 +21,28 @@ async function cadastrarConta(req) {
 
             //Salvando usuario com id do estabelecimento
             if (estabelecimento != null) {
-                await cadastraUsuarioComIDEstabelecimentoOuOng(req.body, estabelecimento._id);
-            }
+                var conta = await cadastraUsuarioComIDEstabelecimentoOuOng(req.body, estabelecimento._id);
 
-            var contaResult = {
-                "nome": req.body.nome,
-                "email": req.body.email,
-                "tipoConta": req.body.tipoConta,
-                "nomeEstabelecimento": req.body.nomeEstabelecimento
+                if (conta =! null) {
+                    var contaResult = {
+                        "nome": conta.nome,
+                        "email": conta.email,
+                        "tipoConta": conta.tipoConta,
+                        "nomeEstabelecimento": estabelecimento.nomeEstabelecimento
+                    }
+        
+                    result = new Result(contaResult, true, "Cadastro realizado com sucesso!", 200);
+                    return result;
+                }
+                else{
+                    result = new Result(contaResult, true, "Falha no cadastro da conta!", 200);
+                    return result;
+                }
             }
-
-            var result = new Result(contaResult, true, "Cadastro realizado com sucesso!", 200);
-            return result;
+            else{
+                result = new Result(contaResult, true, "Falha no cadastro do estabelecimento!", 200);
+                return result;
+            }
         }
 
     } catch (error) {
@@ -43,51 +54,50 @@ async function cadastrarConta(req) {
 async function editarConta(idConta, req) {
     console.log("editarConta");
     try {
+        var result;
         //Verificação a ja exixtencia dos dados  
         var contaAntesEditar = await listaContaCompletaPorID(idConta)
         if (contaAntesEditar.cpf != req.body.cpf) {
             let dadoCPF = await verificaCPF(req.body.cpf);
             if (dadoCPF) {
-                var result = new Result(null, false, "Edição não Efetuado, CPF ja utilizado", 400);
+                result = new Result('', false, "Edição não Efetuado, CPF ja utilizado", 400);
                 return result;
             }
         }
-        else if (contaAntesEditar.cnpj != req.body.cnpj) {
+        
+        if (contaAntesEditar.cnpj != req.body.cnpj) {
             let dadoCNPJ = await verificaCNPJ(req.body.cnpj);
             if (dadoCNPJ) {
-                var result = new Result(null, false, "Edição não Efetuado, CNPJ ja utilizado", 400);
+                result = new Result('', false, "Edição não Efetuado, CNPJ ja utilizado", 400);
                 return result;
             }
+        }
+
+        var contaAtual = await listaContaID(idConta);
+        var estabelecimentoAtual = await listaOngOuEstabelecimentoPorID(contaAtual.idEstabelecimento);
+        var vetorResult = [];
+
+        //Atualiza Estabelecimento
+        var estabelecimentoAtualizado = await atualizaOngOuEstabelecimento(req.body, contaAtual.idEstabelecimento);
+
+        if (estabelecimentoAtualizado != null) {
+            //Atualiza Conta 
+            var contaAtualizada = await atualizaDadosConta(req.body, idConta, estabelecimentoAtual);
         }
         else {
-
-            var contaAtual = await listaContaID(idConta);
-            var estabelecimentoAtual = await listaOngOuEstabelecimentoPorID(contaAtual.idEstabelecimento);
-            var vetorResult = [];
-
-            //Atualiza Estabelecimento
-            var estabelecimentoAtualizado = await atualizaOngOuEstabelecimento(req.body, contaAtual.idEstabelecimento);
-
-            if (estabelecimentoAtualizado != null) {
-                //Atualiza Conta 
-                var contaAtualizada = await atualizaDadosConta(req.body, idConta, estabelecimentoAtual);
-            }
-            else {
-                var result = new Result(null, false, "Alterações não realizadas", 400);
-                return result;
-            }
-
-            if (contaAtualizada != null) {
-                vetorResult.push(contaAtualizada, estabelecimentoAtualizado);
-                var result = new Result(vetorResult, true, "Conta alterada com sucesso!", 200);
-            }
-            else {
-                var result = new Result(null, false, "Alterações não realizadas", 400);
-            }
-
+            result = new Result('', false, "Alterações não realizadas", 400);
             return result;
-
         }
+
+        if (contaAtualizada != null) {
+            vetorResult.push(contaAtualizada, estabelecimentoAtualizado);
+            result = new Result(vetorResult, true, "Conta alterada com sucesso!", 200);
+        }
+        else {
+            result = new Result('', false, "Alterações não realizadas", 400);
+        }
+        return result;
+
 
     } catch (error) {
         var result = new Result(error, false, "Internal error", 500);
@@ -347,11 +357,11 @@ const cadastraOngOuEstabelecimento = async (body) => {
         var estabelecimento = estabelecimentoSchema(body);
         await estabelecimento.save();
         console.log(estabelecimento);
+        return estabelecimento;
     } catch (error) {
         console.log(error)
         return estabelecimento = null;
     }
-    return estabelecimento;
 }
 
 //Cadastra Conta relacionando com Estabelecimento
@@ -368,7 +378,7 @@ const cadastraUsuarioComIDEstabelecimentoOuOng = async (body, estabelecimento_id
             "cpf": body.cpf,
             "email": body.email,
             "senha": hash,
-            "tipoConta": body.tipo,
+            "tipoConta": body.tipoConta,
             "idEstabelecimento": estabelecimento_id,
             "verificaAtivo": null,
             "dataCadastro": today.toLocaleDateString()
@@ -376,8 +386,11 @@ const cadastraUsuarioComIDEstabelecimentoOuOng = async (body, estabelecimento_id
         console.log(cont);
         var conta = contaSchema(cont);
         await conta.save();
+        return cont;
+
     } catch (error) {
         await excluiOngOuEstabelecimento(estabelecimento_id);
+        return null;
     }
 }
 
