@@ -8,30 +8,41 @@ var nodemailer = require('nodemailer');
 //#region Metodos Principais
 async function cadastrarConta(req) {
     try {
+        var result;
         //Verificação a ja exixtencia dos dados 
         var verif = await verificaExistenciaDosDados(req.body)
         if (verif[0] == true) {
-            var result = new Result(null, false, verif[1], 400);
+            result = new Result(null, false, verif[1], 400);
             return result;
         }
         else {
             //Salvando estbelecimento
             var estabelecimento = await cadastraOngOuEstabelecimento(req.body);
-            
+
             //Salvando usuario com id do estabelecimento
             if (estabelecimento != null) {
-                await cadastraUsuarioComIDEstabelecimentoOuOng(req.body, estabelecimento._id);
-            }
+                var conta = await cadastraUsuarioComIDEstabelecimentoOuOng(req.body, estabelecimento._id);
 
-            var contaResult = {
-                "nome": req.body.nome,
-                "email": req.body.email,
-                "tipoConta": req.body.tipoConta,
-                "nomeEstabelecimento": req.body.nomeEstabelecimento
+                if (conta =! null) {
+                    var contaResult = {
+                        "nome": conta.nome,
+                        "email": conta.email,
+                        "tipoConta": conta.tipoConta,
+                        "nomeEstabelecimento": estabelecimento.nomeEstabelecimento
+                    }
+        
+                    result = new Result(contaResult, true, "Cadastro realizado com sucesso!", 200);
+                    return result;
+                }
+                else{
+                    result = new Result(contaResult, true, "Falha no cadastro da conta!", 200);
+                    return result;
+                }
             }
-
-            var result = new Result(contaResult, true, "Cadastro realizado com sucesso!", 200);
-            return result;
+            else{
+                result = new Result(contaResult, true, "Falha no cadastro do estabelecimento!", 200);
+                return result;
+            }
         }
 
     } catch (error) {
@@ -43,51 +54,50 @@ async function cadastrarConta(req) {
 async function editarConta(idConta, req) {
     console.log("editarConta");
     try {
+        var result;
         //Verificação a ja exixtencia dos dados  
         var contaAntesEditar = await listaContaCompletaPorID(idConta)
         if (contaAntesEditar.cpf != req.body.cpf) {
             let dadoCPF = await verificaCPF(req.body.cpf);
             if (dadoCPF) {
-                var result = new Result(null, false, "Edição não Efetuado, CPF ja utilizado", 400);
+                result = new Result('', false, "Edição não Efetuado, CPF ja utilizado", 400);
                 return result;
             }
         }
-        else if (contaAntesEditar.cnpj != req.body.cnpj) {
+        
+        if (contaAntesEditar.cnpj != req.body.cnpj) {
             let dadoCNPJ = await verificaCNPJ(req.body.cnpj);
             if (dadoCNPJ) {
-                var result = new Result(null, false, "Edição não Efetuado, CNPJ ja utilizado", 400);
+                result = new Result('', false, "Edição não Efetuado, CNPJ ja utilizado", 400);
                 return result;
             }
+        }
+
+        var contaAtual = await listaContaID(idConta);
+        var estabelecimentoAtual = await listaOngOuEstabelecimentoPorID(contaAtual.idEstabelecimento);
+        var vetorResult = [];
+
+        //Atualiza Estabelecimento
+        var estabelecimentoAtualizado = await atualizaOngOuEstabelecimento(req.body, contaAtual.idEstabelecimento);
+
+        if (estabelecimentoAtualizado != null) {
+            //Atualiza Conta 
+            var contaAtualizada = await atualizaDadosConta(req.body, idConta, estabelecimentoAtual);
         }
         else {
-
-            var contaAtual = await listaContaID(idConta);
-            var estabelecimentoAtual = await listaOngOuEstabelecimentoPorID(contaAtual.idEstabelecimento);
-            var vetorResult = [];
-
-            //Atualiza Estabelecimento
-            var estabelecimentoAtualizado = await atualizaOngOuEstabelecimento(req.body, contaAtual.idEstabelecimento);
-
-            if (estabelecimentoAtualizado != null) {
-                //Atualiza Conta 
-                var contaAtualizada = await atualizaDadosConta(req.body, idConta, estabelecimentoAtual);
-            }
-            else {
-                var result = new Result(null, false, "Alterações não realizadas", 400);
-                return result;
-            }
-
-            if (contaAtualizada != null) {
-                vetorResult.push(contaAtualizada, estabelecimentoAtualizado);
-                var result = new Result(vetorResult, true, "Conta alterada com sucesso!", 200);
-            }
-            else {
-                var result = new Result(null, false, "Alterações não realizadas", 400);
-            }
-
+            result = new Result('', false, "Alterações não realizadas", 400);
             return result;
-
         }
+
+        if (contaAtualizada != null) {
+            vetorResult.push(contaAtualizada, estabelecimentoAtualizado);
+            result = new Result(vetorResult, true, "Conta alterada com sucesso!", 200);
+        }
+        else {
+            result = new Result('', false, "Alterações não realizadas", 400);
+        }
+        return result;
+
 
     } catch (error) {
         var result = new Result(error, false, "Internal error", 500);
@@ -144,6 +154,7 @@ async function pegarDadosConta(idConta) {
         return result;
 
     } catch (error) {
+        console.log(error)
         var result = new Result(error, false, "Internal error", 500);
         return result;
     }
@@ -244,6 +255,41 @@ async function enviaEmailResetSenha(req) {
     }
 
 }
+
+async function listaContasPendentes() {
+    try {
+        var contas = await contaSchema.find({ verificaAtivo: "0" })
+        return new Result(contas, true, "", 200);
+    }
+    catch (error) {
+        return new Result(error, false, "Internal error", 500)
+    }
+}
+
+async function aprovaOuNegaContas(req) {
+    try{
+        var conta = await contaSchema.findOne({ _id: req.params.idEstabelecimento })
+        conta.verificaAtivo = req.body.verificaAtivo;
+        var resultado = await contaSchema.updateOne({ _id: req.params.idEstabelecimento }, {
+            $set: {
+                verificaAtivo: conta.verificaAtivo
+            }
+        });
+        if(resultado.acknowledged){
+            if(req.body.verificaAtivo == 1){
+                return new Result(true, true, "Aprovado com sucesso!", 200)
+            }
+            else if(req.body.verificaAtivo == 2){
+                return new Result(true, true, "Negado com sucesso!", 200)
+            }
+            
+        }
+    }
+    catch(error){
+        return new Result(error, false, "Internal error", 500)
+    }
+    
+}
 //#endregion
 
 //#region Metodos Auxiliares 
@@ -311,11 +357,11 @@ const cadastraOngOuEstabelecimento = async (body) => {
         var estabelecimento = estabelecimentoSchema(body);
         await estabelecimento.save();
         console.log(estabelecimento);
+        return estabelecimento;
     } catch (error) {
         console.log(error)
         return estabelecimento = null;
     }
-    return estabelecimento;
 }
 
 //Cadastra Conta relacionando com Estabelecimento
@@ -332,16 +378,19 @@ const cadastraUsuarioComIDEstabelecimentoOuOng = async (body, estabelecimento_id
             "cpf": body.cpf,
             "email": body.email,
             "senha": hash,
-            "tipoConta": body.tipo,
+            "tipoConta": body.tipoConta,
             "idEstabelecimento": estabelecimento_id,
-            "verificaAtivo": "0",
+            "verificaAtivo": null,
             "dataCadastro": today.toLocaleDateString()
         }
         console.log(cont);
         var conta = contaSchema(cont);
         await conta.save();
+        return cont;
+
     } catch (error) {
         await excluiOngOuEstabelecimento(estabelecimento_id);
+        return null;
     }
 }
 
@@ -460,10 +509,10 @@ const listaContas = async () => {
 
 //Lista conta + estabelecimento por ID
 const listaContaCompletaPorID = async (id) => {
-
+    console.log("entrou")
     var conta = await listaContaID(id);
     var estabelecimento = await listaOngOuEstabelecimentoPorID(conta.idEstabelecimento)
-
+    console.log(conta)
     var retorno = {
         "nome": conta.nome,
         "sobrenome": conta.sobrenome,
@@ -504,6 +553,7 @@ const listaContaCompletaPorID = async (id) => {
 const listaContaID = async (id) => {
     var conta = await contaSchema
         .findById(id);
+    console.log(conta)
 
     var retorno = {
         "nome": conta.nome,
@@ -527,5 +577,5 @@ const listaOngOuEstabelecimentoPorID = async (id) => {
 //#endregion
 
 module.exports = {
-    cadastrarConta, editarConta, excluirConta, resetarSenha, enviaEmailResetSenha, pegarDadosConta, verificaExisteciaEmail
+    cadastrarConta, editarConta, excluirConta, resetarSenha, enviaEmailResetSenha, pegarDadosConta, aprovaOuNegaContas, listaContasPendentes, verificaExisteciaEmail
 }
