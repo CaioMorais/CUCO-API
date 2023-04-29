@@ -110,8 +110,8 @@ Contarouter.post('/v1/Conta/ResetarSenha/:id', ContaController.ResetarSenha)
  * tags:
  *  name: Conta
  *  description: API's de Conta
- * /api/v1/Conta/EnviaEmailResetSenha/:
- *  post:
+ * /api/v1/Conta/EnviaEmailResetSenha/:email:
+ *  get:
  *      tags: [Conta]
  *      parameters:
  *          - name: page_number
@@ -123,7 +123,7 @@ Contarouter.post('/v1/Conta/ResetarSenha/:id', ContaController.ResetarSenha)
  *          default:
  *              description: This is the default response for it
  */
- Contarouter.post('/v1/Conta/EnviaEmailResetSenha', ContaController.EnviaEmailResetSenha)
+ Contarouter.get('/v1/Conta/EnviaEmailResetSenha/:email', ContaController.EnviaEmailResetSenha)
 
  /**
  * @swagger
