@@ -34,16 +34,6 @@ exports.CadastraDoacao = async (req, res, next) => {
 }
 
 exports.efiCallback = async (req, res) => {
-    if (req.socket.authorized) {
-        console.log("entrou")
         var result = await efiCallback(req.body);
         res.status(result.status).send(result);
-        response.status(200).end();
-    } else {
-        console.log("não entrou")
-        var result = await efiCallback(req.body);
-        console.log(req.body, result)
-        res.status(result.status).send(result);
-    }
-
 }

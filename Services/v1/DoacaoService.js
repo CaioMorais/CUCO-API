@@ -136,9 +136,9 @@ async function cadastraDoacao(req, idRestaurante) {
 
 async function efiCallback(body) {
     try {
-        var doacao = await doacaoSchema.findOne({ txid: body.pix.txid });
+        var doacao = await doacaoSchema.findOne({ txId: body.pix[0].txid });
         var doador = await clienteDoadorSchema.findOne({ _id: doacao.idClienteDoador });
-
+        
         //insere valor carteira
         var resultadoIncersao = await carteira.insereValorCarteira(doacao.idRestaurante, doacao.quantidadePratosDoados);
 
