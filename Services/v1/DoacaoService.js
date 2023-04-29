@@ -48,13 +48,10 @@ async function cadastraDoacao(req, idRestaurante) {
 
         //EFI Cria Cobrança
         let cobranca = await efiService.gerarCobranca(req.body);
-        console.log(cobranca);
-
-
 
         //Cria Doação
         var doacao = await criaDoacao(req.body, clienteDoador, idRestaurante, cobranca);
-        console.log(doacao)
+
         if (doacao == null) {
             result = new Result(resultDoacao, false, "Doação não efetuada, não foi possivel criar a doação!", 400);
             return result;
@@ -83,10 +80,13 @@ async function cadastraDoacao(req, idRestaurante) {
                 result = new Result(resultDoacao, false, "Doação não efetuada, não foi possivel criar novo doador!", 400);
                 return result;
             }
+            let pixCopiaCola = await efiService.getPixCopiaCola(cobranca.data.loc.id);
 
             var resultDoacao = {
                 "nomeDoador": req.body.nome,
                 "quantidadePratosDoados": req.body.quantidadePratosDoados,
+                "pixCopiaCola": pixCopiaCola.data.qrcode,
+                "linkVisualizacao": pixCopiaCola.data.linkVisualizacao
             }
 
             result = new Result(resultDoacao, true, "Prato doado com sucesso!", 200);
