@@ -62,22 +62,13 @@ mongoose.connect(uri).then(() => {
 
 // Endpoint para configuração do webhook, você precisa cadastrar https://SEUDOMINIO.com/webhook
 app.post("/webhook", (request, response) => {
-  // Verifica se a requisição que chegou nesse endpoint foi autorizada
-  if (request.socket.authorized) {
     response.status(200).end();
-  } else {
-    response.status(401).end();
-  }
 });
 
 // Endpoind para recepção do webhook tratando o /pix
 app.post("/webhook/pix", (request, response) => {
-  if (request.socket.authorized) {
     result = doacaoController.efiCallback(request);
     response.status(200).end();
-  } else {
-    response.status(401).end();
-  }
 });
 
 const server = app.listen(port, () => {
