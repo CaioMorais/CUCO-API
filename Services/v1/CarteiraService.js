@@ -258,7 +258,7 @@ async function envioMetaCarteiraAtingido(carteira) {
          },
          auth: {
             user: "no-reply.cuco@outlook.com.br",
-            pass: "Cuco1234"
+            pass: "CucoProjeto1@"
          }
       });
 

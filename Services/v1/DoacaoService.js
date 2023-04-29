@@ -131,7 +131,7 @@ async function enviarEmailRecompensa(emailcliente) {
             },
             auth: {
                 user: "no-reply.cuco@outlook.com.br",
-                pass: "Cuco1234"
+                pass: "CucoProjeto1@"
             }
         });
 
