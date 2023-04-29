@@ -139,17 +139,19 @@ async function efiCallback(body) {
         var doacao = await doacaoSchema.findOne({ txid: body.pix.txid });
         var doador = await clienteDoadorSchema.findOne({ _id: doacao.idClienteDoador });
 
-        if (body.pix.status)
+        if (body.pix.status == "CONCLUIDA") {
             //insere valor carteira
             var resultadoIncersao = await carteira.insereValorCarteira(doacao.idRestaurante, doacao.quantidadePratosDoados);
 
-        if (resultadoIncersao.success) {
-            //envia email com recompensa para cliente
-            enviarEmailRecompensa(doador.email, doacao.quantidadePratosDoados, doador.nome);
+            if (resultadoIncersao.success) {
+                //envia email com recompensa para cliente
+                enviarEmailRecompensa(doador.email, doacao.quantidadePratosDoados, doador.nome);
 
-            result = new Result("Recebido", true, "Prato doado com sucesso!", 200);
-            return result;
+                result = new Result("Recebido", true, "Prato doado com sucesso!", 200);
+                return result;
+            }
         }
+        return false;
     }
     catch (e) {
         result = new Result("Recebido", true, "Prato doado com sucesso!", 200);
