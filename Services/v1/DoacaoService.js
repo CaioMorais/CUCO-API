@@ -151,7 +151,8 @@ async function efiCallback(body) {
                 return result;
             }
         }
-        return false;
+        result = new Result("Recebido", true, "Prato doado com sucesso!", 200);
+        return result;
     }
     catch (e) {
         result = new Result("Recebido", true, "Prato doado com sucesso!", 200);
