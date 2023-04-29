@@ -47,7 +47,8 @@ exports.ResetarSenha = async (req, res, next) =>{
 }
 
 exports.EnviaEmailResetSenha = async (req, res, next) =>{
-    var result = await enviaEmailResetSenha(req);
+    var email = req.params["email"];
+    var result = await enviaEmailResetSenha(email);
     console.log(result);
     res.status(result.status).send(result);
 }

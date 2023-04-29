@@ -200,10 +200,10 @@ async function resetarSenha(idConta, req) {
 
 }
 
-async function enviaEmailResetSenha(req) {
+async function enviaEmailResetSenha(email) {
     try {
-        console.log(req.body.email);
-        var conta = await verificaEmailExiste(req.body.email);
+        console.log(email);
+        var conta = await verificaEmailExiste(email);
         if (!conta) {
             var result = new Result(null, false, "Email não enviado, conta inexistente", 400);
             return result;
@@ -218,7 +218,7 @@ async function enviaEmailResetSenha(req) {
             },
             auth: {
                 user: "no-reply.cuco@outlook.com.br",
-                pass: "Cuco1234@"
+                pass: "CucoProjeto1@"
             }
         });
 
@@ -231,7 +231,7 @@ async function enviaEmailResetSenha(req) {
             subject: "Troca de Senha Cuco",
 
             text: "Você solicitou a troca de senha" +
-                " entre no link a seguir para proseguir www.linkpaginatrocadesenha/" + conta._id + ".com ." +
+                " entre no link a seguir para proseguir " + "https://lively-coast-01b431d10.1.azurestaticapps.net/resetsenha/" + conta._id + " " +
                 " Caso não tenha solicitado ignore esse e-mail e considere trocar sua senha." +
                 " A equipe CUCO está a disposição em caso de qualquer duvida."
 
@@ -240,11 +240,12 @@ async function enviaEmailResetSenha(req) {
         remetente.sendMail(emailASerEnviado, function (error) {
             if (error) {
                 console.log(error);
+                var result = new Result(null, false, "Problemas ao enviar o email, tente novamente mais tarde ou contate o administrador do sistema.", 400);
+                return result;
             } else {
                 console.log("Email enviado com sucesso.");
             }
         });
-
 
         var result = new Result(null, true, "Email enviado com sucesso", 200);
         return result;
