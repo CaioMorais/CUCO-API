@@ -10,6 +10,10 @@ var doacaoSchema = new Schema({
         type: String,
         required: true 
     },
+    dataPagamento: {
+        type:String,
+        required: false
+    },
     idClienteDoador: {
         type: String,
         required: true 
@@ -17,7 +21,19 @@ var doacaoSchema = new Schema({
     idRestaurante: {
         type: String,
         required: true 
-    } 
+    },
+    locId: {
+        type: Number,
+        required: true
+    },
+    txId: {
+        type: String,
+        required: true
+    },
+    status: {
+        type: String,
+        required: true
+    }
 })
 
 module.exports = mongoose.model('doacoe', doacaoSchema);

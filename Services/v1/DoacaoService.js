@@ -7,6 +7,7 @@ let historicoEntregaRetiradasSchema = require("../../Domain/Models/v1/HistoricoE
 let carteiraSchema = require("../../Domain/Models/v1/CarteiraModel");
 let estabelecimentoSchema = require("../../Domain/Models/v1/EstabelecimentoModel");
 var nodemailer = require('nodemailer');
+var efiService = require('./EfiService.js')
 
 // function gerarQRCodeLinkDoacao(id){
 //     try {
@@ -27,7 +28,6 @@ var nodemailer = require('nodemailer');
 
 async function cadastraDoacao(req, idRestaurante) {
     try {
-        console.log(req.body)
         var result;
         var clienteAntigoBackup;
         var clienteNovo = false;
@@ -42,10 +42,16 @@ async function cadastraDoacao(req, idRestaurante) {
             }
             clienteNovo = true;
         }
-        console.log(clienteDoador)
-        // console.log(clienteDoador._id.toString())
+
+        let restaurante = await estabelecimentoSchema.findOne({ _id: idRestaurante })
+        req.body.pixRestaurante = restaurante.chavePix;
+
+        //EFI Cria Cobrança
+        let cobranca = await efiService.gerarCobranca(req.body);
+
         //Cria Doação
-        var doacao = await criaDoacao(req.body, clienteDoador, idRestaurante);
+        var doacao = await criaDoacao(req.body, clienteDoador, idRestaurante, cobranca);
+
         if (doacao == null) {
             result = new Result(resultDoacao, false, "Doação não efetuada, não foi possivel criar a doação!", 400);
             return result;
@@ -61,7 +67,7 @@ async function cadastraDoacao(req, idRestaurante) {
                 if (await clienteDoadorSchema.updateOne({ _id: clienteDoador._id }, { $set: { nome: req.body.nome, email: req.body.email, totalPratosDoados: valorTotaldeDoacoesDesseCliente } })) {
                     console.log("entrou")
                 }
-                else{
+                else {
                     // erro ao atualizar pratos do cliente existente, doação é excluida
                     await doacaoSchema.deleteOne({ _id: doacao._id });
                     result = new Result(resultDoacao, false, "Doação não efetuada, não foi atualizar doações do doador!", 400);
@@ -74,36 +80,46 @@ async function cadastraDoacao(req, idRestaurante) {
                 result = new Result(resultDoacao, false, "Doação não efetuada, não foi possivel criar novo doador!", 400);
                 return result;
             }
+            let pixCopiaCola = await efiService.getPixCopiaCola(cobranca.data.loc.id);
 
-            //insere valor carteira
-            var resultadoIncersao = await carteira.insereValorCarteira(idRestaurante, req.body.quantidadePratosDoados);
-
-            if (resultadoIncersao.success) {
-
-                var resultDoacao = {
-                    "nomeDoador": req.body.nome,
-                    "quantidadePratosDoados": req.body.quantidadePratosDoados,
-                }
-
-                //envia email com recompensa para cliente
-                enviarEmailRecompensa(req.body.email);
-
-                result = new Result(resultDoacao, true, "Prato doado com sucesso!", 200);
-            } else {
-
-                //em caso de erro em inserir valor da carteira o cliente doador é excluido se for novo, ou os pratos doados nessa docao são retirados do seu registro
-                if (clienteNovo == true) {
-                    await clienteDoadorSchema.updateOne({ _id: clienteDoador._id }, { $set: { totalPratosDoados: clienteAntigoBackup.totalPratosDoados } })
-                }
-                else {
-                    await excluiDoador(clienteDoador._id);
-                }
-
-                //em caso de erro ao inserir valor na carteira doação é excluida
-                await doacaoSchema.deleteOne({ _id: doacao._id });
-                result = new Result(resultDoacao, false, "Doacao não efetuada, não foi possivel inserir valor na carteira!", 400);
-                return result;
+            var resultDoacao = {
+                "nomeDoador": req.body.nome,
+                "quantidadePratosDoados": req.body.quantidadePratosDoados,
+                "pixCopiaCola": pixCopiaCola.data.qrcode,
+                "linkVisualizacao": pixCopiaCola.data.linkVisualizacao
             }
+
+            result = new Result(resultDoacao, true, "Prato doado com sucesso!", 200);
+
+            // //insere valor carteira
+            // var resultadoIncersao = await carteira.insereValorCarteira(idRestaurante, req.body.quantidadePratosDoados);
+
+            // if (resultadoIncersao.success) {
+
+            //     var resultDoacao = {
+            //         "nomeDoador": req.body.nome,
+            //         "quantidadePratosDoados": req.body.quantidadePratosDoados,
+            //     }
+
+            //     //envia email com recompensa para cliente
+            //     enviarEmailRecompensa(req.body.email);
+
+            //     result = new Result(resultDoacao, true, "Prato doado com sucesso!", 200);
+            // } else {
+
+            //     //em caso de erro em inserir valor da carteira o cliente doador é excluido se for novo, ou os pratos doados nessa docao são retirados do seu registro
+            //     if (clienteNovo == true) {
+            //         await clienteDoadorSchema.updateOne({ _id: clienteDoador._id }, { $set: { totalPratosDoados: clienteAntigoBackup.totalPratosDoados } })
+            //     }
+            //     else {
+            //         await excluiDoador(clienteDoador._id);
+            //     }
+
+            //     //em caso de erro ao inserir valor na carteira doação é excluida
+            //     await doacaoSchema.deleteOne({ _id: doacao._id });
+            //     result = new Result(resultDoacao, false, "Doacao não efetuada, não foi possivel inserir valor na carteira!", 400);
+            //     return result;
+            // }
 
         }
         else {
@@ -118,7 +134,32 @@ async function cadastraDoacao(req, idRestaurante) {
 
 }
 
-async function enviarEmailRecompensa(emailcliente) {
+async function efiCallback(body) {
+    try {
+        var doacao = await doacaoSchema.findOne({ txId: body.pix[0].txid });
+        var doador = await clienteDoadorSchema.findOne({ _id: doacao.idClienteDoador });
+        
+        //insere valor carteira
+        var resultadoIncersao = await carteira.insereValorCarteira(doacao.idRestaurante, doacao.quantidadePratosDoados);
+
+        if (resultadoIncersao.success) {
+            //envia email com recompensa para cliente
+            enviarEmailRecompensa(doador.email, doacao.quantidadePratosDoados, doador.nome);
+
+            result = new Result("Recebido", true, "Prato doado com sucesso!", 200);
+            return result;
+        }
+
+        result = new Result("Recebido", true, "Prato doado com sucesso!", 200);
+        return result;
+    }
+    catch (e) {
+        result = new Result("Recebido", true, "Prato doado com sucesso!", 200);
+        return result;
+    }
+}
+
+async function enviarEmailRecompensa(emailcliente, quantidadePratosDoados, nome) {
     try {
 
         var remetente = nodemailer.createTransport({
@@ -143,9 +184,7 @@ async function enviarEmailRecompensa(emailcliente) {
 
             subject: "Obrigado por Doar",
 
-            text: "Sua doação ajudara uma pessoa com fome, por esse motivo a equipe do CUCO" +
-                "em conjunto com o estabelecimento te fornecera um NFC esclusivo, que pode ser resgatado"
-                + " pelo link a seguir:  www.nfcexclusivoscucodoadores.com"
+            text: "Olá " + nome + ", \n Este e-mail é para te confirmar que recebemos a doação de " + quantidadePratosDoados + " pratos. \n Queremos te agradecer por tornar o mundo um lugar melhor!"
         };
 
 
@@ -168,14 +207,14 @@ async function gerarTokenIndentificacaoRetiradaDoacoes(idCarteira) {
         var result;
 
         var entregaRetiradasDocument = await entregaRetiradasSchema.findOne({ idCarteira: idCarteira });
-        if(entregaRetiradasDocument.tokenOng != ""){
+        if (entregaRetiradasDocument.tokenOng != "") {
             return new Result(entregaRetiradasDocument.tokenOng, true, "", 200);
         }
         //Gera token  de identificação
         var tokenIdentificacao = geraTokenIdentificacao();
 
         //Salva token para ser consultado na entrega pelo restaurante
-        
+
         if (entregaRetiradasDocument) {
             await entregaRetiradasSchema.updateOne({ _id: entregaRetiradasDocument._id },
                 { $set: { tokenOng: tokenIdentificacao } })
@@ -345,7 +384,7 @@ async function criaOuAtualizaClienteDoador(body) {
 }
 
 //Cria doação 
-async function criaDoacao(body, clienteDoador, idRestaurante) {
+async function criaDoacao(body, clienteDoador, idRestaurante, cobranca) {
     var doacao = null;
     try {
         const timeElapsed = Date.now();
@@ -354,7 +393,10 @@ async function criaDoacao(body, clienteDoador, idRestaurante) {
             "quantidadePratosDoados": body.quantidadePratosDoados,
             "dataDoacao": today.toLocaleDateString(),
             "idClienteDoador": clienteDoador._id.toString(),
-            "idRestaurante": idRestaurante
+            "idRestaurante": idRestaurante,
+            "locId": cobranca.data.loc.id,
+            "txId": cobranca.data.txid,
+            "status": cobranca.data.status
         };
         console.log(doa);
         doacao = doacaoSchema(doa);
@@ -376,5 +418,5 @@ function geraTokenIdentificacao() {
 module.exports = {
     gerarTokenIndentificacaoRetiradaDoacoes,
     /*gerarQRCodeLinkDoacao,*/ cadastraDoacao,
-    validacaoTokens, enviarEmailRecompensa
+    validacaoTokens, enviarEmailRecompensa, efiCallback
 }
