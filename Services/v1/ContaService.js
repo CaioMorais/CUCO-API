@@ -3,6 +3,7 @@ let Result = require("../../Domain/Entities/Result");
 let contaSchema = require('../../Domain/Models/v1/ContaModel');
 let estabelecimentoSchema = require('../../Domain/Models/v1/EstabelecimentoModel');
 var nodemailer = require('nodemailer');
+var ejs = require('ejs');
 
 
 //#region Metodos Principais
@@ -202,51 +203,58 @@ async function resetarSenha(idConta, req) {
 
 async function enviaEmailResetSenha(email) {
     try {
-        console.log(email);
         var conta = await verificaEmailExiste(email);
         if (!conta) {
             var result = new Result(null, false, "Email não enviado, conta inexistente", 400);
             return result;
         }
-        var remetente = nodemailer.createTransport({
-            host: "smtp-mail.outlook.com",
-            service: "outlook",
-            port: 587,
-            secureConnection: false,
-            tls: {
-                ciphers: 'SSLv3'                            // tls version
-            },
-            auth: {
-                user: "no-reply.cuco@outlook.com.br",
-                pass: "CucoProjeto1@"
-            }
-        });
 
-        var emailASerEnviado = {
+        var emailEnvio = "no-reply.cuco@outlook.com.br";
+        var senha = "CucoProjeto1@";
+        var emailDestino = email;
+        var idConta = conta._id;
+        var assunto = "Troca de Senha Cuco";
+        var service = "outlook";
+        var caminhoHtml = "/helperService/TemplateEmailTrocaSenha.ejs";
 
-            from: "no-reply.cuco@outlook.com.br",
-
-            to: conta.email,
-
-            subject: "Troca de Senha Cuco",
-
-            text: "Você solicitou a troca de senha" +
-                " entre no link a seguir para proseguir " + "https://lively-coast-01b431d10.1.azurestaticapps.net/resetsenha/" + conta._id + " " +
-                " Caso não tenha solicitado ignore esse e-mail e considere trocar sua senha." +
-                " A equipe CUCO está a disposição em caso de qualquer duvida."
-
-        };
-
-        remetente.sendMail(emailASerEnviado, function (error) {
-            if (error) {
-                console.log(error);
-                var result = new Result(null, false, "Problemas ao enviar o email, tente novamente mais tarde ou contate o administrador do sistema.", 400);
-                return result;
+        ejs.renderFile(__dirname + caminhoHtml, {email: emailDestino, id: idConta}, function (err, data) 
+        {
+            if (err) {
+                console.log(err);
             } else {
-                console.log("Email enviado com sucesso.");
+                var transporter = nodemailer.createTransport({
+                    host: "smtp-mail.outlook.com",
+                    service: service,
+                    port: 587,
+                    secureConnection: false,
+                    tls: {
+                        ciphers: 'SSLv3'                            // tls version
+                    },
+                    auth: {
+                        user: emailEnvio,
+                        pass: senha
+                    }
+                });
+     
+                var mainOptions = {
+                    from: emailEnvio,
+                    to: emailDestino,
+                    subject: assunto,
+                    html: data
+                };
+    
+                transporter.sendMail(mainOptions, function (err, info) {
+                    if (err) {
+                        var result = new Result(null, false, "Falha ao enviar o Email, por favor tente novamente mais tarde", 400);
+                        return result;
+                    } else {
+                        console.log("Email enviado com sucesso.");
+                        result = true;
+                    }
+                });
             }
-        });
-
+        })
+        
         var result = new Result(null, true, "Email enviado com sucesso", 200);
         return result;
 

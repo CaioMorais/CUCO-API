@@ -84,4 +84,6 @@ const {verificaToken} = require("../../Security/usuarioMiddleware");
  */
  Doacaorouter.post('/v1/Doacao/ValidaToken/:idCarteira',verificaToken, DoacaoController.ValidaToken)
 
+//  Doacaorouter.post('/v1/webhook/pix', DoacaoController.efiCallback)
+
 module.exports = Doacaorouter
