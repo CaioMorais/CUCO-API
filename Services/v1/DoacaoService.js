@@ -136,9 +136,10 @@ async function cadastraDoacao(req, idRestaurante) {
 
 async function efiCallback(body) {
     try {
+        var result;
         var doacao = await doacaoSchema.findOne({ txId: body.pix[0].txid });
         var doador = await clienteDoadorSchema.findOne({ _id: doacao.idClienteDoador });
-        
+
         //insere valor carteira
         var resultadoIncersao = await carteira.insereValorCarteira(doacao.idRestaurante, doacao.quantidadePratosDoados);
 
@@ -162,41 +163,51 @@ async function efiCallback(body) {
 async function enviarEmailRecompensa(emailcliente, quantidadePratosDoados, nome) {
     try {
 
-        var remetente = nodemailer.createTransport({
-            host: "smtp-mail.outlook.com",
-            service: "outlook",
-            port: 587,
-            secureConnection: false,
-            tls: {
-                ciphers: 'SSLv3'                            // tls version
-            },
-            auth: {
-                user: "no-reply.cuco@outlook.com.br",
-                pass: "CucoProjeto1@"
-            }
-        });
+        var emailEnvio = "no-reply.cuco@outlook.com.br";
+        var senha = "CucoProjeto1@";
+        var emailDestino = emailcliente;
+        var nomeCliente = nome
+        var pratos = quantidadePratosDoados;
+        var assunto = "Obrigado por Doar";
+        var service = "outlook";
+        var caminhoHtml = "/helperService/TemplateEmailDoacaoConcluida.ejs";
 
-        var emailASerEnviado = {
-
-            from: "no-reply.cuco@outlook.com.br",
-
-            to: emailcliente,
-
-            subject: "Obrigado por Doar",
-
-            text: "Olá " + nome + ", \n Este e-mail é para te confirmar que recebemos a doação de " + quantidadePratosDoados + " pratos. \n Queremos te agradecer por tornar o mundo um lugar melhor!"
-        };
-
-
-        remetente.sendMail(emailASerEnviado, function (error) {
-            if (error) {
-                console.log(error);
+        ejs.renderFile(__dirname + caminhoHtml, {nomeCliente: nomeCliente, pratos: pratos}, function (err, data) {
+            if (err) {
+                console.log(err);
             } else {
-                console.log("Email enviado com sucesso.");
-            }
-        });
+                var transporter = nodemailer.createTransport({
+                    host: "smtp-mail.outlook.com",
+                    service: service,
+                    port: 587,
+                    secureConnection: false,
+                    tls: {
+                        ciphers: 'SSLv3'                            // tls version
+                    },
+                    auth: {
+                        user: emailEnvio,
+                        pass: senha
+                    }
+                });
 
-    } catch (error) {
+                var mainOptions = {
+                    from: emailEnvio,
+                    to: emailDestino,
+                    subject: assunto,
+                    html: data
+                };
+
+                transporter.sendMail(mainOptions, function (err, info) {
+                    if (err) {
+                        console.log(err);
+                    } else {
+                        console.log("Email enviado com sucesso.");
+                    }
+                });
+            }
+        })
+    }
+    catch (error) {
         return error;
     }
 }
