@@ -247,42 +247,52 @@ async function insereValorCarteira(id, valorDoado) {
 async function envioMetaCarteiraAtingido(carteira) {
    try {
       var dadosEstabelecimento = await listagemEstabelecimentoId(carteira.idRestaurante);
+       
+      var emailEnvio = "no-reply.cuco@outlook.com.br";
+      var senha = "CucoProjeto1@";
+      var emailDestino = dadosEstabelecimento.emailEstabelecimento;
+      var nomeEstabelecimeto = dadosEstabelecimento.nomeEstabelecimento;
+      var metaFinal = dadosEstabelecimento.metaFinal;
+      var contato = dadosEstabelecimento.contato;
+      var assunto = "Limite de Carteira Atingido! - " + nomeEstabelecimeto;
+      var service = "outlook";
+      var caminhoHtml = "/helperService/TemplateEmailMetaCarteiraAtingido.ejs";
 
-      var remetente = nodemailer.createTransport({
-         host: "smtp-mail.outlook.com",
-         service: "outlook",
-         port: 587,
-         secureConnection: false,
-         tls: {
-            ciphers: 'SSLv3'                            // tls version
-         },
-         auth: {
-            user: "no-reply.cuco@outlook.com.br",
-            pass: "CucoProjeto1@"
-         }
-      });
-
-      var emailASerEnviado = {
-
-         from: "no-reply.cuco@outlook.com.br",
-
-         to: dadosEstabelecimento.emailEstabelecimento,
-
-         subject: "Limite de Carteira Atingido! - " + dadosEstabelecimento.nomeEstabelecimento,
-
-         text: "Prezado usuário, o limite da carteira no valor de R$" + carteira.metaFinal +
-            " referente ao estabelecimento " + dadosEstabelecimento.nomeEstabelecimento + " foi atingido!"
-            + " Favor entrar em contato com o mesmo através do n° " + dadosEstabelecimento.contato + " para agendar a coleta."
-      };
-
-
-      remetente.sendMail(emailASerEnviado, function (error) {
-         if (error) {
-            console.log(error);
-         } else {
-            console.log("Email enviado com sucesso.");
-         }
-      });
+      ejs.renderFile(__dirname + caminhoHtml, {meta: metaFinal, nome: nomeEstabelecimeto, contato: contato}, function (err, data) 
+      {
+          if (err) {
+              console.log(err);
+          } else {
+              var transporter = nodemailer.createTransport({
+                  host: "smtp-mail.outlook.com",
+                  service: service,
+                  port: 587,
+                  secureConnection: false,
+                  tls: {
+                      ciphers: 'SSLv3'                            // tls version
+                  },
+                  auth: {
+                      user: emailEnvio,
+                      pass: senha
+                  }
+              });
+   
+              var mainOptions = {
+                  from: emailEnvio,
+                  to: emailDestino,
+                  subject: assunto,
+                  html: data
+              };
+  
+              transporter.sendMail(mainOptions, function (err, info) {
+                  if (err) {
+                     console.log(err);
+                  } else {
+                      console.log("Email enviado com sucesso.");
+                  }
+              });
+          }
+      })
 
    } catch (error) {
       return error;
