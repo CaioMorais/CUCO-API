@@ -1,0 +1,25 @@
+<!-- Template simples de e-mail, arquivo com o nome email.ejs -->
+<header style="background-color: #6584B4; color: #ffffff; padding: 10px; text-align: center;">
+    <h3>Troca de Senha Plataforma CUCO</h3>
+</header>
+<article>
+    <p>Você solicitou a troca de senha?</p>
+    <p>Nós recebemos a solicitação de troca de senha da sua conta <%= email %></p>
+    <p>entre no link a seguir para proseguir: </p>
+    <a href="https://lively-coast-01b431d10.1.azurestaticapps.net/resetsenha/<%= id %>">https://lively-coast-01b431d10.1.azurestaticapps.net/resetsenha/<%= id %></a>
+    <p>Caso não tenha solicitado ignore esse e-mail e considere trocar sua senha.</p>
+    <p>A equipe CUCO está a disposição em caso de qualquer duvida.</p>
+    <p></p>
+    <p></p>
+    <p style="font-size: 7pt;">
+        Por favor não responda essa mensagem, ela foi enviada por endereço de e-mail não monitorado. 
+        Ela esta relacionada ao seu uso da plataforma CUCO, 
+        para mais informações entre em contato com a nossa equipe.
+    </p>
+</article>
+<footer style="background-color: #6584B4; color: #ffffff; padding: 10px; text-align: center;">
+    <p style="font-size: 30 pt;"> <strong>CUCO</strong></p>
+    <p style="font-size: 10 pt;">Compre Um Conceda Outro </p>
+    <p style="font-size: 5 pt;"> Equipe de Suporte</p>
+</footer>
+
