@@ -9,23 +9,6 @@ let estabelecimentoSchema = require("../../Domain/Models/v1/EstabelecimentoModel
 var nodemailer = require('nodemailer');
 var efiService = require('./EfiService.js')
 
-// function gerarQRCodeLinkDoacao(id){
-//     try {
-//         var apiQRCode = "https://chart.googleapis.com/chart?chs=150x150&cht=qr&chl=";
-//         var caminhoDoacao = "";       
-
-//         // acessar o banco paara retornar o link real com os dados do estabelecimento ja prenchidos
-//         var link = "www.estabelecimentox/paginadoacao"
-//         var result = new Result(link, true, "link para doaçao", 200);
-//         return result
-
-//     } catch (error) {
-//       var result = new Result(error, false, "Internal error", 500);
-//       return result;
-//     }
-
-// }
-
 async function cadastraDoacao(req, idRestaurante) {
     try {
         var result;
