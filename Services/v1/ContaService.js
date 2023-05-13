@@ -162,6 +162,21 @@ async function pegarDadosConta(idConta) {
 
 }
 
+async function pegarDadosApenasEstabelecimentoOuOng(idEstabelecimento) {
+    try {
+        var estabelecimento = await retornaDadosOngOuEstabelecimentoPorID(idEstabelecimento)
+
+        var result = new Result(estabelecimento, true, "Dados da Ong ou Estabelecimento", 200);
+        return result;
+
+    } catch (error) {
+        console.log(error)
+        var result = new Result(error, false, "Internal error", 500);
+        return result;
+    }
+
+}
+
 async function verificaExisteciaEmail(email) {
     try {
         var result;
@@ -255,7 +270,7 @@ async function enviaEmailResetSenha(email) {
             }
         })
         
-        var result = new Result(null, true, "Email enviado com sucesso", 200);
+        var result = new Result(null, true, "Um email com link para trocar sua senha foi enviado para sua conta!", 200);
         return result;
 
     } catch (error) {
@@ -562,7 +577,6 @@ const listaContaCompletaPorID = async (id) => {
 const listaContaID = async (id) => {
     var conta = await contaSchema
         .findById(id);
-    console.log(conta)
 
     var retorno = {
         "nome": conta.nome,
@@ -583,8 +597,33 @@ const listaOngOuEstabelecimentoPorID = async (id) => {
     return await estabelecimentoSchema
         .findById(id);
 }
+
+//retorna dados limitados de estabelecimento por ID
+const retornaDadosOngOuEstabelecimentoPorID = async (id) => {
+    var estabelecimento =  await estabelecimentoSchema.findById(id);
+
+    var retorno = {
+        "nomeEstabelecimento": estabelecimento.nomeEstabelecimento,
+        "tipo": estabelecimento.tipo,
+        "cep": estabelecimento.cep,
+        "cidade": estabelecimento.cidade,
+        "estado": estabelecimento.estado,
+        "bairro": estabelecimento.bairro,
+        "logradouro": estabelecimento.logradouro,
+        "numero": estabelecimento.numero,
+        "complemento": estabelecimento.complemento,
+        "chavePix": estabelecimento.chavePix,
+        "descricao": estabelecimento.descricao,
+        "paginaWeb": estabelecimento.paginaWeb,
+    }
+
+    return retorno;
+
+
+}
 //#endregion
 
 module.exports = {
-    cadastrarConta, editarConta, excluirConta, resetarSenha, enviaEmailResetSenha, pegarDadosConta, aprovaOuNegaContas, listaContasPendentes, verificaExisteciaEmail
+    cadastrarConta, editarConta, excluirConta, resetarSenha, enviaEmailResetSenha, pegarDadosConta, 
+    aprovaOuNegaContas, listaContasPendentes, verificaExisteciaEmail, pegarDadosApenasEstabelecimentoOuOng
 }
