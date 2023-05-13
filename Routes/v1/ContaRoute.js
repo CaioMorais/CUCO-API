@@ -125,26 +125,6 @@ Contarouter.post('/v1/Conta/ResetarSenha/:id', ContaController.ResetarSenha)
  */
  Contarouter.get('/v1/Conta/EnviaEmailResetSenha/:email', ContaController.EnviaEmailResetSenha)
 
- /**
- * @swagger
- * tags:
- *  name: Conta
- *  description: API's de Conta
- * /api/v1/Conta/ConsultaEmail/:email:
- *  get:
- *      tags: [Conta]
- *      parameters:
- *          - name: id
- *            default: 1
- *            in: uri
- *            schema:
- *              type: string
- *      responses:
- *          default:
- *              description: This is the default response for it
- */
- Contarouter.get('/v1/Conta/PegarDadosConta/:id',verificaToken, ContaController.PegarDadosConta)
-
  Contarouter.get('/v1/Conta/ListarContasPendentes',verificaToken, ContaController.listaContasPendentes)
 
  Contarouter.put('/v1/Conta/aprovaOuNegaContas/:idEstabelecimento', verificaToken, ContaController.aprovaOuNegaContas)
@@ -170,5 +150,7 @@ Contarouter.post('/v1/Conta/ResetarSenha/:id', ContaController.ResetarSenha)
  *              description: This is the default response for it
  */
  Contarouter.get('/v1/Conta/PegarDadosConta/:id',verificaToken, ContaController.PegarDadosConta)
+
+ Contarouter.get('/v1/Conta/PegarDadosEstabelecimentoOuOng/:id', ContaController.PegarDadosEstabelecimentoOuOng)
 
 module.exports = Contarouter
