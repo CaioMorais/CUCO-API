@@ -88,6 +88,7 @@ const {verificaToken} = require("../../Security/usuarioMiddleware")
  *            description: The requested tax filing was not found.
  */
  Gerenciamentorouter.get('/v1/Gerenciamento/HistoricoEntregasRetiradas/:id',verificaToken, GerenciamentoController.HistoricoEntregasRetiradas)
+ Gerenciamentorouter.get('/v1/Gerenciamento/HistoricoEntregasRetiradasOng/:id',verificaToken, GerenciamentoController.HistoricoEntregasRetiradasOng)
 
 /**
  * @swagger

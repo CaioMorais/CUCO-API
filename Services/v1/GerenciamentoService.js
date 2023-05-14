@@ -36,6 +36,31 @@ async function historicoEntregasRetiradas(idEstabelecimento){
     }
 }
 
+async function historicoEntregasRetiradasOng(idEstabelecimento){
+    try {
+      var listaRetiradas = [];
+      var retiradas = await historicoEntregaRetiradasSchema.find({idOng: idEstabelecimento}); 
+
+      for (let index = 0; index < retiradas.length; index++) {
+          var ret = {
+              "dataEntregaRetirada" : retiradas[index].dataEntregaRetirada,
+              "nomeRestaurante" : retiradas[index].nomeRestaurante,
+              "quantidadePratosEntregues" : retiradas[index].quantidadePratosEntregues
+
+          }
+          console.log(ret);
+          listaRetiradas.push(ret);
+      }
+
+      var result = new Result(listaRetiradas, true, "Historico de Entregas e Retiradas", 200);
+      return result;
+
+    } catch (error) {
+      var result = new Result(error, false, "Internal error", 500);
+      return result;
+    }
+}
+
 //Estabelecimento
 async function hisotricoDoacoes(idRestaurante){
     try {
@@ -442,7 +467,7 @@ const recusaSolicitacao = async (idSolicitacao) =>{
 module.exports = {
     historicoEntregasRetiradas, hisotricoDoacoes, geraSolicitacaoParceriaParaOng, 
     respondeSolicitacao, listaOngs, listaSolicitacoesParaOng, 
-    excluirSolicitacaoDeEstabelecimento,listaSolicitacoesEstabelecimentos
+    excluirSolicitacaoDeEstabelecimento,listaSolicitacoesEstabelecimentos,historicoEntregasRetiradasOng
 }
 
 

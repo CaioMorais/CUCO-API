@@ -1,7 +1,7 @@
 let Result = require("../../Domain/Entities/Result.js");
 const {historicoEntregasRetiradas, hisotricoDoacoes, geraSolicitacaoParceriaParaOng,  
     respondeSolicitacao,listaOngs, listaSolicitacoesParaOng, 
-    excluirSolicitacaoDeEstabelecimento, listaSolicitacoesEstabelecimentos} = require("../../Services/v1/GerenciamentoService");
+    excluirSolicitacaoDeEstabelecimento, listaSolicitacoesEstabelecimentos, historicoEntregasRetiradasOng} = require("../../Services/v1/GerenciamentoService");
 
 exports.HistoricoDoacoes = async (req, res, next) =>{
     var id = req.params["id"];
@@ -61,6 +61,12 @@ exports.ExcluirSolicitacoesDeEstabelecimentos = async (req, res, next) =>{
 exports.HistoricoEntregasRetiradas = async (req, res, next) =>{
     var id = req.params["id"];
     var result = await historicoEntregasRetiradas(id);
+    res.status(result.status).send(result);
+}
+
+exports.HistoricoEntregasRetiradasOng = async (req, res, next) =>{
+    var id = req.params["id"];
+    var result = await historicoEntregasRetiradasOng(id);
     res.status(result.status).send(result);
 }
 
