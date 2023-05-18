@@ -103,9 +103,15 @@ async function listaOngs(){
 
 async function listaSolicitacoesEstabelecimentos(idEstabelecimento){
   try {
-    
-      var solicitacao = await solicitacaoParceriaSchema.find({idRestaurante: idEstabelecimento});
-      var result = new Result(solicitacao, true, "lista de solicitacoes", 200);
+      console.log(idEstabelecimento);
+      var solicitacao = await retrornaSolicitacaoPendenteRestaurante(idEstabelecimento);
+      if(solicitacao != null){
+        var result = new Result(solicitacao, true, "solicitacoes restaurante", 200);
+      }
+      else{
+        var result = new Result(solicitacao, false, "solicitacoes restaurante", 200);
+      }
+
       return result;
 
   } catch (error) {
@@ -281,6 +287,26 @@ const listaSolicitacoesPendentesOng = async (solicitacoes) =>{
   return listaDeSolicitacoes;
 }
 
+const retrornaSolicitacaoPendenteRestaurante = async (idEstabelecimento) =>{
+
+  var solicitacao = await solicitacaoParceriaSchema.findOne({idRestaurante: idEstabelecimento});
+  if(solicitacao != null){
+    var ong = await estabelecimentoSchema.findOne({_id: solicitacao.idOng});
+
+    var resultado = {
+        "idSolicitacao" : solicitacao._id,
+        "nomeOng" : ong.nomeEstabelecimento,
+        "status" : solicitacao.status,
+        "dataSolicitacao" : solicitacao.dataSolicitacao,
+        "idCarteira" : solicitacao.idCarteira,
+    }
+  
+    return resultado;
+  }
+  return null;
+
+}
+
 //Atualiza resposta da solicitação 
 const atualizaRespostaSolicitacao = async (solicitacao , status, data, respostaOng) =>{ 
   var retorno = null;
@@ -335,7 +361,7 @@ const geraTabelaVerificacaoEntregasRetiradas = async (carteira) =>{
 
     var entrRet = {
       "idCarteira" : carteira._id,
-      "tokenOng" : " ",
+      "tokenOng" : "",
     }
     var entregaRetiradas = entregaRetiradasSchema(entrRet);
     var retorno = await entregaRetiradas.save();

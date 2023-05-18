@@ -201,11 +201,15 @@ async function gerarTokenIndentificacaoRetiradaDoacoes(idCarteira) {
         var result;
 
         var entregaRetiradasDocument = await entregaRetiradasSchema.findOne({ idCarteira: idCarteira });
-        if (entregaRetiradasDocument.tokenOng != "") {
-            return new Result(entregaRetiradasDocument.tokenOng, true, "", 200);
+        console.log(entregaRetiradasDocument.tokenOng.indexOf(' ') != -1);
+        if (entregaRetiradasDocument.tokenOng != "" && 
+            entregaRetiradasDocument.tokenOng.indexOf(' ') == -1) {     
+                return new Result(entregaRetiradasDocument.tokenOng, true, "Token ja existente", 200);
         }
+
         //Gera token  de identificação
         var tokenIdentificacao = geraTokenIdentificacao();
+        console.log(tokenIdentificacao);
 
         //Salva token para ser consultado na entrega pelo restaurante
 
@@ -235,19 +239,33 @@ async function validacaoTokens(idCarteira, req) {
         var result;
 
         // var entregaRetiradasDocument = await entregaRetiradasSchema.findOne({ idCarteira: idCarteira });
+        
+        //verifica se tem token
+        var entregaRetirada = await entregaRetiradasSchema.findOne({ idCarteira: idCarteira, tokenOng: req.body.token });
+        if (entregaRetirada) {
 
-        var validaToken = await entregaRetiradasSchema.findOne({ idCarteira: idCarteira, tokenOng: req.body.token });
-        if (validaToken) {
+            var update = await entregaRetiradasSchema.updateOne({ _id: entregaRetirada._id}, { $set: { tokenOng: "" } })
+            
+            //verifica se removeu o token validado
+            if(update.modifiedCount != 0){
 
-            var resultadoHistoricoDeEntrega = await geraHistoricoEntregaRetirada(idCarteira);
+               var resultadoHistoricoDeEntrega = await geraHistoricoEntregaRetirada(idCarteira);
 
-            await entregaRetiradasSchema.updateOne({ _id: validaToken._id },
-                { $set: { tokenOng: "" } })
-
-            result = new Result(resultadoHistoricoDeEntrega, true, "Token Validado", 200);
+               //verifica se gerou o historico e zerou as entregas pendentes da carteira
+               if(resultadoHistoricoDeEntrega = true){
+                result = new Result(resultadoHistoricoDeEntrega, true, "Token Validado, os pratos podem ser entregues, a entrega foi registrada no histórico de entregas.", 200);
+               }
+               else{
+                await entregaRetiradasSchema.updateOne({ _id: entregaRetirada._id}, { $set: { tokenOng: req.body.token } })
+                result = new Result(null, false, "Estamos com problemas para validar o Token, contate um administrador", 200);
+               }
+            }
+            else{
+                result = new Result(null, false, "Estamos com problemas para validar o Token, contate um administrador do sistema", 200);
+            }       
         }
         else {
-            result = new Result(null, false, "Token não Validado", 200);
+            result = new Result(null, false, "Token invalido.", 200);
         }
         return result;
 
@@ -326,7 +344,7 @@ const excluiDoacao = async (idDaoacao) => {
 //Gera o historico de entregas/retiradas de doações
 async function geraHistoricoEntregaRetirada(idCarteira) {
 
-    var resultadoHistoricoDeEntrega
+    var resultadoHistoricoDeEntrega = false;
 
     const timeElapsed = Date.now();
     const today = new Date(timeElapsed);
@@ -346,9 +364,18 @@ async function geraHistoricoEntregaRetirada(idCarteira) {
     };
 
     var geraHistoricoEntregaRetirada = historicoEntregaRetiradasSchema(historicoRestaurante);
-    resultadoHistoricoDeEntrega = await geraHistoricoEntregaRetirada.save();
-    carteira.entregasPendentes = 0;
-    await carteiraSchema.updateOne(carteira);
+    resultadoSalvaHistorico = await geraHistoricoEntregaRetirada.save();
+    if(resultadoSalvaHistorico.idCarteira){
+        var update = await carteiraSchema.updateOne({_id: carteira._id}, { $set: { entregasPendentes: 0 } });
+        if(update.modifiedCount != 0){
+            resultadoHistoricoDeEntrega = true;
+        }
+        else{
+            historicoEntregaRetiradasSchema.deleteOne({_id:resultadoSalvaHistorico._id});
+            resultadoHistoricoDeEntrega = false;
+        }
+    }
+
     return resultadoHistoricoDeEntrega;
 }
 
