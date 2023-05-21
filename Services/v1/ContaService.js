@@ -282,7 +282,7 @@ async function enviaEmailResetSenha(email) {
 
 async function listaContasPendentes() {
     try {
-        var contas = await contaSchema.find({ verificaAtivo: "0" })
+        var contas = await contaSchema.find({ verificaAtivo: null })
         return new Result(contas, true, "", 200);
     }
     catch (error) {
@@ -313,6 +313,12 @@ async function aprovaOuNegaContas(req) {
         return new Result(error, false, "Internal error", 500)
     }
     
+}
+
+//Carrega foto da conta
+async function carregaFoto(id) {
+    var estabelecimento = await listaOngOuEstabelecimentoPorID(id);
+    return new Result({ "fotoPerfil": estabelecimento.fotoPerfil }, true, "", 200);
 }
 //#endregion
 
@@ -625,5 +631,5 @@ const retornaDadosOngOuEstabelecimentoPorID = async (id) => {
 
 module.exports = {
     cadastrarConta, editarConta, excluirConta, resetarSenha, enviaEmailResetSenha, pegarDadosConta, 
-    aprovaOuNegaContas, listaContasPendentes, verificaExisteciaEmail, pegarDadosApenasEstabelecimentoOuOng
+    aprovaOuNegaContas, listaContasPendentes, verificaExisteciaEmail, pegarDadosApenasEstabelecimentoOuOng, carregaFoto
 }

@@ -2,7 +2,7 @@ const express = require("express");
 let Result = require("../../Domain/Entities/Result.js");
 const {cadastrarConta, editarConta, pegarDadosConta, excluirConta, 
       resetarSenha, enviaEmailResetSenha, aprovaOuNegaContas, listaContasPendentes,
-       verificaExisteciaEmail, pegarDadosApenasEstabelecimentoOuOng} = require("../../Services/v1/ContaService");
+       verificaExisteciaEmail, pegarDadosApenasEstabelecimentoOuOng, carregaFoto} = require("../../Services/v1/ContaService");
 
  
 exports.Editar = async (req, res, next) =>{
@@ -68,5 +68,11 @@ exports.aprovaOuNegaContas = async (req, res, next) =>{
 
 exports.listaContasPendentes = async (req, res, next) =>{
     var result = await listaContasPendentes(req);
+    res.status(result.status).send(result);
+}
+
+exports.carregaFoto = async (req, res, next) =>{
+    var id = req.params["id"];
+    var result = await carregaFoto(id);
     res.status(result.status).send(result);
 }

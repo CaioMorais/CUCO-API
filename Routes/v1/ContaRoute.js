@@ -152,5 +152,7 @@ Contarouter.post('/v1/Conta/ResetarSenha/:id', ContaController.ResetarSenha)
  Contarouter.get('/v1/Conta/PegarDadosConta/:id',verificaToken, ContaController.PegarDadosConta)
 
  Contarouter.get('/v1/Conta/PegarDadosEstabelecimentoOuOng/:id', ContaController.PegarDadosEstabelecimentoOuOng)
+ 
+ Contarouter.get('/v1/Conta/carregaFoto/:id', verificaToken, ContaController.carregaFoto)
 
 module.exports = Contarouter
