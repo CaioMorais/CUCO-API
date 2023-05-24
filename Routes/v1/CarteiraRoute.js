@@ -144,6 +144,26 @@ carteirarouter.put('/v1/Carteira/EditaValorPrato/',verificaToken, carteiraContro
  */
  carteirarouter.get('/v1/Carteira/ListaCarteiraIdRestaurante/:id',verificaToken, carteiraController.ListaCarteiraIdRestaurante)
 
+/**
+ * @swagger
+ * tags:
+ *  name: Carteira
+ *  description: API's de Gerenciamento da carteira ONG/Estabelecimento
+ * /api/v1/Carteira/ListaCarteiraIdRestaurantePaginaDoacao/:id:
+ *  get:
+ *      tags: [Carteira]
+ *      parameters:
+ *          - name: page_number
+ *            default: 1
+ *            in: body
+ *            schema:
+ *              type: string
+ *      responses:
+ *          default:
+ *              description: This is the default response for it
+ */
+carteirarouter.get('/v1/Carteira/ListaCarteiraIdRestaurantePaginaDoacao/:id', carteiraController.ListaCarteiraIdRestaurante)
+
  /**
  * @swagger
  * tags:

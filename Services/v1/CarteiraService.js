@@ -59,6 +59,40 @@ async function listagemCarteiraIDRestaurante(id) {
    }
 }
 
+async function listagemCarteiraIDRestaurantePaginaDoacao(id) {
+   try {
+      var result;
+      var carteira = await carteiraSchema
+         .findOne({ idRestaurante: id, status: "true" });
+
+      if (carteira) {
+         var ong = await estabelecimentoSchema.findById(carteira.idOng);
+
+         var carteiraResult = {
+            "metaFinal": carteira.metaFinal,
+            "valorAtual": carteira.valorAtual,
+            "valorPrato": carteira.valorPrato,
+            "descPratoDoado": carteira.descPratoDoado,
+            "nomeOng": ong.nomeEstabelecimento,
+            "enderecoOng": await retornaEndereco(ong),
+            "descricaoOng": ong.descricao,
+            "contatoOng": ong.telefone,
+            "paginaWebOng" : ong.paginaWeb,
+         }
+
+         var result = new Result(carteiraResult, true, "Carteira restaurante", 200);
+      }
+      else {
+         result = new Result(carteira, false, "Carteira não encontrada", 200);
+      }
+      return result;
+
+   } catch (error) {
+      var result = new Result(error, false, "Internal error", 500);
+      return result;
+   }
+}
+
 const listagemCarteirasIDOng = async function(id) {
    try {
       var result = new Result();
@@ -389,6 +423,7 @@ const retornaEndereco = async function (estabelecimento) {
 module.exports = {
    listaValorPratoId, editandoValorPrato, inserirCarteira,
    listagemCarteiras, listagemCarteirasId, editandoCarteira,
-   deletandoCarteira, insereValorCarteira, listagemCarteiraIDRestaurante, listagemCarteirasIDOng
+   deletandoCarteira, insereValorCarteira, listagemCarteiraIDRestaurante, 
+   listagemCarteirasIDOng, listagemCarteiraIDRestaurantePaginaDoacao
 }
 
