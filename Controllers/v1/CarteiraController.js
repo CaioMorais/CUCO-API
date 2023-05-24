@@ -2,7 +2,7 @@ let Result = require("../../Domain/Entities/Result");
 const { 
         inserirCarteira, listagemCarteiras, listagemCarteiraId, 
         editandoCarteira, deletandoCarteira, editandoValorPrato, listagemCarteiraIDRestaurante,
-        listaValorPratoId, listagemCarteirasIDOng } = require("../../Services/v1/CarteiraService");
+        listaValorPratoId, listagemCarteirasIDOng, listagemCarteiraIDRestaurantePaginaDoacao} = require("../../Services/v1/CarteiraService");
 
 
 exports.InsereCarteira = async (req, res, next) =>{
@@ -28,11 +28,15 @@ exports.PegarValorPrato = async (req, res, next) =>{
     res.status(result.status).send(result);
 }
 
-
-
 exports.ListaCarteiraIdRestaurante = async (req, res, next) =>{
     var id = req.params["id"];
     var result = await listagemCarteiraIDRestaurante(id);
+    res.status(result.status).send(result);
+}
+
+exports.ListaCarteiraIdRestaurantePaginaDoacao = async (req, res, next) =>{
+    var id = req.params["id"];
+    var result = await listagemCarteiraIDRestaurantePaginaDoacao(id);
     res.status(result.status).send(result);
 }
 
