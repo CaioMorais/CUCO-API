@@ -33,6 +33,10 @@ var doacaoSchema = new Schema({
     status: {
         type: String,
         required: true
+    },
+    statusPagamento: {
+        type: String,
+        required: true
     }
 })
 

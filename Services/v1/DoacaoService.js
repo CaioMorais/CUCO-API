@@ -125,6 +125,9 @@ async function efiCallback(body) {
 
         //insere valor carteira
         var resultadoIncersao = await carteira.insereValorCarteira(doacao.idRestaurante, doacao.quantidadePratosDoados);
+        
+        //Muda a doação como paga, ativando ela no historico de doações.
+        doacaoSchema.updateOne({ _id: doacao._id }, {$set: {statusPagamento: '1'}});
 
         if (resultadoIncersao.success) {
             //envia email com recompensa para cliente
@@ -133,12 +136,13 @@ async function efiCallback(body) {
             result = new Result("Recebido", true, "Prato doado com sucesso!", 200);
             return result;
         }
-
-        result = new Result("Recebido", true, "Prato doado com sucesso!", 200);
-        return result;
+        else{
+            result = new Result("", false, "Erro na catualização da carteira, após o pix ser realizado", 400);
+            return result;
+        }
     }
     catch (e) {
-        result = new Result("Recebido", true, "Prato doado com sucesso!", 200);
+        result = new Result("", false, "Internal error", 500);
         return result;
     }
 }
@@ -417,7 +421,8 @@ async function criaDoacao(body, clienteDoador, idRestaurante, cobranca) {
             "idRestaurante": idRestaurante,
             "locId": cobranca.data.loc.id,
             "txId": cobranca.data.txid,
-            "status": cobranca.data.status
+            "status": cobranca.data.status,
+            "statusPagamento": '0',
         };
         console.log(doa);
         doacao = doacaoSchema(doa);

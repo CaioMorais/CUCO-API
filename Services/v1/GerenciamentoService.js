@@ -66,9 +66,10 @@ async function hisotricoDoacoes(idRestaurante){
     try {
         //Function junta os dados das docaoes e dos doadores e devolve um array
         var listaDoacoes = [];
-        var doacoes = await doacaoSchema.find({idRestaurante: idRestaurante}); 
+        var doacoes = await doacaoSchema.find({idRestaurante: idRestaurante});
 
         for (let index = 0; index < doacoes.length; index++) {
+          if(doacoes[index].statusPagamento == '1'){
             doador = await clienteDoadorSchema.findOne({_id: doacoes[index].idClienteDoador});
             var doacao = {
                 "quantidadePratosDoados" : doacoes[index].quantidadePratosDoados,
@@ -76,6 +77,7 @@ async function hisotricoDoacoes(idRestaurante){
                 "nomeDoador" : doador.nome
             }
             listaDoacoes.push(doacao);
+          }
         }
 
         var result = new Result(listaDoacoes, true, "Historico de doações", 200);
