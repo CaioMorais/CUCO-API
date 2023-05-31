@@ -405,7 +405,7 @@ const cadastraUsuarioComIDEstabelecimentoOuOng = async (body, estabelecimento_id
             "tipoConta": body.tipoConta,
             "idEstabelecimento": estabelecimento_id,
             "verificaAtivo": null,
-            "dataCadastro": today.toLocaleDateString()
+            "dataCadastro": today.toLocaleDateString('pt-br')
         }
         console.log(cont);
         var conta = contaSchema(cont);

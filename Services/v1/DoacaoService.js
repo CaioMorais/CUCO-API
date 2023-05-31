@@ -358,7 +358,7 @@ async function geraHistoricoEntregaRetirada(idCarteira) {
 
     var historicoRestaurante = {
         "idCarteira": idCarteira,
-        "dataEntregaRetirada": today.toLocaleDateString(),
+        "dataEntregaRetirada": today.toLocaleDateString('pt-br'),
         "valorEntregado": carteira.metaFinal,
         "nomeOng": ong.nomeEstabelecimento,
         "nomeRestaurante": restaurante.nomeEstabelecimento,
@@ -416,8 +416,8 @@ async function criaDoacao(body, clienteDoador, idRestaurante, cobranca) {
         const today = new Date(timeElapsed);
         var doa = {
             "quantidadePratosDoados": body.quantidadePratosDoados,
-            "dataDoacao": today.toLocaleDateString(),
-            "idClienteDoador": clienteDoador._id.toString(),
+            "dataDoacao": today.toLocaleDateString('pt-br'),
+            "idClienteDoador": clienteDoador._id.toString('pt-br'),
             "idRestaurante": idRestaurante,
             "locId": cobranca.data.loc.id,
             "txId": cobranca.data.txid,
