@@ -242,7 +242,7 @@ const gerasolciitacaoParceria = async (body, carteira) =>{
     "respostaOng": "pending", 
     "respostaRestaurante": "true", 
     "status": "pending",
-    "dataSolicitacao" : today.toLocaleDateString(),
+    "dataSolicitacao" : today.toLocaleDateString('pt-br'),
     "dataResposta" : "pending",
     "idCarteira" : carteira._id
   } 
@@ -292,7 +292,7 @@ const listaSolicitacoesPendentesOng = async (solicitacoes) =>{
 const retrornaSolicitacaoPendenteRestaurante = async (idEstabelecimento) =>{
 
   var solicitacao = await solicitacaoParceriaSchema.findOne({idRestaurante: idEstabelecimento});
-  if(solicitacao != null){
+  if(solicitacao != null && solicitacao.status == "pending"){
     var ong = await estabelecimentoSchema.findOne({_id: solicitacao.idOng});
 
     var resultado = {
@@ -392,7 +392,7 @@ const aceitaSolicitacao = async (idSolicitacao) =>{
     const today = new Date(timeElapsed);
     
     //Atualiza resposta da solicitação 
-    var resultSolicitacao = await atualizaRespostaSolicitacao(solicitacao._id, "true", today.toLocaleDateString(), "true");
+    var resultSolicitacao = await atualizaRespostaSolicitacao(solicitacao._id, "true", today.toLocaleDateString('pt-br'), "true");
     if(resultSolicitacao != null){
       vetorResultado.push(resultSolicitacao);
     }
@@ -461,7 +461,7 @@ const recusaSolicitacao = async (idSolicitacao) =>{
     const today = new Date(timeElapsed); 
 
     //Atualiza resposta da solicitacao
-    var resultSolicitacao = await atualizaRespostaSolicitacao(solicitacao._id, "false", today.toLocaleDateString(), "false");
+    var resultSolicitacao = await atualizaRespostaSolicitacao(solicitacao._id, "false", today.toLocaleDateString('pt-br'), "false");
     if(resultSolicitacao != null){
       vetorResultado.push(resultSolicitacao);
     }
