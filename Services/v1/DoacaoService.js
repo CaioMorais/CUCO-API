@@ -417,7 +417,7 @@ async function criaDoacao(body, clienteDoador, idRestaurante, cobranca) {
         var doa = {
             "quantidadePratosDoados": body.quantidadePratosDoados,
             "dataDoacao": today.toLocaleDateString('pt-br'),
-            "idClienteDoador": clienteDoador._id.toString('pt-br'),
+            "idClienteDoador": clienteDoador._id.toString(),
             "idRestaurante": idRestaurante,
             "locId": cobranca.data.loc.id,
             "txId": cobranca.data.txid,
