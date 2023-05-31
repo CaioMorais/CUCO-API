@@ -127,7 +127,7 @@ async function efiCallback(body) {
         var resultadoIncersao = await carteira.insereValorCarteira(doacao.idRestaurante, doacao.quantidadePratosDoados);
         
         //Muda a doação como paga, ativando ela no historico de doações.
-        doacaoSchema.updateOne({ _id: doacao._id }, {$set: {statusPagamento: '1'}});
+        await doacaoSchema.updateOne({ _id: doacao._id }, {$set: {statusPagamento: '1'}});
 
         if (resultadoIncersao.success) {
             //envia email com recompensa para cliente
@@ -137,7 +137,7 @@ async function efiCallback(body) {
             return result;
         }
         else{
-            result = new Result("", false, "Erro na catualização da carteira, após o pix ser realizado", 400);
+            result = new Result("", false, "Erro na atualização da carteira, após o pix ser realizado", 400);
             return result;
         }
     }
